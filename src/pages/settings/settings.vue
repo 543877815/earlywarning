@@ -6,16 +6,16 @@
       <router-view></router-view>
     </transition>
     <div style="clear: both"></div>
-    <showControl></showControl>
+    <showControl :bottom="60" :right="50"></showControl>
     <Footer></Footer>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../nav_index/nav_index';
-  import sidebar from '../sidebar/sidebar'
-  import Footer from '../footer/footer'
-  import showControl from '../showControl/showControl'
+  import navigator from '../../components/nav_index/nav_index';
+  import sidebar from '../../components/sidebar/sidebar'
+  import Footer from '../../components/footer/footer'
+  import showControl from '../../components/showControl/showControl'
 
   export default {
     components: {
@@ -56,8 +56,7 @@
     .fade-enter-to, .fade-leave {
       opacity: 1;
     }
-
-    .fade-enter-active, .fade-leave-active {
+    .fade-enter-active{
       transition: all 0.3s;
     }
   }

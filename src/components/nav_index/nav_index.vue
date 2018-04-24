@@ -3,7 +3,7 @@
     <div class="left">
       <div class="icon-wrapper">
         <router-link to="/index">
-          <img src="./icon-home.png" alt="">
+          <img src="./icon-home.png" width="50" height="50">
         </router-link>
       </div>
       <div class="project-name">
@@ -14,12 +14,16 @@
     </div>
     <div class="right">
       <div class="role">当前角色：用户</div>
-      <div class="management">仪器管理</div>
-      <div class="record">检修记录</div>
+      <router-link to="/management">
+        <div class="management">仪器管理</div>
+      </router-link>
+      <router-link to="/history">
+        <div class="record">检修记录</div>
+      </router-link>
       <div class="personal-info">
         <span class="greeting">你好，<span class="name">李逢君</span></span>
         <img src="./avatar.png" width="45" height="45">
-        <div class="info-panel" :class="{'navChange':navChange}" >
+        <div class="info-panel" :class="{'navChange':navChange}">
           <div class="exit" @click="exit">
             <div class="icon-wrapper">
               <img src="./icon-exit.png" width="25" height="25">
@@ -48,17 +52,26 @@
               <div class="icon-wrapper">
                 <img src="./icon-trends.png" alt="">
               </div>
-              <div class="trends">动态</div>
+              <router-link to="/userNews">
+                <div class="trends">
+                  <el-badge :value="12" class="item">
+                    <el-button size="middle">
+                      用户动态
+                    </el-button>
+                  </el-badge>
+                  <!--<router-link to="/userNews"></router-link>-->
+                </div>
+              </router-link>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+
   export default {
     methods: {
       exit() {
@@ -85,6 +98,8 @@
     display: flex;
     flex-flow: row;
     justify-content: space-between;
+    position: relative;
+    z-index: 9999;
     .left, .right {
       padding: 5px 0;
       display: flex;
@@ -96,7 +111,7 @@
       cursor: pointer;
       margin-left: 44px;
       .project-name {
-        font-size: 40px;
+        font-size: 32px;
         margin-left: 35px;
         @include word-not-select();
         a {
@@ -106,6 +121,12 @@
     }
     .right {
       position: relative;
+      .router-link-active {
+        div {
+          color: $nav_index-color;
+          background: #fff !important;
+        }
+      }
       .role, .homePage, .management, .record, .personal-info {
         color: #fff;
         box-sizing: border-box;
@@ -114,12 +135,19 @@
         padding: 25px 30px;
         cursor: pointer;
         transition: all 0.3s;
+        a {
+          color: #fff;
+          transition: all 0.3s;
+          &:hover {
+            color: $nav_index-color;
+          }
+        }
         &:hover {
           color: $nav_index-color;
-          background: #fff;
+          background: rgba(255, 255, 255, 0.5);
           .info-panel {
             opacity: 1;
-            pointer-events: auto!important;
+            pointer-events: auto !important;
           }
         }
       }
@@ -145,7 +173,6 @@
           top: 100%;
           right: 2px;
           border-radius: 10px;
-          border: 2px solid $nav_index-color;
           background-color: #fff;
           opacity: 0;
           display: flex;
@@ -153,9 +180,10 @@
           justify-content: center;
           transition: all 0.3s;
           pointer-events: none;
+          box-shadow: 0 8px 16px 0 rgba(7, 17, 27, .2);
           &:hover {
             opacity: 1;
-            pointer-events: auto!important;
+            pointer-events: auto !important;
           }
           &.navChange {
             top: 125%;
@@ -172,6 +200,18 @@
           }
           .trends {
             cursor: pointer;
+            padding: 0!important;
+            .el-button{
+              padding: 4px 20px !important;
+              background-color: darkgrey;
+              color: #fff;
+              &:hover{
+                outline: 0;
+              }
+              span{
+                font-size: 20px;
+              }
+            }
           }
           .up, .down {
             display: flex;
@@ -201,7 +241,7 @@
               margin: 0 20px;
               .setting, .trends {
                 background: darkgray;
-                font-size: 24px;
+                font-size: 20px;
                 padding: 5px 20px;
                 border-radius: 5px;
                 a {

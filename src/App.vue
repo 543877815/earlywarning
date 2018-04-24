@@ -12,7 +12,7 @@
 
   export default {
     name: 'App',
-    mounted(){
+    mounted() {
       particlesJS("particles-js", this.$store.state.common.particlesConfig);
     }
   }
@@ -36,15 +36,15 @@
   }
 
   html {
-    &.shortPage{
+    &.shortPage {
       height: 100%;
       width: 100%;
     }
-    &.scrollPage{
+    &.scrollPage {
       height: 100%;
       width: 100%;
     }
-    &.longPage{
+    &.longPage {
       height: auto;
       width: 100%;
     }
@@ -91,5 +91,11 @@
       margin: 0;
       position: relative;
     }
+  }
+  .v-modal{
+    z-index: 99998!important;
+  }
+  .el-message-box__wrapper {
+    z-index: 99999!important;
   }
 </style>

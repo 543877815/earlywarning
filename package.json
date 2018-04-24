@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "element-ui": "^2.3.4",
+    "form-data": "^2.3.2",
     "lodash": "^4.17.5",
     "lodash.throttle": "^4.1.1",
     "particles.js": "^2.0.0",
     "particlesjs": "^2.2.2",
+    "qs": "^6.5.1",
     "skrollr": "^0.6.26",
     "underscore": "^1.8.3",
     "vue": "^2.5.2",

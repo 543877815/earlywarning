@@ -10,12 +10,36 @@
       <p>仪器简介：</p>
       <p class="intro">{{equipItem.description}}</p>
     </div>
-    <equipDetail v-if="equipItem.id === $store.state.equipment.equipDetailOnShow" :equipItem="equipItem"></equipDetail>
+    <transition name="modal">
+        <modal v-if="equipItem.id === $store.state.equipment.equipDetailOnShow" :equipItem="equipItem" :wrapperClass="'equipDetail'" @hideDetail="hideDetail">
+          <div class="title" slot="header">仪器详情</div>
+          <div class="intro" slot="body">
+            <div class="img-wrapper">
+              <img v-lazy="equipItem.picUrl" width="300" height="300">
+            </div>
+            <div class="intro-wrapper">
+              <div class="name">
+                {{equipItem.name}}
+                <span class="id">ID：{{equipItem.id}}</span>
+              </div>
+              <div class="insType">型号：{{equipItem.insType}}</div>
+              <div class="param">参数：{{equipItem.param}}</div>
+              <div class="detail-intro">仪器简介：{{equipItem.description}}</div>
+              <div class="thresholdValue">告警阈值：{{equipItem.thresholdValue}}</div>
+              <div class="present-thresholdValue">当前阈值：</div>
+            </div>
+          </div>
+          <div class="history" slot="body">
+            <div class="title">历史阈值</div>
+          </div>
+          <div class="others" slot="body"></div>
+        </modal>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import equipDetail from '../equipDetail/equipDetail'
+  import modal from '../modal/modal'
   export default {
     props: {
       equipItem: {
@@ -24,12 +48,16 @@
       }
     },
     components:{
-      equipDetail
+      modal
     },
     methods:{
       showDetail(id){
         this.$store.state.equipment.equipDetailOnShow = id;
         document.getElementsByTagName('body')[0].style.overflow = "hidden";
+      },
+      hideDetail() {
+        this.$store.state.equipment.equipDetailOnShow = null;
+        document.getElementsByTagName('body')[0].style.overflow = "auto";
       }
     },
     mounted(){
@@ -101,6 +129,62 @@
           line-height: 1.2em;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
+        }
+      }
+    }
+    .modal-enter, .modal-leave-to{
+      opacity: 0;
+    }
+    .modal-enter-to, .modal-leave{
+      opacity: 1;
+    }
+    .modal-leave-active{
+      transition: all 0.3s;
+    }
+    .equipDetail {
+      cursor: default;
+      .title {
+        font-size: 18px;
+        width: 100%;
+      }
+      .icon-wrapper {
+        cursor: pointer;
+      }
+      .intro {
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        border-bottom: 1px solid #ccc;
+        .intro-wrapper {
+          width: 568px;
+          margin-left: 30px;
+          .name {
+            font-size: 32px;
+            position: relative;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+            .id {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              font-size: 16px;
+              padding-right: 10px;
+              bottom: 5px;
+            }
+          }
+          .insType, .param, .detail-intro, .thresholdValue, .present-thresholdValue {
+            margin: 8px 0;
+          }
+          .detail-intro {
+            line-height: 1.2em;
+          }
+        }
+      }
+      .history {
+        margin-top: 20px;
+        margin-left: 20px;
+        .title {
+          font-size: 24px;
         }
       }
     }

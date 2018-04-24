@@ -1,51 +1,34 @@
 <template>
-  <!--<div :class="wrapperClass">-->
-    <!--<div class="modal">-->
-      <!--<div class="modal-dialog">-->
-        <!--<div class="modal-content">-->
-          <!--<div class="modal-header">-->
-            <!--<div class="title">仪器详情</div>-->
-            <!--<div class="icon-wrapper" @click.stop.prevent="hideDetail">-->
-              <!--<img src="./close.png" width="15" height="15">-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="modal-body">-->
-            <!--<div class="intro">-->
-              <!--<div class="img-wrapper">-->
-                <!--<img v-lazy="equipItem.picUrl" width="300" height="300">-->
-              <!--</div>-->
-              <!--<div class="intro-wrapper">-->
-                <!--<div class="name">-->
-                  <!--{{equipItem.name}}-->
-                  <!--<span class="id">ID：{{equipItem.id}}</span>-->
-                <!--</div>-->
-                <!--<div class="insType">型号：{{equipItem.insType}}</div>-->
-                <!--<div class="param">参数：{{equipItem.param}}</div>-->
-                <!--<div class="detail-intro">仪器简介：{{equipItem.description}}</div>-->
-                <!--<div class="thresholdValue">告警阈值：{{equipItem.thresholdValue}}</div>-->
-                <!--<div class="present-thresholdValue">当前阈值：</div>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="history">-->
-              <!--<div class="title">历史阈值</div>-->
-            <!--</div>-->
-            <!--<div class="others"></div>-->
-          <!--</div>-->
-          <!--<div class="modal-footer">-->
-            <!--<button type="button" class="btn btn-default">submit</button>-->
-            <!--<button type="button" class="btn btn-default" @click.stop.prevent="hideDetail">Close</button>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
+  <div :class="wrapperClass" @click="stopPropagation">
+    <div class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <slot name="header"></slot>
+            <div class="icon-wrapper" @click.stop.prevent="hideDetail">
+              <img src="./close.png" width="15" height="15">
+            </div>
+          </div>
+          <div class="modal-body">
+            <slot name="body"></slot>
+          </div>
+          <div class="modal-footer">
+            <slot name="footer"></slot>
+            <button type="button" class="btn btn-default" @click.stop.prevent="hideDetail">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
   export default {
     props: {
       equipItem: {
-        default: {},
+        default: () => {
+          return {};
+        },
         type: Object
       },
       wrapperClass: {
@@ -56,6 +39,9 @@
     methods: {
       hideDetail() {
         this.$emit("hideDetail")
+      },
+      stopPropagation(event){
+        event.stopPropagation();
       }
     }
   };
@@ -90,7 +76,9 @@
           flex-flow: row;
           justify-content: space-between;
           border-bottom: 1px solid #e5e5e5;
-
+          .icon-wrapper {
+            cursor: pointer;
+          }
         }
         .modal-body {
           padding: 15px;
@@ -107,6 +95,11 @@
             background-repeat: repeat-x;
             border-color: #dbdbdb;
             border-color: #ccc;
+          }
+          .btn-primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
           }
           .btn {
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 1px rgba(0, 0, 0, .075);

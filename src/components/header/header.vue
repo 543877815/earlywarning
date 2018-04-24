@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="title">{{title}}</div>
+    <div class="title" :class="icon">{{title}}</div>
     <div class="split"></div>
   </div>
 </template>
@@ -10,6 +10,10 @@
     props: {
       title: {
         type: String
+      },
+      icon:{
+        type: String,
+        default: ''
       }
     }
   };
@@ -22,6 +26,7 @@
     .title {
       font-size: 32px;
       color: $nav_index-color;
+      padding-left: 10px;
     }
     .split {
       width: 100%;

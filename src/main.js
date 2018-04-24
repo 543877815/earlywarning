@@ -11,6 +11,9 @@ Vue.config.productionTip = false
 Vue.use(particlesJS)
 Vue.prototype.$axios = $axios
 
+$axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5ad368e0939d5749ebcc7e05/earlywarning';
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

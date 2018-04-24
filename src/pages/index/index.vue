@@ -1,4 +1,3 @@
-<script src="../../main.js"></script>
 <template>
   <div class="window">
     <navigator ref="nav" :class="{'scrollDown':navChange}" :navChange="navChange"></navigator>
@@ -11,27 +10,27 @@
         <Menu v-show="menuShow"></Menu>
       </transition>
       <div class="equip-content" :class="{'menuShow':menuShow}">
-        <p class="equipEmpty" v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去<a>仪器管理</a>添加仪器吧！</p>
-        <equipItem v-for="item in $store.state.equipment.equipOnShow" :equipItem="item"></equipItem>
+        <p class="equipEmpty" v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去<router-link to="/management">仪器管理</router-link>添加仪器吧！</p>
+        <equipItem v-for="(item,index) in $store.state.equipment.equipOnShow" :equipItem="item" :key="index"></equipItem>
       </div>
-      <showControl v-show="iconShow"></showControl>
-      <ScrollToY :scrollTargetY="iconShowHeight-navChangeHeight" :speed="4000" v-show="iconShow"></ScrollToY>
+      <showControl v-show="iconShow" :right="50" :bottom="115"></showControl>
+      <ScrollToY :scrollTargetY="iconShowHeight-navChangeHeight" :speed="4000" v-show="iconShow" :bottom="60"
+                 :right="50"></ScrollToY>
     </div>
-    <Footer></Footer>
+    <Footer :position="'relative'"></Footer>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../nav_index/nav_index'
-  import Footer from '../footer/footer'
-  import Parallax from '../Parallax/Parallax'
-  import menubar from '../menubar/menubar'
-  import Menu from '../menu/menu'
-  import equipItem from '../equipItem/equipItem'
-  import showControl from '../showControl/showControl'
-  import ScrollToY from '../scrollToY/scrollToY'
+  import navigator from '../../components/nav_index/nav_index'
+  import Footer from '../../components/footer/footer'
+  import Parallax from '../../components/Parallax/Parallax'
+  import menubar from '../../components/menubar/menubar'
+  import Menu from '../../components/menu/menu'
+  import equipItem from '../../components/equipItem/equipItem'
+  import showControl from '../../components/showControl/showControl'
+  import ScrollToY from '../../components/scrollToY/scrollToY'
   import _ from 'underscore'
-
 
   export default {
     data() {
@@ -43,7 +42,6 @@
         iconShowHeight: 0,
         iconShow: false,
         menuShow: false,
-
         requestSize: 10,
         requestPage: 1,
         requestSort: "firstname"
@@ -74,14 +72,14 @@
       this.throttleload = _.throttle(this.scrollControl, 100)
       window.addEventListener("scroll", this.throttleload, false);
 
-      this.$axios.get(this.$store.state.common.baseUrl + "/getCategories").then((response) => {
+      this.$axios.get("/getCategories").then((response) => {
         if (response.data.ret === 200) {
           this.$store.state.equipment.equipTypes = this.$store.state.equipment.equipTypes.concat(response.data.data);
         }
       })
 
 
-      this.$axios.get(this.$store.state.common.baseUrl + `/getUserInstrument?sort=${this.requestSort}&size=${this.requestSize}&page=${this.requestPage}`).then((response) => {
+      this.$axios.get(`/getUserInstrument?sort=${this.requestSort}&size=${this.requestSize}&page=${this.requestPage}`).then((response) => {
         if (response.data.ret === 200) {
           this.requestPage++;
           this.$store.state.equipment.equipOnShow =
@@ -176,7 +174,7 @@
   .nav {
     background: rgba(255, 255, 255, 0);
     position: fixed;
-    z-index: 99999;
+    z-index: 9999;
     top: 0;
     left: 0;
     width: 100%;
@@ -185,6 +183,7 @@
     &.scrollDown {
       background-color: rgba(0, 0, 0, 0.9);
       padding: 15px 0;
+      box-shadow: 5px 5px 50px #888888;
       &:hover {
         background-color: rgba(0, 0, 0, 1);
       }
@@ -209,10 +208,6 @@
 
   .Masthead {
     z-index: 1;
-  }
-
-  #footer {
-    position: static;
   }
 
 </style>

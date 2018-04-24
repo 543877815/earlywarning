@@ -101,11 +101,11 @@
       }
     }
     .right {
+      min-width: 520px;
       display: flex;
       flex-flow: row;
       justify-content: center;
       align-items: center;
-      padding-right: 10%;
       .sort {
         margin: 0 10px 0 90px;
         cursor: pointer;

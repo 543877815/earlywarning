@@ -1,5 +1,5 @@
 <template>
-  <div class="scrollToY-wrapper" @click="scrollTo">
+  <div class="scrollToY-wrapper" @click="scrollTo" :style="{bottom: bottom+'px', right: right+'px'}">
     <img src="./up.png" width="34" height="30" class="showControl">
   </div>
 </template>
@@ -20,6 +20,14 @@
       easing: {
         default: "easeInOutQuint",
         type: String
+      },
+      right: {
+        type: Number,
+        default: 0
+      },
+      bottom: {
+        type: Number,
+        default: 0
       }
     },
     methods: {
@@ -38,7 +46,7 @@
     bottom: 70px;
     background-color: #2d8cf0;
     /*box-shadow: darkgrey 10px 10px 30px 5px;*/
-    z-index: 9999;
+    z-index: 999;
     height: 42px;
     width: 42px;
     text-align: center;

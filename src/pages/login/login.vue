@@ -2,16 +2,16 @@
   <div id="particles-js" class="main" ref="particlesJs">
     <navigation></navigation>
     <panel></panel>
-    <showControl></showControl>
-    <!--<Footer></Footer>-->
+    <showControl :right="50" :bottom="60"></showControl>
+    <Footer></Footer>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import navigation from '../nav_login/nav_login';
-  import showControl from '../showControl/showControl';
-  import panel from '../panel/panel';
-  import Footer from '../footer/footer'
+  import navigation from '../../components/nav_login/nav_login';
+  import showControl from '../../components/showControl/showControl';
+  import panel from '../../components/panel/panel';
+  import Footer from '../../components/footer/footer'
 
   export default {
     components: {
@@ -24,10 +24,7 @@
       document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
     },
     methods: {
-      switchShowAndHide() {
-        // let particlesCanvas = this.$refs.particlesJs.getElementsByClassName('particles-js-canvas-el')[0];
-        // !this.$store.state.particles.show ? particlesCanvas.style.display = 'none' : particlesCanvas.style.display = 'block';
-      }
+
     }
   }
 </script>
@@ -43,7 +40,6 @@
     padding: 0;
     margin: 0;
     position: relative;
-    /*overflow: hidden;*/
   }
   .main {
     position: relative;
@@ -51,7 +47,6 @@
     height: 100%;
 
     .particles-js-canvas-el {
-      /*transform: translateZ(0);*/
       position: absolute;
       left: 0;
       top: 0;
@@ -65,8 +60,11 @@
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   .main {
-    background: url("../../assets/bg-login.jpg") no-repeat center center;
+    /*background: url("../../assets/bg-login.jpg") no-repeat center center;*/
     background-size: cover;
     background-size: 100% 100%;
+  }
+  .main /deep/ #footer{
+    background-color: #4a96c5;
   }
 </style>

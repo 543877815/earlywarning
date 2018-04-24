@@ -163,12 +163,11 @@
     min-height: 550px;
     min-width: 480px;
     margin: 8% auto 0;
-    /*background: #fff;*/
-    /*background-color: rgba(255, 255, 255, 0);*/
     box-shadow: darkgrey 10px 10px 30px 5px;
     position: relative;
     display: flex;
     flex-flow: column;
+
     &.register, &.forgetPassword {
       /*height: 50%;*/
     }
