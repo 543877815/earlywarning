@@ -13,7 +13,7 @@
           <img src="./icon_username.jpg" width="40px" height="40px">
         </div>
         <div class="input-wrapper">
-          <input type="text" placeholder="用户名" ref="usernameInput">
+          <input type="text" placeholder="用户名" v-model="username">
         </div>
       </div>
       <div class="password-wrapper">
@@ -21,21 +21,19 @@
           <img src="./icon_password.jpg" width="40px" height="40px">
         </div>
         <div class="input-wrapper">
-          <input type="text" placeholder="用户密码" ref="passwordInput">
+          <input type="text" :placeholder="loginIsActive ? '用户密码' : '请输入密码'" v-model="password">
           <div class="forgetPassword" v-show="loginIsActive" @click="forgetPasswordActive">忘记密码？</div>
         </div>
       </div>
-      <transition name="vercode">
-        <div class="vercode-wrapper">
-          <div class="icon-wrapper">
-            <img src="./icon_vercode.jpg" width="40px" height="40px">
-          </div>
-          <div class="input-wrapper">
-            <input type="text" :placeholder="loginIsActive ? '验证码' : '邮箱'" ref="verCodeInput">
-            <img src="./vercode.jpg" alt="" width="112" height="50" class="vercode" v-show="loginIsActive">
-          </div>
+      <div class="vercode-wrapper">
+        <div class="icon-wrapper">
+          <img src="./icon_vercode.jpg" width="40px" height="40px">
         </div>
-      </transition>
+        <div class="input-wrapper">
+          <input type="text" :placeholder="loginIsActive ? '验证码' : '再次输入密码'" v-model="verCodeOrPassword">
+          <img :src="verCodeSrc" width="112" height="50" class="vercode" v-show="loginIsActive" @click="getVerCode">
+        </div>
+      </div>
     </div>
     <div class="footer">
       <div class="loginOrRegister" @click="LoginOrRegister">{{loginIsActive ? '登录' : '注册'}}</div>
@@ -66,14 +64,28 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const offset = 15;
-  const delay = 600;
+
   export default {
+    props: {
+      verCodeUrl: {
+        type: String
+      },
+      BaseUrl: {
+        type: String
+      },
+      loginIsActive: {
+        type: Boolean,
+        default: true
+      }
+    },
     data() {
       return {
+        verCodeSrc: '',
         lineLeft: 240,
-        loginIsActive: true,
-        forgetPassword: false
+        forgetPassword: false,
+        username: '',
+        password: '',
+        verCodeOrPassword: '',
       }
     },
     methods: {
@@ -96,25 +108,26 @@
        *  loginActive and registerActive use to switch between page login and page register
        */
       loginActive() {
-        this.loginIsActive = true;
-        this.lineLeft = this.$refs.login.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.login.offsetWidth) / 2 - offset;
-        this.inputEmpty();
-        let timer = setTimeout(() => {
-          this.lineControl();
-          clearTimeout(timer);
-        }, delay);
+        this.$emit('changeToLogin',true);
+        this.activeChange('login')
       },
       registerActive() {
-        this.loginIsActive = false;
-        this.lineLeft = this.$refs.register.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.register.offsetWidth) / 2 + offset;
-        this.inputEmpty();
+        this.$emit('changeToLogin', false);
+        this.activeChange('register')
+      },
+      activeChange(position){
+        const offset = 15;
+        const delay = 600;
+        if (position === 'register'){
+          this.lineLeft = this.$refs.register.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.register.offsetWidth) / 2 + offset;
+        } else{
+          this.lineLeft = this.$refs.login.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.login.offsetWidth) / 2 - offset;
+        }
+        this.verCodeOrPassword = this.password = this.username = ''
         let timer = setTimeout(() => {
           this.lineControl();
           clearTimeout(timer);
         }, delay);
-      },
-      inputEmpty() {
-        this.$refs.usernameInput.value = this.$refs.passwordInput.value = this.$refs.verCodeInput.value = '';
       },
       /**
        *  use to control line position
@@ -130,13 +143,15 @@
           this.lineLeft = this.$refs.resetPassword.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.resetPassword.offsetWidth) / 2;
         }
       },
-
       LoginOrRegister() {
         if (this.loginIsActive) {
-          this.$router.push('/index');
+          this.$emit('login',this.username, this.password, this.verCodeOrPassword);
         } else {
-
+          this.$emit('register', this.username, this.password, this.verCodeOrPassword);
         }
+      },
+      getVerCode() {
+        this.verCodeSrc = `${this.verCodeUrl}?time=${Math.random()}`;
       }
     },
     created() {
@@ -144,8 +159,9 @@
         this.lineControl();
       })
     },
-    computed: {},
     mounted() {
+      this.verCodeSrc = this.verCodeUrl;
+      this.$forceUpdate();
       window.onresize = () => {
         this.lineControl();
       }
@@ -162,7 +178,7 @@
     width: 37.5%;
     min-height: 550px;
     min-width: 480px;
-    margin: 8% auto 0;
+    margin: 6% auto 0;
     box-shadow: darkgrey 10px 10px 30px 5px;
     position: relative;
     display: flex;

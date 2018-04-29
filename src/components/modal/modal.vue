@@ -82,7 +82,6 @@
         }
         .modal-body {
           padding: 15px;
-
         }
         .modal-footer {
           padding: 15px 0;

@@ -95,7 +95,7 @@
   .v-modal{
     z-index: 99998!important;
   }
-  .el-message-box__wrapper {
+  .el-message-box__wrapper, .el-message {
     z-index: 99999!important;
   }
 </style>

@@ -9,10 +9,8 @@ import $axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.use(particlesJS)
-Vue.prototype.$axios = $axios
-
-$axios.defaults.baseURL = 'https://www.easy-mock.com/mock/5ad368e0939d5749ebcc7e05/earlywarning';
-
+// Vue.prototype.$axios = $axios
+// $axios.defaults.baseURL = 'http://192.168.100.152:8080';
 
 /* eslint-disable no-new */
 new Vue({

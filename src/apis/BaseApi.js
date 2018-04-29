@@ -4,7 +4,8 @@ import FormData from 'form-data';
 import qs from 'qs';
 
 const clientConfig = {
-  baseURL: '/',
+  // baseURL: 'http://192.168.100.152:8080',
+  baseURL: '/api',
   timeout: 300000,
 };
 
@@ -100,8 +101,8 @@ export default class BaseApi {
     this.axiosClient = axios.create(clientConfig);
     this.axiosClient.interceptors.response.use(
       (response) => {
-        console.log(response, 'message');
-        if (response.data.code !== 200) {
+        console.log(response);
+        if (response.data.ret !== 200) {
           const reject = {
             type: status[response.data.code] || '',
             ...response.data,
@@ -112,6 +113,7 @@ export default class BaseApi {
         return response.data;
       },
       (err) => {
+        console.log(err)
         const reject = {
           type: status.sys,
           code: err.response.status,
