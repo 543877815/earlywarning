@@ -11,7 +11,7 @@
       <p class="intro">{{equipItem.description}}</p>
     </div>
     <transition name="modal">
-        <modal v-if="equipItem.id === $store.state.equipment.equipDetailOnShow" :equipItem="equipItem" :wrapperClass="'equipDetail'" @hideDetail="hideDetail">
+        <modal v-show="equipItem.id === $store.state.equipment.equipDetailOnShow" :equipItem="equipItem" :wrapperClass="'equipDetail'" @hideDetail="hideDetail">
           <div class="title" slot="header">仪器详情</div>
           <div class="intro" slot="body">
             <div class="img-wrapper">
@@ -52,6 +52,7 @@
     },
     methods:{
       showDetail(id){
+        this.$emit('hideMenu');
         this.$store.state.equipment.equipDetailOnShow = id;
         document.getElementsByTagName('body')[0].style.overflow = "hidden";
       },
@@ -69,7 +70,7 @@
 <style lang="scss" rel="stylesheet/scss">
   .equipItem {
     width: 500px;
-    width: 500px;
+    height: 500px;
     cursor: pointer;
     margin-bottom: 50px;
     position: relative;

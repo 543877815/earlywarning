@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <ul class="lists">
-      <li class="item" data-id="0" @click="switchEquip($el)">所有</li>
+      <li class="item" data-id="0" @click="switchEquip(all)">所有</li>
       <li class="item" v-for="equipListItem in $store.state.equipment.equipTypes" :data-id="equipListItem.id"
           @click="switchEquip(equipListItem)">{{equipListItem.name}}
       </li>
@@ -12,6 +12,14 @@
 
 <script type="text/ecmascript-6">
   export default {
+    data() {
+      return {
+        all: {
+          name: '所有',
+          id: 0,
+        }
+      }
+    },
     props: {
       menuShow: {
         default: false,
@@ -20,7 +28,9 @@
     },
     methods: {
       switchEquip(item) {
+        console.log(item);
         this.$store.commit("changeEquipActive", item);
+        this.$emit('changeEquipActive');
       }
     }
   };
@@ -28,8 +38,6 @@
 
 <style lang="scss" rel="stylesheet/scss">
   @import "../../common/sass/variables";
-
-
 
   .menu {
     text-align: center;
@@ -39,7 +47,7 @@
     max-height: calc(100% - #{$index-menubar-height});
     background-color: rgba(58, 59, 72, 0.7);
     overflow: auto;
-    z-index: 9999;
+    z-index: 999;
     color: #fff;
     font-size: 20px;
     position: absolute;

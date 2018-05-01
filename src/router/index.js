@@ -57,6 +57,16 @@ export default new Router({
       component: userNews
     },
     {
+      path: '/adminLogin',
+      name: 'adminLogin',
+      component: AdminLogin,
+    },
+    {
+      path: '/admin',
+      name: 'layout',
+      component: AdminBaseLayout,
+    },
+    {
       path: '/settings',
       name: 'settings',
       component: setting,
@@ -78,15 +88,6 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '/AdminLogin',
-      name: 'AdminLogin',
-      component: AdminLogin,
-    },
-    {
-      path: '/admin',
-      name: 'layout',
-      component: AdminBaseLayout,
-    }
+
   ]
 })

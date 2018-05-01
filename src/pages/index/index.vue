@@ -1,25 +1,53 @@
 <template>
   <div class="window">
-    <navigator ref="nav" :class="{'scrollDown':navChange}" :navChange="navChange"></navigator>
-    <Parallax :sectionHeight="100" style="position: relative" :speedFactor="0.1" ref="Masthead">
+    <navigator ref="nav"
+               :class="{'scrollDown':navChange}"
+               :navChange="navChange"></navigator>
+    <Parallax :sectionHeight="100"
+              style="position: relative"
+              :speedFactor="0.1"
+              ref="Masthead">
       <img src="../../assets/Jumbotron.jpg" width="100%" height="100%">
     </Parallax>
     <div class="content">
-      <menubar @menuControl="menuControl" ref="Menubar"></menubar>
+      <menubar @menuControl="menuControl"
+               @switchSort="switchSort"
+               ref="Menubar">
+      </menubar>
       <transition name="menuFade">
-        <Menu v-show="menuShow"></Menu>
+        <Menu v-show="menuShow"
+              @changeEquipActive="changeEquipActive">
+        </Menu>
       </transition>
-      <div class="equip-content" :class="{'menuShow':menuShow}">
-        <p class="equipEmpty" v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去
+      <div class="equip-content"
+           :class="{'menuShow':menuShow}">
+        <p class="equipEmpty"
+           v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去
           <router-link to="/management">仪器管理</router-link>
           添加仪器吧！
         </p>
-        <equipItem v-for="(item,index) in $store.state.equipment.equipOnShow" :equipItem="item"
-                   :key="index"></equipItem>
+        <equipItem v-for="(item,index) in $store.state.equipment.equipOnShow"
+                   :equipItem="item"
+                   :key="index"
+                   @hideMenu="hideMenu">
+        </equipItem>
       </div>
-      <showControl v-show="iconShow" :right="50" :bottom="115"></showControl>
-      <ScrollToY :scrollTargetY="iconShowHeight-navChangeHeight" :speed="4000" v-show="iconShow" :bottom="60"
-                 :right="50"></ScrollToY>
+      <div v-infinite-scroll="loadMore"
+           infinite-scroll-disabled="busy"
+           infinite-scroll-distance="20">
+        加载中...
+      </div>
+      <showControl v-show="iconShow"
+                   :right="50"
+                   :bottom="115">
+      </showControl>
+      <ScrollToY
+        :scrollTargetY="iconShowHeight-navChangeHeight"
+        :speed="4000"
+        v-show="iconShow"
+        :bottom="60"
+        :right="50">
+      </ScrollToY>
     </div>
     <Footer :position="'relative'"></Footer>
   </div>
@@ -36,8 +64,9 @@
   import ScrollToY from '../../components/scrollToY/scrollToY'
   import _ from 'underscore'
 
-  import Equipment from  '../../apis/Equipment'
+  import Equipment from '../../apis/Equipment'
   import User from '../../apis/User';
+
   const equipment = new Equipment();
   const user = new User();
 
@@ -51,9 +80,12 @@
         iconShowHeight: 0,
         iconShow: false,
         menuShow: false,
-        requestSize: 10,
-        requestPage: 1,
-        requestSort: "firstname"
+        size: 10,
+        page: 0,
+        sort: "id",
+        desc: false,
+        busy: true,
+        getByCid: false
       }
     },
     components: {
@@ -78,36 +110,109 @@
       this.throttleload = _.throttle(this.scrollControl, 100)
       window.addEventListener("scroll", this.throttleload, false);
 
-      if (!this.$store.state.user.id){
+      if (!this.$store.state.user.id) {
         this.getUserInfo();
       }
 
-      if (this.$store.state.equipment.equipTypes.length === 0){
+      if (this.$store.state.equipment.equipTypes.length === 0) {
         this.getCategories();
       }
+
+      this.getByCid ?
+        this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, false) :
+        this.getUserInstrument(this.page, this.size, this.sort, false);
     },
     created() {
 
-      // this.$axios.get("/getCategories").then((response) => {
-      //   if (response.data.ret === 200) {
-      //     this.$store.state.equipment.equipTypes = this.$store.state.equipment.equipTypes.concat(response.data.data);
-      //   }
-      // })
-
-      // this.$axios.get(`/getUserInstrument?sort=${this.requestSort}&size=${this.requestSize}&page=${this.requestPage}`).then((response) => {
-      //   if (response.data.ret === 200) {
-      //     this.requestPage++;
-      //     this.$store.state.equipment.equipOnShow =
-      //       this.$store.state.equipment.equipItems =
-      //         this.$store.state.equipment.equipItems.concat(response.data.data.content);
-      //   }
-      // })
     },
     methods: {
-      getCategories(){
+      loadMore() {
+        this.busy = true;
+        setTimeout(() => {
+          this.busy = false;
+          this.page++;
+          this.getByCid ?
+            this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, true) :
+            this.getUserInstrument(this.page, this.size, this.sort, true);
+        }, 500);
+      },
+      changeEquipActive() {
+        this.page = 0;
+        this.size = 10;
+        this.$store.state.equipment.equipActive.id === 0 ? this.getByCid = false : this.getByCid = true;
+        this.getByCid ?
+          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, false) :
+          this.getUserInstrument(this.page, this.size, this.sort, false);
+      },
+      getInstrumentByCid(page, size, cid, sort = 'id', flag = false) {
+        equipment
+          .getInstrumentByCid({
+            page: page,
+            size: size,
+            cid: cid,
+            sort: sort,
+          })
+          .then((res) => {
+            if (flag) {
+              this.$store.state.equipment.equipOnShow =
+                this.$store.state.equipment.equipItems =
+                  this.$store.state.equipment.equipOnShow.concat(res.data.content)
+              if (res.data.content.length === 0) {
+                this.busy = true;
+              } else {
+                this.busy = false;
+              }
+            } else {
+              this.$store.state.equipment.equipOnShow =
+                this.$store.state.equipment.equipItems =
+                  res.data.content;
+              this.busy = false;
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      switchSort(desc) {
+        this.page = 0;
+        this.size = 10;
+        desc === true ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`;
+        this.getByCid ?
+          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, false) :
+          this.getUserInstrument(this.page, this.size, this.sort, false);
+      },
+      getUserInstrument(page, size, sort = 'id', flag = false) {
+        equipment
+          .getUserInstrument({
+            size: size,
+            sort: sort,
+            page: page
+          })
+          .then((res) => {
+            if (flag) {
+              this.$store.state.equipment.equipOnShow =
+                this.$store.state.equipment.equipItems =
+                  this.$store.state.equipment.equipOnShow.concat(res.data.content)
+              if (res.data.content.length === 0) {
+                this.busy = true
+              } else {
+                this.busy = false;
+              }
+            } else {
+              this.$store.state.equipment.equipOnShow =
+                this.$store.state.equipment.equipItems =
+                  res.data.content;
+              this.busy = false;
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      getCategories() {
         equipment
           .getCategories()
-          .then((res)=>{
+          .then((res) => {
             this.$store.state.equipment.equipTypes = res.data;
           })
           .catch((err) => {
@@ -139,12 +244,14 @@
       menuControl() {
         this.menuShow = !this.menuShow;
       },
-
+      hideMenu(){
+        this.menuShow = false;
+      },
       getUserInfo() {
         user.getUserInfo()
           .then((res) => {
             // 如果邮箱为空或者未激活则提醒用户
-            if (res.data.isEmailLocked === 0 || res.data.email === ''){
+            if (res.data.isEmailLocked === 0 || res.data.email === '') {
               this.$notify({
                 title: '警告',
                 message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',

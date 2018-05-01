@@ -126,13 +126,13 @@
           }
         }
         reader.onerror = () => {
-          console.log('读取文件出错!')
+          this.$message.error('读取文件出错!')
         }
         reader.onprogress = (event) => {
           console.log('读取中...')
         }
         reader.onload = () => {
-          console.log('读取文件成功!')
+          this.$message.success('读取文件成功!')
         }
       }
     },

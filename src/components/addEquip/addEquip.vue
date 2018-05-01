@@ -18,7 +18,7 @@
         <el-table
           highlight-current-row
           @current-change="handleCurrentChange"
-          :data="tableData"
+          :data="$store.state.equipment.equipModelList"
           style="width: 100%"
           slot="body">
           <el-table-column
@@ -36,7 +36,6 @@
             width="120">
             <template slot-scope="scope">
               <el-button
-                @click.native.prevent="deleteRow(scope.$index, scope.row)"
                 type="text"
                 size="small">
                 选中
@@ -45,11 +44,12 @@
           </el-table-column>
         </el-table>
         <el-pagination slot="body"
-          background
-          layout="prev, pager, next"
-          :total="100">
+                       background
+                       layout="prev, pager, next"
+                       :total="totalPage">
         </el-pagination>
         <button class="btn btn-primary" slot="footer" @click="showTemplate">确定</button>
+        <button class="btn btn-default" slot="footer" @click="showTypes">返回</button>
       </Modal>
     </transition>
     <transition name="modal">
@@ -57,28 +57,40 @@
         <div class="title" slot="header">仪器详情</div>
         <div class="intro" slot="body">
           <div class="img-wrapper">
-            <img src="/src/assets/logo.png" width="300" height="300">
+            <img :src="form.picUrl" width="300" height="300">
+            <input type="file" accept="*image/*" @click.stop="addImg($event)">
           </div>
           <div class="intro-wrapper">
             <div class="name">
-              仪器名称
-              <span class="id">ID：</span>
+              <input type="text" :placeholder="currentRow.name" v-model="form.name">
+              <span class="id">ID：{{currentRow.thresholdValue}}</span>
             </div>
-            <div class="insType">型号：</div>
-            <div class="param">参数：</div>
-            <div class="detail-intro">仪器简介：</div>
-            <div class="thresholdValue">告警阈值：</div>
-            <div class="present-thresholdValue">当前阈值：</div>
+            <div class="insType">型号：
+              <input type="text" :placeholder="currentRow.insType" v-model="form.insType">
+            </div>
+            <div class="param">参数：
+              <input type="text" :placeholder="currentRow.param" v-model="form.param">
+            </div>
+            <div class="maturity">使用年限：
+              <input type="text" :placeholder="currentRow.durableYears" v-model="form.durableYears">
+            </div>
+            <div class="detail-intro">仪器简介：
+              <textarea cols="60" rows="10" :placeholder="currentRow.description" v-model="form.description"></textarea>
+            </div>
+            <div class="thresholdValue">告警阈值：
+              <input type="number" :placeholder="currentRow.thresholdValue" v-model.number="form.thresholdValue">
+            </div>
           </div>
         </div>
-        <button class="btn btn-primary" slot="footer" @click="hideTemplate">创建</button>
+        <button class="btn btn-primary" slot="footer" @click="createEquip">创建</button>
+        <button class="btn btn-default" slot="footer" @click="showTemplateList">返回</button>
       </Modal>
     </transition>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import Modal from '../../components/modal/modal'
-
+  import {createObjectURL} from "../../common/js/createObjectURL";
   export default {
     data() {
       return {
@@ -86,24 +98,20 @@
         template: false,
         templateList: false,
         radio: 1,
-        tableData: [{
-          id: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          id: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          id: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          id: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
-        currentRow: null
+        currentRow: null,
+        page: 1,
+        pageSize: 10,
+        totalPage: 1,
+        tableData: [],
+        form: {
+          name: '',
+          insType: '',
+          param: '',
+          durableYears: '',
+          description: '',
+          picUrl: '',
+          thresholdValue: ''
+        }
       }
     },
     components: {
@@ -120,13 +128,37 @@
       }
     },
     methods: {
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
+      addImg($event) {
+        $event.target.removeEventListener('change', this.loadImg)
+        $event.target.addEventListener('change', this.loadImg)
       },
-      showTypes() {
-        this.messageBox = true;
-        document.getElementsByTagName('body')[0].style.overflow = "hidden";
-
+      loadImg(event) {
+        console.log(event.target.files);
+        let files = event.target.files,
+          reader = new FileReader(),
+          url = createObjectURL(files[0]);
+        if (url) {
+          if (/image/.test(files[0].type)) {
+            this.form.picUrl = url;
+            reader.readAsDataURL(files[0]);
+          } else {
+            this.$message.error('不是图片')
+          }
+        }
+        reader.onerror = () => {
+          this.$message.error('读取文件出错!')
+        }
+        reader.onprogress = (event) => {
+          console.log('读取中...')
+        }
+        reader.onload = () => {
+          this.$message.success('读取文件成功!')
+        }
+      },
+      setPage(page, pageSize, totalPage) {
+        this.page = page;
+        this.pageSize = pageSize;
+        this.totalPage = totalPage
       },
       hideAll() {
         this.messageBox =
@@ -134,20 +166,36 @@
             this.templateList = false;
         document.getElementsByTagName('body')[0].style.overflow = "auto";
       },
-      hideTypes() {
-        this.messageBox = false;
-        document.getElementsByTagName('body')[0].style.overflow = "auto";
+      showTypes() {
+        this.messageBox = true;
+        this.template =
+          this.templateList = false;
+        document.getElementsByTagName('body')[0].style.overflow = "hidden";
       },
       showTemplate() {
-        this.template = true;
-        this.templateList = false;
-        this.$emit('getModelInstrumentByCid', this.radio);
+        if (this.currentRow) {
+          this.template = true;
+          this.messageBox =
+            this.templateList = false;
+          this.form.picUrl = this.currentRow.picUrl;
+        } else {
+          this.$message.warning(`请选择一种类型！`)
+        }
       },
-      hideTemplate() {
-        this.template = false;
-        document.getElementsByTagName('body')[0].style.overflow = "auto";
+      showTemplateList() {
+        this.template =
+          this.messageBox = false;
+        this.templateList = true;
+        this.$emit('getModelInstrumentByCid', this.radio, this.page, this.pageSize);
+      },
+      handleCurrentChange(val) {
+        this.currentRow = val;
+      },
+      createEquip() {
+        this.$emit('createEquip', this.currentRow, this.form)
       }
-    }
+    },
+    computed: {}
   }
 </script>
 
@@ -187,7 +235,7 @@
         }
       }
     }
-    .EquiptemplateList{
+    .EquiptemplateList {
       .modal-dialog {
         top: 50%;
         transform: translateY(-50%);
@@ -195,7 +243,7 @@
         width: 550px;
         text-align: left;
         cursor: default;
-        .el-pagination{
+        .el-pagination {
           margin-top: 20px;
         }
       }
@@ -219,6 +267,19 @@
             display: flex;
             flex-flow: row;
             justify-content: space-between;
+            .img-wrapper{
+              position: relative;
+              input {
+                cursor: pointer;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                outline: 0;
+                opacity: 0;
+              }
+            }
             .intro-wrapper {
               width: 568px;
               margin-left: 30px;
@@ -236,11 +297,16 @@
                   bottom: 5px;
                 }
               }
-              .insType, .param, .detail-intro, .thresholdValue, .present-thresholdValue {
+              .insType, .param, .maturity, .detail-intro, .thresholdValue, .present-thresholdValue {
                 margin: 8px 0;
               }
               .detail-intro {
+                display: flex;
+                flex-flow: row;
                 line-height: 1.2em;
+                textarea{
+                  border-top: 1px solid #ccc;
+                }
               }
             }
           }

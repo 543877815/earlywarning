@@ -14,13 +14,13 @@
           <img src="./icon-search.png" width="30px" height="30px">
         </div>
         <div class="class">
-          {{$store.state.equipment.equipActive}}:
+          {{$store.state.equipment.equipActive.name}}:
         </div>
       </div>
     </div>
     <div class="right">
       <div class="form">方式：默认排序</div>
-      <div class="sort" @click="switchSort">名称排序</div>
+      <div class="sort" @click="switchSort">ID排序</div>
       <div class="triangle" :class="{down:triangleDown,up:!triangleDown}"></div>
     </div>
   </div>
@@ -33,13 +33,13 @@
         triangleDown: false
       }
     },
-    components:{
-    },
+    components: {},
     methods: {
       switchSort() {
         this.triangleDown = !this.triangleDown;
+        this.$emit('switchSort', this.triangleDown);
       },
-      menuControl(){
+      menuControl() {
         this.$emit("menuControl");
       }
     }
@@ -123,7 +123,6 @@
         }
       }
     }
-
 
   }
 </style>

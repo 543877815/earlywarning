@@ -1,9 +1,13 @@
 const state = {
-  equipActive: '所有',
+  equipActive: {
+    name: '所有',
+    id: 0,
+  },
   equipTypes: [],
   equipOnShow: [],
   equipItems: [],
-  equipDetailOnShow: null
+  equipDetailOnShow: null,
+  equipModelList:[]
 }
 
 const getters = {
@@ -25,10 +29,8 @@ const getters = {
 }
 
 const mutations = {
-  changeEquipActive(state, item) {
-    // console.log(getters.equipTypeLists(item.id));
-    // state.equipOnShow = getters.equipTypeLists(item.id);
-    state.equipActive = item.name;
+  changeEquipActive(state, name) {
+    state.equipActive = name;
   },
 }
 

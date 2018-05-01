@@ -10,4 +10,19 @@ export default class User extends BaseApi {
     const url = '/getModelInstrumentByCid';
     return this.get(url, data);
   }
+
+  createInstrument(data){
+    const url = '/createInstrument';
+    return this.post(url, data);
+  }
+
+  getUserInstrument(data){
+     const url = '/getUserInstrument';
+     return this.get(url, data);
+  }
+
+  getInstrumentByCid(data){
+    const url = '/getInstrumentByCid';
+    return this.get(url,data);
+  }
 }

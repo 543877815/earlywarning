@@ -13,8 +13,7 @@
             <slot name="body"></slot>
           </div>
           <div class="modal-footer">
-            <slot name="footer"></slot>
-            <button type="button" class="btn btn-default" @click.stop.prevent="hideDetail">关闭</button>
+            <slot name="footer"></slot><button type="button" class="btn btn-default" @click.stop.prevent="hideDetail">关闭</button>
           </div>
         </div>
       </div>
@@ -50,11 +49,13 @@
 <style lang="scss" rel="stylesheet/scss">
   .modal {
     position: fixed;
+    width: 100%;
+    height: 100%;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 9999;
+    z-index: 10000;
     background-color: rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     overflow-x: hidden;
@@ -105,6 +106,7 @@
             display: inline-block;
             padding: 6px 12px;
             margin-bottom: 0;
+            margin-left: 4px;
             font-size: 14px;
             font-weight: 400;
             line-height: 1.42857143;

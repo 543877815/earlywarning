@@ -49,6 +49,10 @@
         this.activeTips = true;
       },
       updateEmail() {
+        if (!this.email || !/^[0-9A-Za-z\-_.]+@[0-9A-Za-z\-_]+(\.[0-9A-Za-z\-_]+)+$/.test(this.email)) {
+          this.$message.error('邮箱有误');
+          return;
+        }
         user
           .updateEmail({
             email: this.email

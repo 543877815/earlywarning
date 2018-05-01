@@ -5,10 +5,12 @@ import App from './App'
 import router from './router'
 import particlesJS from 'particles.js'
 import store from './store'
-import $axios from 'axios'
+import infiniteScroll from 'vue-infinite-scroll'
 
 Vue.config.productionTip = false
 Vue.use(particlesJS)
+Vue.use(infiniteScroll)
+
 // Vue.prototype.$axios = $axios
 // $axios.defaults.baseURL = 'http://192.168.100.152:8080';
 
