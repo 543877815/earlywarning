@@ -6,22 +6,22 @@
         <div class="oldPassword-wrapper">
           <div class="item">旧的密码：</div>
           <div class="input">
-            <input type="text" class="oldPassword">
+            <input type="password" class="oldPassword" v-model="oldPassword">
           </div>
         </div>
         <div class="newPassword-wrapper">
           <div class="item">新的密码：</div>
           <div class="input">
-            <input type="text" class="newPassword" readonly>
+            <input type="password" class="newPassword" v-model="newPassword">
           </div>
         </div>
         <div class="newPassword-wrapper">
           <div class="item">确认新密码：</div>
           <div class="input">
-            <input type="text" class="newPassword">
+            <input type="password" class="newPassword" v-model="newPasswordRepeat">
           </div>
         </div>
-        <div class="change">更改密码</div>
+        <div class="change" @click="changePassword">更改密码</div>
       </div>
     </div>
   </div>
@@ -30,13 +30,57 @@
 <script type="text/ecmascript-6">
   import Header from '../header/header'
   import {heightSetting} from "../../common/js/heightSetting";
+  import User from '../../apis/User';
+
+  const user = new User();
 
   export default {
     data() {
-      return {}
+      return {
+        oldPassword: '',
+        newPassword: '',
+        newPasswordRepeat: ''
+      }
     },
     components: {
       Header
+    },
+    methods: {
+      changePassword() {
+        if (!this.oldPassword || !this.newPassword || !this.newPasswordRepeat) {
+          this.$message.error(`输入不能为空！`);
+          return;
+        }
+        if (this.newPassword !== this.newPasswordRepeat) {
+          this.$message.error('两次输入密码不一致！')
+          return;
+        }
+        if (!/^.*[a-zA-Z]+.*$/.test(this.newPassword) ||
+          !/^.*[0-9]+.*$/.test(this.newPassword) ||
+          !/^.*[/^/$/.//,;:'!@#%&/*/|/?/+/(/)/[/\]/{/}]+.*$/.test(this.newPassword) ||
+          this.newPassword.length <= 5 ||
+          this.newPassword.length >= 17) {
+          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间');
+          return;
+        }
+        console.log('222')
+        user
+          .updatePassword({
+            oldPassword: this.oldPassword,
+            newPassword: this.newPassword
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`修改密码成功！`)
+            } else {
+              this.$message.error(`提示：${res.msg}`);
+            }
+            console.log(res);
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      }
     },
     mounted() {
       document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage';

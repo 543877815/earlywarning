@@ -6,14 +6,19 @@
         <div class="presentEmail-wrapper">
           <div class="item">当前邮箱：</div>
           <div class="input">
-            <input type="text" class="presentEmail" readonly placeholder="543877815@qq.com">
+            <input type="text" class="presentEmail" readonly
+                   :placeholder="`${$store.state.user.email} ${$store.getters.isEmailLocked}`">
+            <div class="unlock" @click="unlockEmail" v-if="$store.state.user.isEmailLocked === 'LOCKED'">去激活</div>
           </div>
         </div>
         <div class="newEmail-wrapper">
           <div class="item">新的邮箱：</div>
           <div class="input">
-            <input type="text" class="newEmail">
-            <div class="change">更改邮箱</div>
+            <input type="text" class="newEmail" v-model="email">
+            <div class="change" @click.stop.prevent="updateEmail">
+              更改邮箱
+              <span class="tips el-icon-back" v-show="activeTips">点击此处以激活</span>
+            </div>
           </div>
         </div>
       </div>
@@ -24,13 +29,39 @@
 <script type="text/ecmascript-6">
   import Header from '../header/header'
   import {heightSetting} from "../../common/js/heightSetting";
+  import User from '../../apis/User';
+
+  const user = new User();
 
   export default {
     data() {
-      return {}
+      return {
+        email: '',
+        activeTips: false
+      }
     },
     components: {
       Header
+    },
+    methods: {
+      unlockEmail() {
+        this.email = this.$store.state.user.email;
+        this.activeTips = true;
+      },
+      updateEmail() {
+        user
+          .updateEmail({
+            email: this.email
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success'){
+              this.$message.success(`邮箱发送成功！`)
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      }
     },
     mounted() {
       this.$nextTick(() => {
@@ -64,6 +95,13 @@
             width: 100%;
             margin-bottom: 30px;
             position: relative;
+            .unlock {
+              position: absolute;
+              right: 30px;
+              top: 50%;
+              transform: translateY(-50%);
+              cursor: pointer;
+            }
             input {
               height: 100%;
               width: 100%;
@@ -85,6 +123,18 @@
           padding: 10px;
           text-align: center;
           cursor: pointer;
+          position: relative;
+          .tips {
+            position: absolute;
+            cursor: text;
+            font-size: 14px;
+            color: black;
+            width: 100%;
+            line-height: 64px;
+            height: 100%;
+            left: 100%;
+            top: 0;
+          }
         }
       }
     }

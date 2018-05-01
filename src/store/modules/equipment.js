@@ -1,9 +1,6 @@
 const state = {
   equipActive: '所有',
-  equipTypes: [{
-    id: 0,
-    name: '所有'
-  }],
+  equipTypes: [],
   equipOnShow: [],
   equipItems: [],
   equipDetailOnShow: null

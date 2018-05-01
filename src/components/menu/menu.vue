@@ -1,6 +1,7 @@
 <template>
   <div class="menu">
     <ul class="lists">
+      <li class="item" data-id="0" @click="switchEquip($el)">所有</li>
       <li class="item" v-for="equipListItem in $store.state.equipment.equipTypes" :data-id="equipListItem.id"
           @click="switchEquip(equipListItem)">{{equipListItem.name}}
       </li>

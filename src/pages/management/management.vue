@@ -3,7 +3,7 @@
     <navIndex></navIndex>
     <el_NavMenu></el_NavMenu>
     <el_Table></el_Table>
-    <addEquip :right="50" :bottom="170"></addEquip>
+    <addEquip :right="50" :bottom="170" @getModelInstrumentByCid="getModelInstrumentByCid"></addEquip>
     <scrollToY :right="50" :bottom="115"></scrollToY>
     <showControl :right="50" :bottom="60"></showControl>
     <Footer></Footer>
@@ -19,6 +19,8 @@
   import addEquip from '../../components/addEquip/addEquip'
   import equipDetail from '../../components/equipDetail/equipDetail'
   import scrollToY from '../../components/scrollToY/scrollToY'
+  import Equipment from  '../../apis/Equipment'
+  const equipment = new Equipment();
 
   export default {
     components: {
@@ -31,9 +33,38 @@
       equipDetail,
       scrollToY
     },
-    methods: {},
+    methods: {
+      getCategories(){
+        equipment
+          .getCategories()
+          .then((res)=>{
+            this.$store.state.equipment.equipTypes = res.data;
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      getModelInstrumentByCid(equipmentId){
+        equipment
+          .getModelInstrumentByCid({
+            id: equipmentId,
+            page: 0,
+            size: 10
+          })
+          .then((res)=>{
+
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      }
+    },
     mounted(){
-      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'longPage'
+      document.getElementsByTagName('body')[0].className =
+        document.getElementsByTagName('html')[0].className = 'longPage';
+      if (this.$store.state.equipment.equipTypes.length === 0){
+        this.getCategories();
+      }
     }
   };
 </script>

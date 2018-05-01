@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="right">
-      <div class="role">当前角色：用户</div>
+      <div class="role">当前角色：{{$store.state.user.roles[0].description}}</div>
       <router-link to="/management">
         <div class="management">仪器管理</div>
       </router-link>
@@ -21,8 +21,8 @@
         <div class="record">检修记录</div>
       </router-link>
       <div class="personal-info">
-        <span class="greeting">你好，<span class="name">李逢君</span></span>
-        <img src="./avatar.png" width="45" height="45">
+        <span class="greeting">你好，<span class="name">{{$store.state.user.name}}</span></span>
+        <img :src="$store.state.user.avatar"  width="45" height="45">
         <div class="info-panel" :class="{'navChange':navChange}">
           <div class="exit" @click="exit">
             <div class="icon-wrapper">
@@ -32,11 +32,11 @@
           </div>
           <div class="up">
             <div class="avatar-wrapper">
-              <img src="./avatar.png" width="110" height="110">
+              <img :src="$store.state.user.avatar" width="110" height="110">
             </div>
             <div class="user-info">
-              <div class="name">李逢君</div>
-              <div class="id">No:<span>000001</span></div>
+              <div class="name">{{$store.state.user.name}}</div>
+              <div class="id">No:<span>{{$store.state.user.id}}</span></div>
             </div>
           </div>
           <div class="down">
@@ -200,15 +200,15 @@
           }
           .trends {
             cursor: pointer;
-            padding: 0!important;
-            .el-button{
+            padding: 0 !important;
+            .el-button {
               padding: 4px 20px !important;
               background-color: darkgrey;
               color: #fff;
-              &:hover{
+              &:hover {
                 outline: 0;
               }
-              span{
+              span {
                 font-size: 20px;
               }
             }

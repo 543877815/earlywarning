@@ -21,7 +21,7 @@
           <img src="./icon_password.jpg" width="40px" height="40px">
         </div>
         <div class="input-wrapper">
-          <input type="text" :placeholder="loginIsActive ? '用户密码' : '请输入密码'" v-model="password">
+          <input type="password" :placeholder="loginIsActive ? '用户密码' : '请输入密码'" v-model="password">
           <div class="forgetPassword" v-show="loginIsActive" @click="forgetPasswordActive">忘记密码？</div>
         </div>
       </div>
@@ -30,7 +30,7 @@
           <img src="./icon_vercode.jpg" width="40px" height="40px">
         </div>
         <div class="input-wrapper">
-          <input type="text" :placeholder="loginIsActive ? '验证码' : '再次输入密码'" v-model="verCodeOrPassword">
+          <input :type="loginIsActive ? 'type' : 'password'" :placeholder="loginIsActive ? '验证码' : '再次输入密码'" v-model="verCodeOrPassword" @keyup.enter="LoginOrRegister">
           <img :src="verCodeSrc" width="112" height="50" class="vercode" v-show="loginIsActive" @click="getVerCode">
         </div>
       </div>
@@ -83,8 +83,8 @@
         verCodeSrc: '',
         lineLeft: 240,
         forgetPassword: false,
-        username: '',
-        password: '',
+        username: 'test',
+        password: '123aaa.',
         verCodeOrPassword: '',
       }
     },

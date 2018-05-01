@@ -1,24 +1,59 @@
 <template>
-  <div class="addEquip-wrapper" :style="{bottom: bottom+'px', right: right+'px'}" @click="showTypes">
+  <div class="addEquip-wrapper" :style="{bottom: bottom+'px', right: right+'px'}" @click.prevent.stop="showTypes">
     <img src="./plus.png" width="34" height="30">
     <transition name="modal">
-      <Modal :wrapperClass="'messagebox'" v-if="messageBox" @hideDetail="hideTypes">
-        <div class="title" slot="header">创建仪器类型</div>
+      <Modal :wrapperClass="'EquipmentType'" v-if="messageBox" @hideDetail="hideAll">
+        <div class="title" slot="header">仪器类型</div>
         <div slot="body" class="radio">
-          <el-radio v-model="radio" label="1" border>备选项1</el-radio>
-          <el-radio v-model="radio" label="2" border>备选项2</el-radio>
-          <el-radio v-model="radio" label="3" border>备选项2</el-radio>
-          <el-radio v-model="radio" label="4" border>备选项2</el-radio>
-          <el-radio v-model="radio" label="5" border>备选项2</el-radio>
-          <el-radio v-model="radio" label="6" border>备选项2</el-radio>
-          <el-radio v-model="radio" label="7" border>备选项2</el-radio>
-          <el-radio v-model="radio" label="8" border>备选项2</el-radio>
+          <el-radio v-model="radio" :label="item.id" v-for="(item, index) in $store.state.equipment.equipTypes" border
+                    size="medium" :key="item.name">{{item.name}}
+          </el-radio>
         </div>
-        <button class="btn btn-primary" slot="footer" @click.prevent.stop="showTemplate">confirm</button>
+        <button class="btn btn-primary" slot="footer" @click.prevent.stop="showTemplateList">确定</button>
       </Modal>
     </transition>
     <transition name="modal">
-      <Modal :wrapperClass="'Equiptemplate'" v-if="template" @hideDetail="hideTemplate">
+      <Modal :wrapperClass="'EquiptemplateList'" v-if="templateList" @hideDetail="hideAll">
+        <div class="title" slot="header">模板列表</div>
+        <el-table
+          highlight-current-row
+          @current-change="handleCurrentChange"
+          :data="tableData"
+          style="width: 100%"
+          slot="body">
+          <el-table-column
+            prop="id"
+            label="ID"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="仪器名称"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="120">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="deleteRow(scope.$index, scope.row)"
+                type="text"
+                size="small">
+                选中
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination slot="body"
+          background
+          layout="prev, pager, next"
+          :total="100">
+        </el-pagination>
+        <button class="btn btn-primary" slot="footer" @click="showTemplate">确定</button>
+      </Modal>
+    </transition>
+    <transition name="modal">
+      <Modal :wrapperClass="'Equiptemplate'" v-if="template" @hideDetail="hideAll">
         <div class="title" slot="header">仪器详情</div>
         <div class="intro" slot="body">
           <div class="img-wrapper">
@@ -36,7 +71,7 @@
             <div class="present-thresholdValue">当前阈值：</div>
           </div>
         </div>
-        <button class="btn btn-primary" slot="footer" @click="hideTemplate">submit</button>
+        <button class="btn btn-primary" slot="footer" @click="hideTemplate">创建</button>
       </Modal>
     </transition>
   </div>
@@ -49,7 +84,26 @@
       return {
         messageBox: false,
         template: false,
-        radio: '1',
+        templateList: false,
+        radio: 1,
+        tableData: [{
+          id: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          id: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          id: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          id: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }],
+        currentRow: null
       }
     },
     components: {
@@ -66,26 +120,32 @@
       }
     },
     methods: {
+      deleteRow(index, rows) {
+        rows.splice(index, 1);
+      },
       showTypes() {
         this.messageBox = true;
         document.getElementsByTagName('body')[0].style.overflow = "hidden";
 
       },
+      hideAll() {
+        this.messageBox =
+          this.template =
+            this.templateList = false;
+        document.getElementsByTagName('body')[0].style.overflow = "auto";
+      },
       hideTypes() {
         this.messageBox = false;
         document.getElementsByTagName('body')[0].style.overflow = "auto";
-
       },
-      showTemplate(){
-        this.messageBox = false;
+      showTemplate() {
         this.template = true;
-        document.getElementsByTagName('body')[0].style.overflow = "hidden";
-
+        this.templateList = false;
+        this.$emit('getModelInstrumentByCid', this.radio);
       },
-      hideTemplate(){
+      hideTemplate() {
         this.template = false;
         document.getElementsByTagName('body')[0].style.overflow = "auto";
-
       }
     }
   }
@@ -107,7 +167,7 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    .messagebox {
+    .EquipmentType {
       .modal {
         .modal-dialog {
           top: 50%;
@@ -127,11 +187,24 @@
         }
       }
     }
+    .EquiptemplateList{
+      .modal-dialog {
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0 auto;
+        width: 550px;
+        text-align: left;
+        cursor: default;
+        .el-pagination{
+          margin-top: 20px;
+        }
+      }
+    }
     .Equiptemplate {
       text-align: left;
       cursor: default;
-      .modal{
-        .modal-dialog{
+      .modal {
+        .modal-dialog {
           margin: 0 auto;
           top: 30%;
           transform: translateY(-50%);

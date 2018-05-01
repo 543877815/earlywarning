@@ -16,6 +16,9 @@ import management from '@/pages/management/management'
 import history from '@/pages/history/history'
 import userNews from '@/pages/userNews/userNews'
 
+//管理员
+import AdminLogin from '@/pages/AdminLogin/AdminLogin'
+import AdminBaseLayout from '@/components/AdminBaseLayout/AdminBaseLayout'
 Vue.use(Element)
 Vue.use(Router)
 
@@ -60,17 +63,30 @@ export default new Router({
       children: [
         {
           path: 'baseInfo',
+          name: 'baseInfo',
           component: baseInfo
         },
         {
           path: 'changePassword',
+          name: 'changePassword',
           component: changePassword
         },
         {
           path: 'emailSetting',
+          name: 'emailSetting',
           component: emailSetting
         }
       ]
+    },
+    {
+      path: '/AdminLogin',
+      name: 'AdminLogin',
+      component: AdminLogin,
+    },
+    {
+      path: '/admin',
+      name: 'layout',
+      component: AdminBaseLayout,
     }
   ]
 })

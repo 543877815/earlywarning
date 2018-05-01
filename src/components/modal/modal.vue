@@ -14,7 +14,7 @@
           </div>
           <div class="modal-footer">
             <slot name="footer"></slot>
-            <button type="button" class="btn btn-default" @click.stop.prevent="hideDetail">Close</button>
+            <button type="button" class="btn btn-default" @click.stop.prevent="hideDetail">关闭</button>
           </div>
         </div>
       </div>

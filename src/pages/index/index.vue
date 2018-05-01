@@ -10,8 +10,12 @@
         <Menu v-show="menuShow"></Menu>
       </transition>
       <div class="equip-content" :class="{'menuShow':menuShow}">
-        <p class="equipEmpty" v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去<router-link to="/management">仪器管理</router-link>添加仪器吧！</p>
-        <equipItem v-for="(item,index) in $store.state.equipment.equipOnShow" :equipItem="item" :key="index"></equipItem>
+        <p class="equipEmpty" v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去
+          <router-link to="/management">仪器管理</router-link>
+          添加仪器吧！
+        </p>
+        <equipItem v-for="(item,index) in $store.state.equipment.equipOnShow" :equipItem="item"
+                   :key="index"></equipItem>
       </div>
       <showControl v-show="iconShow" :right="50" :bottom="115"></showControl>
       <ScrollToY :scrollTargetY="iconShowHeight-navChangeHeight" :speed="4000" v-show="iconShow" :bottom="60"
@@ -31,6 +35,11 @@
   import showControl from '../../components/showControl/showControl'
   import ScrollToY from '../../components/scrollToY/scrollToY'
   import _ from 'underscore'
+
+  import Equipment from  '../../apis/Equipment'
+  import User from '../../apis/User';
+  const equipment = new Equipment();
+  const user = new User();
 
   export default {
     data() {
@@ -66,29 +75,45 @@
       this.navHeight = this.$refs.nav.$el.offsetHeight;
       this.iconShowHeight = this.$refs.Masthead.$el.offsetHeight;
 
-    },
-    created() {
-
       this.throttleload = _.throttle(this.scrollControl, 100)
       window.addEventListener("scroll", this.throttleload, false);
 
-      this.$axios.get("/getCategories").then((response) => {
-        if (response.data.ret === 200) {
-          this.$store.state.equipment.equipTypes = this.$store.state.equipment.equipTypes.concat(response.data.data);
-        }
-      })
+      if (!this.$store.state.user.id){
+        this.getUserInfo();
+      }
 
+      if (this.$store.state.equipment.equipTypes.length === 0){
+        this.getCategories();
+      }
+    },
+    created() {
 
-      this.$axios.get(`/getUserInstrument?sort=${this.requestSort}&size=${this.requestSize}&page=${this.requestPage}`).then((response) => {
-        if (response.data.ret === 200) {
-          this.requestPage++;
-          this.$store.state.equipment.equipOnShow =
-            this.$store.state.equipment.equipItems =
-              this.$store.state.equipment.equipItems.concat(response.data.data.content);
-        }
-      })
+      // this.$axios.get("/getCategories").then((response) => {
+      //   if (response.data.ret === 200) {
+      //     this.$store.state.equipment.equipTypes = this.$store.state.equipment.equipTypes.concat(response.data.data);
+      //   }
+      // })
+
+      // this.$axios.get(`/getUserInstrument?sort=${this.requestSort}&size=${this.requestSize}&page=${this.requestPage}`).then((response) => {
+      //   if (response.data.ret === 200) {
+      //     this.requestPage++;
+      //     this.$store.state.equipment.equipOnShow =
+      //       this.$store.state.equipment.equipItems =
+      //         this.$store.state.equipment.equipItems.concat(response.data.data.content);
+      //   }
+      // })
     },
     methods: {
+      getCategories(){
+        equipment
+          .getCategories()
+          .then((res)=>{
+            this.$store.state.equipment.equipTypes = res.data;
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       /**
        * minitor the icon show/hidden
        * monitor thr nav color black/Transparent
@@ -114,6 +139,33 @@
       menuControl() {
         this.menuShow = !this.menuShow;
       },
+
+      getUserInfo() {
+        user.getUserInfo()
+          .then((res) => {
+            // 如果邮箱为空或者未激活则提醒用户
+            if (res.data.isEmailLocked === 0 || res.data.email === ''){
+              this.$notify({
+                title: '警告',
+                message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
+                type: 'warning',
+                offset: 100
+              });
+            }
+            this.$store.state.user.username = res.data.username;
+            this.$store.state.user.name = res.data.name;
+            this.$store.state.user.id = res.data.id;
+            this.$store.state.user.email = res.data.email;
+            this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
+            this.$store.state.user.description = res.data.description;
+            this.$store.state.user.avatar = res.data.avatar;
+            this.$store.state.user.roles = res.data.roles;
+
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      }
     },
     beforeDestroy() {
       window.removeEventListener("scroll", this.throttleload, false);

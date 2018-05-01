@@ -56,7 +56,7 @@
       height: 100% !important;
       min-width: 1280px;
       min-height: 800px;
-      max-width: 1856px;
+      max-width: 1920px;
       padding: 0;
       margin: 0;
       position: relative;
@@ -84,7 +84,7 @@
       width: 100%;
       height: 100%;
       overflow-x: hidden;
-      max-width: 1856px;
+      max-width: 1920px;
       min-width: 1280px;
       min-height: 800px;
       padding: 0;

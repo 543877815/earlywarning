@@ -11,8 +11,7 @@
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
-          :collapse="isCollapse"
-        >
+          :collapse="isCollapse">
           <el-menu-item v-for="(item, index) in $store.state.equipment.equipTypes" v-if="item.id!==0"
                         :index="index.toString()" :key="index">
             <i class="el-icon-location"></i>

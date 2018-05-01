@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import common from './modules/common'
 import equipment from './modules/equipment'
 import particles from './modules/particles'
+import user from './modules/user'
 import VueLazyLoad from 'vue-lazyload'
 
 Vue.use(Vuex)
@@ -16,7 +17,8 @@ export default new Vuex.Store({
   modules: {
     common,
     equipment,
-    particles
+    particles,
+    user
   },
   // strict: debug,
   // plugins: debug ? [createLogger()] : []

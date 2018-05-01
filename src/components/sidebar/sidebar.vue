@@ -5,18 +5,29 @@
       <router-link to="baseInfo">
         <li class="item" :class="{'active':this.$route.path.indexOf('baseInfo')!==-1}"><span>基本信息</span></li>
       </router-link>
-      <router-link to="changePassword">
-        <li class="item" :class="{'active':this.$route.path.indexOf('changePassword')!==-1}"><span>修改密码</span></li>
-      </router-link>
-      <router-link to="emailSetting">
-        <li class="item" :class="{'active':this.$route.path.indexOf('emailSetting')!==-1}"><span>邮箱设置</span></li>
-      </router-link>
+      <li class="item" :class="{'active':this.$route.path.indexOf('changePassword')!==-1}" @click="changePassword">
+        <span>修改密码</span>
+      </li>
+      <li class="item" :class="{'active':this.$route.path.indexOf('emailSetting')!==-1}" @click="emailSetting">
+        <span>邮箱设置</span>
+      </li>
     </ul>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  export default {};
+  export default {
+    methods: {
+      changePassword() {
+        window.scrollTo(0, 0);
+        this.$router.push('changePassword')
+      },
+      emailSetting() {
+        window.scrollTo(0, 0);
+        this.$router.push('emailSetting');
+      }
+    }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

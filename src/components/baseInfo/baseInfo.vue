@@ -5,15 +5,15 @@
       <div class="top-wrapper">
         <div class="left-wrapper">
           <div class="name-wrapper">
-            <div class="item">用户名：</div>
+            <div class="item">昵称：</div>
             <div class="input">
-              <input type="text" class="name" placeholder="name">
+              <input type="text" class="name" :placeholder="$store.state.user.name" v-model="name">
             </div>
           </div>
           <div class="email-wrapper">
             <div class="item">邮箱：</div>
             <div class="input">
-              <input type="text" class="email" readonly placeholder="543877815@qq.com">
+              <input type="text" class="email" readonly :placeholder="$store.state.user.email">
             </div>
           </div>
           <div class="phone-wrapper">
@@ -25,7 +25,7 @@
         </div>
         <div class="right-wrapper">
           <div class="avatar-wrapper">
-            <img src="./avatar.png" height="250" width="250" ref="avatar">
+            <img :src="$store.state.user.avatar" height="250" width="250" ref="avatar">
             <input type="file" accept="*image/*" @click.stop="addImg($event)">
           </div>
           <div class="update-wrapper">
@@ -36,9 +36,10 @@
       <div class="bottom-wrapper">
         <div class="briefInfo-wrapper">
           <div class="item">个人简介：</div>
-          <textarea class="briefInfo" cols="30" rows="10" placeholder="请输入您的个人简介..."></textarea>
+          <textarea class="briefInfo" cols="30" rows="10" :placeholder="$store.state.user.description"
+                    v-model="description"></textarea>
         </div>
-        <div class="change">更改信息</div>
+        <div class="change" @click="modifyUserInfo">更改信息</div>
       </div>
     </div>
   </div>
@@ -48,16 +49,62 @@
   import Header from '../header/header'
   import {createObjectURL} from "../../common/js/createObjectURL";
   import {heightSetting} from "../../common/js/heightSetting";
+  import User from '../../apis/User';
+  const user = new User();
 
   export default {
     name: "baseInfo",
     data() {
-      return {}
+      return {
+        name: '',
+        description: ''
+      }
     },
     components: {
       Header
     },
     methods: {
+      getUserInfo() {
+        user.getUserInfo()
+          .then((res) => {
+            this.name = this.description = '';
+            this.$store.state.user.username = res.data.username;
+            this.$store.state.user.name = res.data.name;
+            this.$store.state.user.id = res.data.id;
+            this.$store.state.user.email = res.data.email;
+            this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
+            this.$store.state.user.description = res.data.description;
+            this.$store.state.user.avatar = res.data.avatar;
+            this.$store.state.user.roles = res.data.roles;
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      modifyUserInfo() {
+        if (!this.name && !this.description) {
+          this.$message.error(`输入为空！`)
+          return;
+        }
+        let name = this.name || this.$store.state.user.name,
+          description = this.description || this.$store.state.user.description;
+        user
+          .modifyUserInfo({
+            name: name,
+            description: description,
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`更改信息成功！`)
+              this.getUserInfo();
+            } else {
+              this.$message.error(`提示：${res.msg}`);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       imgUpdate() {
         console.log('ddd')
       },
@@ -75,7 +122,7 @@
             this.$refs.avatar.src = url;
             reader.readAsDataURL(files[0]);
           } else {
-            alert('不是图片')
+            this.$message.error('不是图片')
           }
         }
         reader.onerror = () => {

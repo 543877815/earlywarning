@@ -16,7 +16,7 @@
 <script type="text/ecmascript-6">
   import navigation from '../../components/nav_login/nav_login';
   import showControl from '../../components/showControl/showControl';
-  import panel from '../../components/panel/panel';
+  import panel from '../../components/loginPanel/loginPanel';
   import Footer from '../../components/footer/footer'
   import User from '../../apis/User';
   import BaseUrl from '../../apis/BaseUrl';
@@ -33,7 +33,6 @@
         email: null,
         verCode: null,
         loginIsActive: true,
-
       }
     },
     components: {
@@ -49,11 +48,40 @@
       changeToLogin(msg) {
         this.loginIsActive = msg;
       },
-      login() {
-        console.log('login')
+      login(username, password, verCodeOrPassword) {
+        if (username === '') {
+          this.$message.error('用户名为空');
+          return;
+        }
+        if (password === '') {
+          this.$message.error('密码为空');
+          return;
+        }
+        if (verCodeOrPassword === '') {
+          this.$message.error('验证码为空');
+          return;
+        }
+        user
+          .userLogin({
+            username: username,
+            password: password,
+            verCode: verCodeOrPassword
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success('登录成功！');
+              if (res.data.roles[0].name === 'user') {
+                this.$router.push('/index');
+              }
+            } else {
+              this.$message.error(res.msg);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       },
       register(username, password, verCodeOrPassword) {
-        console.log(username === '');
         if (username === '') {
           this.$message.error('用户名为空');
           return;
@@ -80,7 +108,7 @@
             password: password
           })
           .then((res) => {
-            if (res.ret === 200) {
+            if (res.ret === 200 && res.msg === 'success') {
               this.$message.success('注册成功！');
               this.changeToLogin(true);
               this.$refs.Panel.activeChange('login');
@@ -88,29 +116,19 @@
               this.$message.error(res.msg);
             }
           })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       }
     }
   }
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-  body, html {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    max-width: 1856px;
-    min-width: 1280px;
-    min-height: 800px;
-    padding: 0;
-    margin: 0;
-    position: relative;
-  }
-
   .windows {
     position: relative;
     width: 100%;
     height: 100%;
-
     .particles-js-canvas-el {
       position: absolute;
       left: 0;
