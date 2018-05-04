@@ -71,17 +71,50 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import User from '../../apis/User'
+  const user = new User();
 
   export default {
     methods: {
       exit() {
         this.$router.push('/login')
       },
+      getUserInfo() {
+        user.getUserInfo()
+          .then((res) => {
+            // 如果邮箱为空或者未激活则提醒用户
+            if (res.data.isEmailLocked === 0 || res.data.email === '') {
+              this.$notify({
+                title: '警告',
+                message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
+                type: 'warning',
+                offset: 100
+              });
+            }
+            this.$store.state.user.username = res.data.username;
+            this.$store.state.user.name = res.data.name;
+            this.$store.state.user.id = res.data.id;
+            this.$store.state.user.email = res.data.email;
+            this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
+            this.$store.state.user.description = res.data.description;
+            this.$store.state.user.avatar = res.data.avatar;
+            this.$store.state.user.roles = res.data.roles;
+
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      }
     },
     props: {
       navChange: {
         type: Boolean,
         default: false
+      }
+    },
+    created(){
+      if (!this.$store.state.user.id) {
+        this.getUserInfo();
       }
     },
   };

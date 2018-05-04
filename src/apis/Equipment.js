@@ -11,18 +11,23 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
-  createInstrument(data){
+  createInstrument(data) {
     const url = '/createInstrument';
     return this.post(url, data);
   }
 
-  getUserInstrument(data){
-     const url = '/getUserInstrument';
-     return this.get(url, data);
+  getUserInstrument(data) {
+    const url = '/getUserInstrument';
+    return this.get(url, data);
   }
 
-  getInstrumentByCid(data){
+  getInstrumentByCid(data) {
     const url = '/getInstrumentByCid';
-    return this.get(url,data);
+    return this.get(url, data);
+  }
+
+  modifyInstrument(data) {
+    const url = '/modifyInstrument';
+    return this.post(url, data);
   }
 }

@@ -22,14 +22,13 @@
       <div class="equip-content"
            :class="{'menuShow':menuShow}">
         <p class="equipEmpty"
-           v-if="$store.state.equipment.equipOnShow.length === 0">尚未添加仪器？先去
+           v-if="$store.state.equipment.equipItems.length === 0">尚未添加仪器？先去
           <router-link to="/management">仪器管理</router-link>
           添加仪器吧！
         </p>
-        <equipItem v-for="(item,index) in $store.state.equipment.equipOnShow"
+        <equipItem v-for="(item,index) in $store.state.equipment.equipItems"
                    :equipItem="item"
-                   :key="index"
-                   @hideMenu="hideMenu">
+                   :key="index">
         </equipItem>
       </div>
       <div v-infinite-scroll="loadMore"
@@ -48,6 +47,32 @@
         :bottom="60"
         :right="50">
       </ScrollToY>
+      <transition name="modal">
+        <modal v-if="$store.state.equipment.equipOnShow" :wrapperClass="'equipDetail'" @hideDetail="hideDetail">
+          <div class="title" slot="header">仪器详情</div>
+          <div class="intro" slot="body">
+            <div class="img-wrapper">
+              <img v-lazy="$store.state.equipment.equipOnShowItem.picUrl" width="300" height="300">
+            </div>
+            <div class="intro-wrapper">
+              <div class="name">
+                {{$store.state.equipment.equipOnShowItem.name}}
+                <span class="id">ID：{{$store.state.equipment.equipOnShowItem.id}}</span>
+              </div>
+              <div class="insType">型号：{{$store.state.equipment.equipOnShowItem.insType}}</div>
+              <div class="param">参数：{{$store.state.equipment.equipOnShowItem.param}}</div>
+              <div class="param">使用年限：{{$store.state.equipment.equipOnShowItem.durableYears}}</div>
+              <div class="detail-intro">仪器简介：{{$store.state.equipment.equipOnShowItem.description}}</div>
+              <div class="thresholdValue">告警阈值：{{$store.state.equipment.equipOnShowItem.thresholdValue}}</div>
+              <div class="present-thresholdValue">当前阈值：</div>
+            </div>
+          </div>
+          <div class="history" slot="body">
+            <div class="title">历史阈值</div>
+          </div>
+          <div class="others" slot="body"></div>
+        </modal>
+      </transition>
     </div>
     <Footer :position="'relative'"></Footer>
   </div>
@@ -62,13 +87,12 @@
   import equipItem from '../../components/equipItem/equipItem'
   import showControl from '../../components/showControl/showControl'
   import ScrollToY from '../../components/scrollToY/scrollToY'
+  import modal from '../../components/modal/modal'
+
   import _ from 'underscore'
 
   import Equipment from '../../apis/Equipment'
-  import User from '../../apis/User';
-
   const equipment = new Equipment();
-  const user = new User();
 
   export default {
     data() {
@@ -96,7 +120,8 @@
       Menu,
       equipItem,
       showControl,
-      ScrollToY
+      ScrollToY,
+      modal
     },
     mounted() {
       document.getElementsByTagName('body')[0].className =
@@ -110,10 +135,6 @@
       this.throttleload = _.throttle(this.scrollControl, 100)
       window.addEventListener("scroll", this.throttleload, false);
 
-      if (!this.$store.state.user.id) {
-        this.getUserInfo();
-      }
-
       if (this.$store.state.equipment.equipTypes.length === 0) {
         this.getCategories();
       }
@@ -126,6 +147,10 @@
 
     },
     methods: {
+      hideDetail() {
+        this.$store.state.equipment.equipOnShow = false;
+        document.getElementsByTagName('body')[0].style.overflow = "auto";
+      },
       loadMore() {
         this.busy = true;
         setTimeout(() => {
@@ -154,18 +179,16 @@
           })
           .then((res) => {
             if (flag) {
-              this.$store.state.equipment.equipOnShow =
-                this.$store.state.equipment.equipItems =
-                  this.$store.state.equipment.equipOnShow.concat(res.data.content)
+              this.$store.state.equipment.equipItems =
+                this.$store.state.equipment.equipItems.concat(res.data.content)
               if (res.data.content.length === 0) {
                 this.busy = true;
               } else {
                 this.busy = false;
               }
             } else {
-              this.$store.state.equipment.equipOnShow =
-                this.$store.state.equipment.equipItems =
-                  res.data.content;
+              this.$store.state.equipment.equipItems =
+                res.data.content;
               this.busy = false;
             }
           })
@@ -190,18 +213,16 @@
           })
           .then((res) => {
             if (flag) {
-              this.$store.state.equipment.equipOnShow =
-                this.$store.state.equipment.equipItems =
-                  this.$store.state.equipment.equipOnShow.concat(res.data.content)
+              this.$store.state.equipment.equipItems =
+                this.$store.state.equipment.equipItems.concat(res.data.content)
               if (res.data.content.length === 0) {
                 this.busy = true
               } else {
                 this.busy = false;
               }
             } else {
-              this.$store.state.equipment.equipOnShow =
-                this.$store.state.equipment.equipItems =
-                  res.data.content;
+              this.$store.state.equipment.equipItems =
+                res.data.content;
               this.busy = false;
             }
           })
@@ -244,35 +265,6 @@
       menuControl() {
         this.menuShow = !this.menuShow;
       },
-      hideMenu(){
-        this.menuShow = false;
-      },
-      getUserInfo() {
-        user.getUserInfo()
-          .then((res) => {
-            // 如果邮箱为空或者未激活则提醒用户
-            if (res.data.isEmailLocked === 0 || res.data.email === '') {
-              this.$notify({
-                title: '警告',
-                message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
-                type: 'warning',
-                offset: 100
-              });
-            }
-            this.$store.state.user.username = res.data.username;
-            this.$store.state.user.name = res.data.name;
-            this.$store.state.user.id = res.data.id;
-            this.$store.state.user.email = res.data.email;
-            this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
-            this.$store.state.user.description = res.data.description;
-            this.$store.state.user.avatar = res.data.avatar;
-            this.$store.state.user.roles = res.data.roles;
-
-          })
-          .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
-      }
     },
     beforeDestroy() {
       window.removeEventListener("scroll", this.throttleload, false);
@@ -281,6 +273,8 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+  @import '../../common/sass/components/equipmentModal';
+
   .window {
     width: 100%;
     height: 100%;
@@ -301,7 +295,6 @@
         opacity: 1;
         transform: translate3d(0, 0, 0);
       }
-
       .equip-content {
         min-height: 768px;
         width: 1100px;
@@ -322,11 +315,20 @@
           transform: translate3d(100px, 0, 0);
         }
       }
+      .modal-enter, .modal-leave-to {
+        opacity: 0;
+      }
+      .modal-enter-to, .modal-leave {
+        opacity: 1;
+      }
+      .modal-leave-active {
+        transition: all 0.3s;
+      }
+      .equipDetail {
+        @include equipmentModal
+      }
     }
-
   }
-
-
 </style>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

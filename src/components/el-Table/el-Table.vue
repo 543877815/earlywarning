@@ -4,34 +4,34 @@
       <h2>流体仪表</h2>
       <div class="split"></div>
       <el-table
-        :data="tableData4"
+        :data="tableData"
         style="width: 100%"
         max-height="700">
         <el-table-column
           fixed
-          prop="date"
+          prop="id"
+          label="ID"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="name"
           label="仪器名称"
           width="150">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="id"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="province"
+          prop="insType"
           label="型号"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="city"
+          prop="thresholdValue"
           label="告警阈值"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="description"
           label="简介"
-          width="300">
+          width="260">
         </el-table-column>
         <el-table-column
           fixed="right"
@@ -40,170 +40,125 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <div class="table">
-      <h2>流体仪表</h2>
-      <div class="split"></div>
-      <el-table
-        :data="tableData4"
-        style="width: 100%"
-        max-height="700">
-        <el-table-column
-          fixed
-          prop="date"
-          label="仪器名称"
-          width="150">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="id"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="province"
-          label="型号"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="city"
-          label="告警阈值"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="简介"
-          width="300">
-        </el-table-column>
-        <el-table-column
-          fixed="right"
-          label="操作"
-          width="180">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+    <div class="block">
+      <el-pagination
+        background
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        layout="total, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
     <transition name="modal">
-      <Modal :wrapperClass="'EquipEdit'" v-if="EquipEdit" @hideDetail="hideEdit">
+      <Modal :wrapperClass="'EquipEdit'" v-if="$store.state.equipment.equipOnShow" @hideDetail="hideEdit">
         <div class="title" slot="header">仪器详情</div>
         <div class="intro" slot="body">
           <div class="img-wrapper">
-            <img src="/src/assets/logo.png" width="300" height="300">
+            <img :src="form.picUrl" width="300" height="300">
+            <input type="file" accept="*image/*" @click.stop="addImg($event)">
           </div>
           <div class="intro-wrapper">
             <div class="name">
-              仪器名称
-              <span class="id">ID：</span>
+              <input type="text" :placeholder="$store.state.equipment.equipOnShowItem.name" v-model="form.name">
+              <span class="id">ID：{{$store.state.equipment.equipOnShowItem.id}}</span>
             </div>
-            <div class="insType">型号：</div>
-            <div class="param">参数：</div>
-            <div class="detail-intro">仪器简介：</div>
-            <div class="thresholdValue">告警阈值：</div>
-            <div class="present-thresholdValue">当前阈值：</div>
+            <div class="insType">型号：
+              <input type="text" :placeholder="$store.state.equipment.equipOnShowItem.insType" v-model="form.insType">
+            </div>
+            <div class="param">参数：
+              <input type="text" :placeholder="$store.state.equipment.equipOnShowItem.param" v-model="form.param">
+            </div>
+            <div class="maturity">使用年限：
+              <input type="text" :placeholder="$store.state.equipment.equipOnShowItem.durableYears"
+                     v-model="form.durableYears">
+            </div>
+            <div class="detail-intro">仪器简介：
+              <textarea cols="60" rows="10" :placeholder="$store.state.equipment.equipOnShowItem.description"
+                        v-model="form.description"></textarea>
+            </div>
+            <div class="thresholdValue">告警阈值：
+              <input type="number" :placeholder="$store.state.equipment.equipOnShowItem.thresholdValue"
+                     v-model.number="form.thresholdValue">
+            </div>
           </div>
         </div>
-        <button class="btn btn-primary" slot="footer" @click="hideEdit">submit</button>
+        <button class="btn btn-primary" slot="footer" @click="hideEdit">修改</button>
       </Modal>
     </transition>
-
   </div>
 </template>
 
 <script>
   import Modal from '../../components/modal/modal'
+
   export default {
-    components:{
+    data() {
+      return {
+        EquipEdit: false,
+        currentPage: 1,
+        currentRow: null,
+        form: {
+          name: '',
+          insType: '',
+          param: '',
+          durableYears: '',
+          description: '',
+          picUrl: '',
+          thresholdValue: ''
+        }
+      }
+    },
+    props: {
+      tableData: {
+        default: [],
+        type: Array
+      },
+      total:{
+        default: 100,
+        type: Number
+      }
+    },
+    components: {
       Modal
     },
     methods: {
-      hideEdit(){
-        this.EquipEdit = false;
+      handleCurrentChange(val) {
+        this.$emit('CurrentChange', val)
       },
-      handleEdit(index, row) {
-        console.log(index, row);
-        this.EquipEdit = true;
+      hideEdit() {
+        this.$emit('modifyInstrument',this.$store.state.equipment.equipOnShowItem.id, this.form);
+        this.$store.state.equipment.equipOnShow = false;
+      },
+      handleEdit(index, scpoeRow) {
+        this.$store.state.equipment.equipOnShow = true;
+        this.$store.state.equipment.equipOnShowItem = scpoeRow;
       },
       handleDelete(index, row) {
         console.log(index, row);
       }
     },
-    data() {
-      return {
-        EquipEdit: false,
-        tableData4: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
-      }
-    }
+
   }
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+  @import '../../common/sass/components/equipmentModal';
+
   .el_table {
     margin-bottom: 100px;
     .table {
+      min-height: 620px;
       margin-top: 50px;
       .split {
         width: 100%;
@@ -216,61 +171,21 @@
         font-size: 28px;
         margin-bottom: 10px;
       }
+      .cell {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .block {
+      margin-top: 30px;
+      .el-pagination {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+      }
     }
     .EquipEdit {
-      text-align: left;
-      cursor: default;
-      .modal{
-        .modal-dialog{
-          margin: 0 auto;
-          top: 30%;
-          transform: translateY(-50%);
-          .title {
-            font-size: 18px;
-            width: 100%;
-          }
-          .icon-wrapper {
-            cursor: pointer;
-          }
-          .intro {
-            display: flex;
-            flex-flow: row;
-            justify-content: space-between;
-            .intro-wrapper {
-              width: 568px;
-              margin-left: 30px;
-              .name {
-                font-size: 32px;
-                position: relative;
-                padding-bottom: 5px;
-                border-bottom: 1px solid #ccc;
-                .id {
-                  position: absolute;
-                  right: 0;
-                  bottom: 0;
-                  font-size: 16px;
-                  padding-right: 10px;
-                  bottom: 5px;
-                }
-              }
-              .insType, .param, .detail-intro, .thresholdValue, .present-thresholdValue {
-                margin: 8px 0;
-              }
-              .detail-intro {
-                line-height: 1.2em;
-              }
-            }
-          }
-          .history {
-            margin-top: 20px;
-            margin-left: 20px;
-            .title {
-              font-size: 24px;
-            }
-          }
-        }
-      }
-
+      @include equipmentModal();
     }
   }
 </style>

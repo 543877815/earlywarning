@@ -7,64 +7,19 @@
           <img src="./avatar.png" width="150" height="150">
         </div>
         <div class="username">
-          <div class="name">李逢君</div>
-          <div class="id">No:10001</div>
+          <div class="name">{{$store.state.user.name}}</div>
+          <div class="id">No:{{$store.state.user.id}}</div>
         </div>
       </div>
     </div>
     <div class="newsList">
-      <div class="newsItem">
+      <div class="newsItem" v-for="item in news">
         <div class="row">
           <div class="img-wrapper">
             <img src="./1.png" width="120" height="120">
           </div>
           <div class="info-wrapper">
-            <div class="name">流表仪器</div>
-            <div class="status">状态：维修完毕</div>
-            <div class="time">时间：2018-04-01 19:00:00</div>
-          </div>
-        </div>
-        <div class="operate">
-          <div class="button" @click="showDetail">查看</div>
-        </div>
-      </div>
-      <div class="newsItem">
-        <div class="row">
-          <div class="img-wrapper">
-            <img src="./1.png" width="120" height="120">
-          </div>
-          <div class="info-wrapper">
-            <div class="name">流表仪器</div>
-            <div class="status">状态：维修完毕</div>
-            <div class="time">时间：2018-04-01 19:00:00</div>
-          </div>
-        </div>
-        <div class="operate">
-          <div class="button" @click="showDetail">查看</div>
-        </div>
-      </div>
-      <div class="newsItem">
-        <div class="row">
-          <div class="img-wrapper">
-            <img src="./1.png" width="120" height="120">
-          </div>
-          <div class="info-wrapper">
-            <div class="name">流表仪器</div>
-            <div class="status">状态：维修完毕</div>
-            <div class="time">时间：2018-04-01 19:00:00</div>
-          </div>
-        </div>
-        <div class="operate">
-          <div class="button" @click="showDetail">查看</div>
-        </div>
-      </div>
-      <div class="newsItem">
-        <div class="row">
-          <div class="img-wrapper">
-            <img src="./1.png" width="120" height="120">
-          </div>
-          <div class="info-wrapper">
-            <div class="name">流表仪器</div>
+            <div class="name">{{news.name}}</div>
             <div class="status">状态：维修完毕</div>
             <div class="time">时间：2018-04-01 19:00:00</div>
           </div>
@@ -75,7 +30,7 @@
       </div>
     </div>
     <transition name="modal">
-      <modal :wrapperClass="'recordDetail'" v-if="modalShow" @hide="hideDetail">
+      <modal :wrapperClass="'recordDetail'" v-if="modalShow" @hideDetail="hideDetail">
         <div class="title" slot="header">详情</div>
         <el-steps :space="200" :active="2" finish-status="success" slot="body" align-center>
           <el-step title="等待确认" description="2018-04-05 15:22:19"></el-step>
@@ -140,11 +95,28 @@
   import showControl from '../../components/showControl/showControl'
   import modal from '../../components/modal/modal'
   import Footer from '../../components/footer/footer'
+  import News from '../../apis/News'
 
+  const news = new News();
   export default {
-    data(){
-      return{
-        modalShow: false
+    data() {
+      return {
+        modalShow: false,
+        news: {
+          content: '',
+          createTime: 0,
+          data: 0,
+          id: 0,
+          mechineId: 19,
+          orderId: 0,
+          read: false,
+          thresholdValue: 10,
+          uid: 5
+        },
+
+        page: 0,
+        size: 0,
+        sort: ''
       }
     },
     components: {
@@ -153,16 +125,33 @@
       Footer,
       modal
     },
-    methods:{
-      showDetail(){
+    methods: {
+      showDetail() {
         this.modalShow = true;
       },
-      hideDetail(){
+      hideDetail() {
         this.modalShow = false;
+      },
+      getMessages(page, size) {
+        news
+          .getMessages({
+            page,
+            size
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success'){
+              this.news = res.data.content;
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       }
     },
+
     mounted() {
       document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'longPage'
+      this.getMessages(this.page, this.size)
     }
   }
 </script>

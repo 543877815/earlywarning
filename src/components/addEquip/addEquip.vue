@@ -46,7 +46,8 @@
         <el-pagination slot="body"
                        background
                        layout="prev, pager, next"
-                       :total="totalPage">
+                       @current-change="CurrentChange"
+                       :total="total">
         </el-pagination>
         <button class="btn btn-primary" slot="footer" @click="showTemplate">确定</button>
         <button class="btn btn-default" slot="footer" @click="showTypes">返回</button>
@@ -91,6 +92,7 @@
 <script type="text/ecmascript-6">
   import Modal from '../../components/modal/modal'
   import {createObjectURL} from "../../common/js/createObjectURL";
+
   export default {
     data() {
       return {
@@ -99,9 +101,6 @@
         templateList: false,
         radio: 1,
         currentRow: null,
-        page: 1,
-        pageSize: 10,
-        totalPage: 1,
         tableData: [],
         form: {
           name: '',
@@ -125,6 +124,10 @@
       bottom: {
         type: Number,
         default: 0
+      },
+      total: {
+        type: Number,
+        default: 20
       }
     },
     methods: {
@@ -155,11 +158,6 @@
           this.$message.success('读取文件成功!')
         }
       },
-      setPage(page, pageSize, totalPage) {
-        this.page = page;
-        this.pageSize = pageSize;
-        this.totalPage = totalPage
-      },
       hideAll() {
         this.messageBox =
           this.template =
@@ -186,10 +184,13 @@
         this.template =
           this.messageBox = false;
         this.templateList = true;
-        this.$emit('getModelInstrumentByCid', this.radio, this.page, this.pageSize);
+        this.$emit('getModel', this.radio);
       },
       handleCurrentChange(val) {
         this.currentRow = val;
+      },
+      CurrentChange(val) {
+        this.$emit('modelCurrentChange', val);
       },
       createEquip() {
         this.$emit('createEquip', this.currentRow, this.form)
@@ -200,6 +201,8 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
+  @import '../../common/sass/components/equipmentModal';
+
   .addEquip-wrapper {
     border-radius: 50%;
     position: fixed;
@@ -249,77 +252,7 @@
       }
     }
     .Equiptemplate {
-      text-align: left;
-      cursor: default;
-      .modal {
-        .modal-dialog {
-          margin: 0 auto;
-          top: 30%;
-          transform: translateY(-50%);
-          .title {
-            font-size: 18px;
-            width: 100%;
-          }
-          .icon-wrapper {
-            cursor: pointer;
-          }
-          .intro {
-            display: flex;
-            flex-flow: row;
-            justify-content: space-between;
-            .img-wrapper{
-              position: relative;
-              input {
-                cursor: pointer;
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-                outline: 0;
-                opacity: 0;
-              }
-            }
-            .intro-wrapper {
-              width: 568px;
-              margin-left: 30px;
-              .name {
-                font-size: 32px;
-                position: relative;
-                padding-bottom: 5px;
-                border-bottom: 1px solid #ccc;
-                .id {
-                  position: absolute;
-                  right: 0;
-                  bottom: 0;
-                  font-size: 16px;
-                  padding-right: 10px;
-                  bottom: 5px;
-                }
-              }
-              .insType, .param, .maturity, .detail-intro, .thresholdValue, .present-thresholdValue {
-                margin: 8px 0;
-              }
-              .detail-intro {
-                display: flex;
-                flex-flow: row;
-                line-height: 1.2em;
-                textarea{
-                  border-top: 1px solid #ccc;
-                }
-              }
-            }
-          }
-          .history {
-            margin-top: 20px;
-            margin-left: 20px;
-            .title {
-              font-size: 24px;
-            }
-          }
-        }
-      }
-
+      @include equipmentModal();
     }
   }
 </style>

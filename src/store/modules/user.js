@@ -36,7 +36,7 @@ const getters = {
     }
   },
   isEmailLocked: (state) => {
-    return state.isEmailLocked === 'LOCKED' ? '未激活' : '已激活';
+    return state.isEmailLocked === 0 ? '未激活' : '已激活';
   }
 }
 

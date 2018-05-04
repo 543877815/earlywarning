@@ -4,9 +4,9 @@ const state = {
     id: 0,
   },
   equipTypes: [],
-  equipOnShow: [],
   equipItems: [],
-  equipDetailOnShow: null,
+  equipOnShow: false,
+  equipOnShowItem: {},
   equipModelList:[]
 }
 

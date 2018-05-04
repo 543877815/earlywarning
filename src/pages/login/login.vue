@@ -5,8 +5,8 @@
            @login="login"
            @register="register"
            :verCodeUrl="verCodeUrl"
-           :BaseUrl="BaseUrl"
            :loginIsActive="loginIsActive"
+           :BaseUrl="BaseUrl"
            @changeToLogin="changeToLogin"></panel>
     <showControl :right="50" :bottom="60"></showControl>
     <Footer></Footer>
@@ -72,6 +72,8 @@
               this.$message.success('登录成功！');
               if (res.data.roles[0].name === 'user') {
                 this.$router.push('/index');
+              }else if(res.data.roles[0].name === 'admin'){
+                this.$router.push('/')
               }
             } else {
               this.$message.error(res.msg);

@@ -2,7 +2,7 @@
   <div class="el_NavMenu">
     <el-row class="tac">
       <el-col :span="24">
-        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+        <el-radio-group v-model="isCollapse">
           <el-radio-button :label="false">展开</el-radio-button>
           <el-radio-button :label="true">收起</el-radio-button>
         </el-radio-group>
@@ -12,8 +12,10 @@
           @open="handleOpen"
           @close="handleClose"
           :collapse="isCollapse">
-          <el-menu-item v-for="(item, index) in $store.state.equipment.equipTypes" v-if="item.id!==0"
-                        :index="index.toString()" :key="index">
+          <el-menu-item v-for="(item, index) in $store.state.equipment.equipTypes"
+                        :index="item.id.toString()"
+                        :key="item.id"
+                        @click="switchType(item.id)">
             <i class="el-icon-location"></i>
             <span slot="title">{{item.name}}</span>
           </el-menu-item>
@@ -27,7 +29,11 @@
   export default {
     data() {
       return {
-        isCollapse: false
+        isCollapse: false,
+        page: 0,
+        size: 10,
+        sort: 'id',
+        cid: '1'
       };
     },
     methods: {
@@ -36,6 +42,9 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      switchType(cid){
+        this.$emit('switchType', cid);
       }
     }
   };
@@ -51,7 +60,7 @@
     transform: translateZ(0);
   }
 
-  .el-menu-vertical-demo.el-menu{
+  .el-menu-vertical-demo.el-menu {
     border-right: 0;
     border-left: solid 1px #e6e6e6;
   }

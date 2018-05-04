@@ -1,12 +1,22 @@
 <template>
   <div class="window">
     <navIndex></navIndex>
-    <el_NavMenu></el_NavMenu>
-    <el_Table></el_Table>
+    <el_NavMenu @switchType="switchType"></el_NavMenu>
+    <el_Table :tableData="tableData"
+              :total="total"
+              @CurrentChange="CurrentChange"
+              @modifyInstrument="modifyInstrument"
+    ></el_Table>
+    <search :right="50"
+            :bottom="225"
+            @searchEquipment="searchEquipment">
+    </search>
     <addEquip ref="addEquip"
               :right="50"
               :bottom="170"
-              @getModelInstrumentByCid="getModelInstrumentByCid"
+              :total="modelTotal"
+              @modelCurrentChange="modelCurrentChange"
+              @getModel="getModel"
               @createEquip="createEquip"></addEquip>
     <scrollToY :right="50" :bottom="115"></scrollToY>
     <showControl :right="50" :bottom="60"></showControl>
@@ -17,6 +27,7 @@
 <script type="text/ecmascript-6">
   import navIndex from '../../components/nav_index/nav_index'
   import showControl from '../../components/showControl/showControl'
+  import search from '../../components/search/search'
   import Footer from '../../components/footer/footer'
   import el_NavMenu from '../../components/el-NavMenu/el-NavMenu'
   import el_Table from '../../components/el-Table/el-Table'
@@ -29,7 +40,21 @@
 
   export default {
     data() {
-      return {}
+      return {
+        getByCid: false,
+        tableData: [],
+        page: 0,
+        size: 10,
+        sort: 'id',
+        keyword: null,
+        cid: 1,
+        total: 10,
+
+        modelPage: 0,
+        modelSize: 10,
+        modelCid: 1,
+        modelTotal: 10
+      }
     },
     components: {
       navIndex,
@@ -39,9 +64,43 @@
       addEquip,
       el_Table,
       equipDetail,
-      scrollToY
+      scrollToY,
+      search
     },
     methods: {
+      searchEquipment(val) {
+        this.keyword = val
+        this.getUserInstrument(this.page, this.pageSize, this.sort, this.keyword)
+      },
+      modifyInstrument(id, form) {
+        equipment
+          .modifyInstrument({
+            id,
+            name: form.name,
+            insType: form.insType,
+            durableYears: form.durableYears,
+            param: form.param,
+            description: form.param,
+            thresholdValue: form.thresholdValue
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`修改成功！`);
+              this.getInstrumentByCid(this.page, this.size, this.cid, this.sort);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      modelCurrentChange(val) {
+        this.modelPage = val;
+        this.getModelInstrumentByCid(this.modelCid, this.modelPage, this.modelSize);
+      },
+      CurrentChange(val) {
+        this.page = val - 1;
+        this.getInstrumentByCid(this.page, this.size, this.cid, this.sort);
+      },
       getCategories() {
         equipment
           .getCategories()
@@ -52,6 +111,10 @@
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
       },
+      getModel(cid) {
+        this.modelCid = cid
+        this.getModelInstrumentByCid(this.modelCid, this.modelPage, this.modelSize);
+      },
       getModelInstrumentByCid(cid, page, size) {
         equipment
           .getModelInstrumentByCid({
@@ -61,7 +124,7 @@
           })
           .then((res) => {
             this.$store.state.equipment.equipModelList = res.data.content;
-            this.$refs.addEquip.setPage(res.data.pageable.page + 1, res.data.pageable.size, Math.ceil(res.data.total / res.data.pageable.size) * 10)
+            this.modelTotal = res.data.totalElements;
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
@@ -78,26 +141,64 @@
             description: form.description || currentRow.description,
             thresholdValue: form.thresholdValue || currentRow.thresholdValue
           })
-          .then((res)=>{
-            if (res.ret === 200 && res.msg === 'success'){
-              this.$message.success(`仪器 ${form.name||currentRow.name} 创建成功!`);
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`仪器 ${form.name || currentRow.name} 创建成功!`);
               this.$refs.addEquip.hideAll();
-            } else{
+            } else {
               this.$message.error(`创建失败！`)
             }
-            console.log(res)
           })
-          .catch((err)=>{
+          .catch((err) => {
+            console.log(err)
             this.$message.error(`[系统提醒: ${err.msg}]`);
           })
+      },
+      getInstrumentByCid(page, size, cid, sort = 'id') {
+        this.cid = cid;
+        equipment
+          .getInstrumentByCid({
+            page: page,
+            size: size,
+            cid: cid,
+            sort: sort,
+          })
+          .then((res) => {
+            this.tableData = res.data.content;
+            this.total = res.data.totalElements;
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      getUserInstrument(page, size, sort = 'id', keyWord = null) {
+        equipment
+          .getUserInstrument({
+            size,
+            sort,
+            page,
+            keyWord
+          })
+          .then((res) => {
+            this.tableData = res.data.content;
+            this.total = res.data.totalElements;
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      switchType(cid) {
+        this.page = 0;
+        this.getInstrumentByCid(this.page, this.size, cid, this.sort)
       }
     },
     mounted() {
       document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'longPage';
+        document.getElementsByTagName('html')[0].className = 'shortPage';
       if (this.$store.state.equipment.equipTypes.length === 0) {
         this.getCategories();
       }
+      this.getInstrumentByCid(this.page, this.size, 1, this.sort);
     }
   };
 </script>
@@ -110,13 +211,13 @@
     height: 100%;
     overflow: visible;
 
-    .modal-enter, .modal-leave-to {
+    .model-enter, .model-leave-to {
       opacity: 0;
     }
-    .modal-enter-to, .modal-leave {
+    .model-enter-to, .model-leave {
       opacity: 1;
     }
-    .modal-leave-active {
+    .model-leave-active {
       transition: all 0.3s;
     }
   }
@@ -131,7 +232,7 @@
   .window /deep/ .el_NavMenu {
     position: fixed;
     top: 18%;
-    left: 17.3%;
+    left: 17%;
   }
 
   @media screen and (max-width: 1280px) {
@@ -143,7 +244,6 @@
   .window /deep/ .el_table {
     position: relative !important;
     left: 28%;
-    top: 10% !important;
     width: 960px !important;
   }
 
