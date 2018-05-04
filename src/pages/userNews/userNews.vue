@@ -19,8 +19,8 @@
             <img src="./1.png" width="120" height="120">
           </div>
           <div class="info-wrapper">
-            <div class="name">{{news.name}}</div>
-            <div class="status">状态：维修完毕</div>
+            <div class="name">{{item.name}}</div>
+            <div class="status">消息：{{item.content}}</div>
             <div class="time">时间：2018-04-01 19:00:00</div>
           </div>
         </div>
@@ -141,6 +141,7 @@
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success'){
               this.news = res.data.content;
+              console.log(this.news);
             }
           })
           .catch((err) => {
