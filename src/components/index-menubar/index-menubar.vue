@@ -14,7 +14,7 @@
           <img src="./icon-search.png" width="30px" height="30px">
         </div>
         <div class="class">
-          {{$store.state.equipment.equipActive.name}}:
+          {{$store.state.equipment.equipTypeActive.name}}:
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../common/sass/variables";
 
   .menubar {

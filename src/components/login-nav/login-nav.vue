@@ -8,10 +8,10 @@
   }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import '../../common/sass/variables';
   .navigation{
-    z-index: 9999;
+    z-index: -1;
     position: relative;
     width: 100%;
     height: 80px;

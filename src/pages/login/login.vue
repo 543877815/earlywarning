@@ -14,9 +14,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigation from '../../components/nav_login/nav_login';
+  import navigation from '../../components/login-nav/login-nav';
   import showControl from '../../components/showControl/showControl';
-  import panel from '../../components/loginPanel/loginPanel';
+  import panel from '../../components/login-panel/login-panel';
   import Footer from '../../components/footer/footer'
   import User from '../../apis/User';
   import BaseUrl from '../../apis/BaseUrl';
@@ -140,17 +140,16 @@
       z-index: 1;
     }
   }
-</style>
 
-
-<style lang="scss" rel="stylesheet/scss" scoped>
   .windows {
     /*background: url("../../assets/bg-login.jpg") no-repeat center center;*/
     background-size: cover;
     background-size: 100% 100%;
+
+    #footer {
+      background-color: #4a96c5;
+    }
   }
 
-  .windows /deep/ #footer {
-    background-color: #4a96c5;
-  }
 </style>
+

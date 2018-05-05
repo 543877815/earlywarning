@@ -31,10 +31,11 @@
                    :key="index">
         </equipItem>
       </div>
-      <div v-infinite-scroll="loadMore"
+      <div class="learnMore"
+           v-infinite-scroll="loadMore"
            infinite-scroll-disabled="busy"
            infinite-scroll-distance="20">
-        加载中...
+        <img src="/static/loading-svg/loading-spinning-bubbles.svg" v-if="loading">
       </div>
       <showControl v-show="iconShow"
                    :right="50"
@@ -79,11 +80,11 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../../components/nav_index/nav_index'
+  import navigator from '../../components/navigator/navigator'
   import Footer from '../../components/footer/footer'
   import Parallax from '../../components/Parallax/Parallax'
-  import menubar from '../../components/menubar/menubar'
-  import Menu from '../../components/menu/menu'
+  import menubar from '../../components/index-menubar/index-menubar'
+  import Menu from '../../components/index-menu/index-menu'
   import equipItem from '../../components/equipItem/equipItem'
   import showControl from '../../components/showControl/showControl'
   import ScrollToY from '../../components/scrollToY/scrollToY'
@@ -92,6 +93,7 @@
   import _ from 'underscore'
 
   import Equipment from '../../apis/Equipment'
+
   const equipment = new Equipment();
 
   export default {
@@ -109,6 +111,7 @@
         sort: "id",
         desc: false,
         busy: true,
+        loading: false,
         getByCid: false
       }
     },
@@ -140,7 +143,7 @@
       }
 
       this.getByCid ?
-        this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, false) :
+        this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
         this.getUserInstrument(this.page, this.size, this.sort, false);
     },
     created() {
@@ -157,19 +160,20 @@
           this.busy = false;
           this.page++;
           this.getByCid ?
-            this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, true) :
+            this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, true) :
             this.getUserInstrument(this.page, this.size, this.sort, true);
         }, 500);
       },
       changeEquipActive() {
         this.page = 0;
         this.size = 10;
-        this.$store.state.equipment.equipActive.id === 0 ? this.getByCid = false : this.getByCid = true;
+        this.$store.state.equipment.equipTypeActive.id === 0 ? this.getByCid = false : this.getByCid = true;
         this.getByCid ?
-          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, false) :
+          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
           this.getUserInstrument(this.page, this.size, this.sort, false);
       },
       getInstrumentByCid(page, size, cid, sort = 'id', flag = false) {
+        this.loading = true;
         equipment
           .getInstrumentByCid({
             page: page,
@@ -178,6 +182,7 @@
             sort: sort,
           })
           .then((res) => {
+            this.loading = false;
             if (flag) {
               this.$store.state.equipment.equipItems =
                 this.$store.state.equipment.equipItems.concat(res.data.content)
@@ -201,10 +206,11 @@
         this.size = 10;
         desc === true ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`;
         this.getByCid ?
-          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipActive.id, this.sort, false) :
+          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
           this.getUserInstrument(this.page, this.size, this.sort, false);
       },
       getUserInstrument(page, size, sort = 'id', flag = false) {
+        this.loading = true
         equipment
           .getUserInstrument({
             size: size,
@@ -212,6 +218,7 @@
             page: page
           })
           .then((res) => {
+            this.loading = false;
             if (flag) {
               this.$store.state.equipment.equipItems =
                 this.$store.state.equipment.equipItems.concat(res.data.content)
@@ -260,7 +267,7 @@
         !this.$store.state.particles.show ? particlesCanvas.style.display = 'none' : particlesCanvas.style.display = 'block';
       },
       /**
-       * toggle the menu
+       * toggle the index-menu
        */
       menuControl() {
         this.menuShow = !this.menuShow;
@@ -272,8 +279,9 @@
   }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import '../../common/sass/components/equipmentModal';
+  @import '../../common/sass/components/modal-transition';
 
   .window {
     width: 100%;
@@ -281,20 +289,46 @@
     overflow: visible;
     position: relative;
     z-index: 2;
+    .nav {
+      background: rgba(255, 255, 255, 0) !important;
+      position: fixed !important;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition: all 0.3s;
+      padding: 0;
+      .right {
+        .role, .homePage, .management, .record, .personal-info {
+          .info-panel {
+            border: 2px solid rgba(0, 0, 0, 0);
+            background: rgba(255, 255, 255, 0.7);
+          }
+          &:hover {
+            background: rgba(255, 255, 255, 0.7);
+            .info-panel {
+              opacity: 1;
+              z-index: 99999;
+            }
+          }
+        }
+      }
+      &.scrollDown {
+        background-color: rgba(0, 0, 0, 0.9) !important;
+        padding: 15px 0;
+        box-shadow: 5px 5px 50px #888888;
+        &:hover {
+          background-color: rgba(0, 0, 0, 1);
+        }
+      }
+    }
+
+    .Masthead {
+      z-index: 1;
+    }
     .content {
       width: 100%;
       position: relative;
-      .menuFade-enter-active, .menuFade-leave-active {
-        transition: all 0.3s;
-      }
-      .menuFade-enter, .menuFade-leave-to {
-        opacity: 0;
-        transform: translate3d(-100px, 0, 0);
-      }
-      .menuFade-enter-to, .menuFade-leave {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
       .equip-content {
         min-height: 768px;
         width: 1100px;
@@ -315,60 +349,31 @@
           transform: translate3d(100px, 0, 0);
         }
       }
-      .modal-enter, .modal-leave-to {
-        opacity: 0;
-      }
-      .modal-enter-to, .modal-leave {
-        opacity: 1;
-      }
-      .modal-leave-active {
-        transition: all 0.3s;
-      }
       .equipDetail {
         @include equipmentModal
       }
+      .learnMore {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+      }
+      .menuFade-enter-active, .menuFade-leave-active {
+        transition: all 0.3s;
+      }
+      .menuFade-enter, .menuFade-leave-to {
+        opacity: 0;
+        transform: translate3d(-100px, 0, 0);
+      }
+      .menuFade-enter-to, .menuFade-leave {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
+      @include modal-transition;
+
     }
   }
+
+
 </style>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
-  .nav {
-    background: rgba(255, 255, 255, 0);
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    transition: all 0.3s;
-    padding: 0;
-    &.scrollDown {
-      background-color: rgba(0, 0, 0, 0.9);
-      padding: 15px 0;
-      box-shadow: 5px 5px 50px #888888;
-      &:hover {
-        background-color: rgba(0, 0, 0, 1);
-      }
-    }
-  }
-
-  .nav /deep/ .right {
-    .role, .homePage, .management, .record, .personal-info {
-      .info-panel {
-        border: 2px solid rgba(0, 0, 0, 0);
-        background: rgba(255, 255, 255, 0.7);
-      }
-      &:hover {
-        background: rgba(255, 255, 255, 0.7);
-        .info-panel {
-          opacity: 1;
-          z-index: 99999;
-        }
-      }
-    }
-  }
-
-  .Masthead {
-    z-index: 1;
-  }
-
-</style>

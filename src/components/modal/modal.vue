@@ -46,7 +46,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   .modal {
     position: fixed;
     width: 100%;
@@ -61,6 +61,7 @@
     overflow-x: hidden;
     .modal-dialog {
       position: relative;
+      z-index: 9999;
       margin: 30px auto;
       width: 900px;
       /*height: 1200px;*/

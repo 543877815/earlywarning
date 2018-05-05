@@ -1,12 +1,12 @@
 <template>
   <div class="window">
     <navIndex></navIndex>
-    <el_NavMenu @switchType="switchType"></el_NavMenu>
-    <el_Table :tableData="tableData"
-              :total="total"
-              @CurrentChange="CurrentChange"
-              @modifyInstrument="modifyInstrument"
-    ></el_Table>
+    <Menu @switchType="switchType"></Menu>
+    <Table :tableData="tableData"
+           :total="total"
+           @CurrentChange="CurrentChange"
+           @modifyInstrument="modifyInstrument"
+    ></Table>
     <search :right="50"
             :bottom="225"
             @searchEquipment="searchEquipment">
@@ -25,14 +25,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navIndex from '../../components/nav_index/nav_index'
+  import navIndex from '../../components/navigator/navigator'
   import showControl from '../../components/showControl/showControl'
   import search from '../../components/search/search'
   import Footer from '../../components/footer/footer'
-  import el_NavMenu from '../../components/el-NavMenu/el-NavMenu'
-  import el_Table from '../../components/el-Table/el-Table'
+  import Menu from '../../components/management-menu/management-menu'
+  import Table from '../../components/management-table/management-table'
   import addEquip from '../../components/addEquip/addEquip'
-  import equipDetail from '../../components/equipDetail/equipDetail'
   import scrollToY from '../../components/scrollToY/scrollToY'
   import Equipment from '../../apis/Equipment'
 
@@ -60,10 +59,9 @@
       navIndex,
       showControl,
       Footer,
-      el_NavMenu,
+      Menu,
       addEquip,
-      el_Table,
-      equipDetail,
+      Table,
       scrollToY,
       search
     },
@@ -99,7 +97,9 @@
       },
       CurrentChange(val) {
         this.page = val - 1;
-        this.getInstrumentByCid(this.page, this.size, this.cid, this.sort);
+        this.$store.state.equipment.equipTypeActive.id === 0 ?
+          this.getUserInstrument(this.page, this.size) :
+          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort);
       },
       getCategories() {
         equipment
@@ -198,57 +198,47 @@
       if (this.$store.state.equipment.equipTypes.length === 0) {
         this.getCategories();
       }
-      this.getInstrumentByCid(this.page, this.size, 1, this.sort);
+      this.$store.state.equipment.equipTypeActive.id === 0 ?
+        this.getUserInstrument(this.page, this.size) :
+        this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort);
     }
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../common/sass/components/modal-transition";
+
   .window {
     position: relative;
-    z-index: 9999;
+    z-index: 2;
     min-width: 1280px;
     height: 100%;
     overflow: visible;
-
-    .model-enter, .model-leave-to {
-      opacity: 0;
+    .nav {
+      width: 100%;
     }
-    .model-enter-to, .model-leave {
-      opacity: 1;
+    .el_NavMenu {
+      position: fixed;
+      top: 18%;
+      left: 17%;
     }
-    .model-leave-active {
-      transition: all 0.3s;
+    .el_table {
+      position: relative !important;
+      left: 28%;
+      width: 960px !important;
+    }
+    #footer {
+      position: absolute;
+      z-index: 9999;
     }
   }
-</style>
-
-<style lang="scss" rel="stylesheet/scss" scoped>
-  .window /deep/ .nav {
-    width: 100%;
-    z-index: 9999;
-  }
-
-  .window /deep/ .el_NavMenu {
-    position: fixed;
-    top: 18%;
-    left: 17%;
-  }
+  @include modal-transition;
 
   @media screen and (max-width: 1280px) {
-    .window /deep/ .el_NavMenu {
+    .window .el_NavMenu {
       left: 210px;
     }
   }
 
-  .window /deep/ .el_table {
-    position: relative !important;
-    left: 28%;
-    width: 960px !important;
-  }
 
-  .window /deep/ #footer {
-    position: absolute;
-    z-index: 9999;
-  }
 </style>

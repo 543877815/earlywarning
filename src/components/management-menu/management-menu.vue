@@ -7,7 +7,7 @@
           <el-radio-button :label="true">收起</el-radio-button>
         </el-radio-group>
         <el-menu
-          default-active="1"
+          :default-active="$store.state.equipment.equipTypeActive.id.toString()"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose"
@@ -15,7 +15,7 @@
           <el-menu-item v-for="(item, index) in $store.state.equipment.equipTypes"
                         :index="item.id.toString()"
                         :key="item.id"
-                        @click="switchType(item.id)">
+                        @click="switchType(item)">
             <i class="el-icon-location"></i>
             <span slot="title">{{item.name}}</span>
           </el-menu-item>
@@ -43,14 +43,15 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      switchType(cid){
-        this.$emit('switchType', cid);
+      switchType(item){
+        this.$store.commit("changeEquipActive", item);
+        this.$emit('switchType', item.id);
       }
     }
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 150px;
     min-height: 400px;

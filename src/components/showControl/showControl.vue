@@ -38,7 +38,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   .showControl-wrapper {
     border-radius: 50%;
     position: fixed;

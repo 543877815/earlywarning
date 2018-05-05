@@ -131,7 +131,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
   .Masthead {
     position: relative;

@@ -45,7 +45,7 @@
         </el-table>
         <el-pagination slot="body"
                        background
-                       layout="prev, pager, next"
+                       layout="total, prev, pager, next, jumper"
                        @current-change="CurrentChange"
                        :total="total">
         </el-pagination>
@@ -200,9 +200,10 @@
   }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import '../../common/sass/components/equipmentModal';
-
+  @import '../../common/sass/components/modal-transition';
+  @include modal-transition;
   .addEquip-wrapper {
     border-radius: 50%;
     position: fixed;
@@ -218,27 +219,25 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    .EquipmentType {
-      .modal {
-        .modal-dialog {
-          top: 50%;
-          transform: translateY(-50%);
-          margin: 0 auto;
-          width: 550px;
-          .radio {
-            display: flex;
-            flex-flow: row;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            .el-radio {
-              margin: 5px;
-            }
+    .EquipmentType /deep/ .modal {
+      .modal-dialog {
+        top: 50% !important;
+        transform: translateY(-50%);
+        margin: 0 auto;
+        width: 550px;
+        .radio {
+          display: flex;
+          flex-flow: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+          .el-radio {
+            margin: 5px;
           }
         }
       }
     }
-    .EquiptemplateList {
+    .EquiptemplateList /deep/ .modal {
       .modal-dialog {
         top: 50%;
         transform: translateY(-50%);
@@ -254,24 +253,5 @@
     .Equiptemplate {
       @include equipmentModal();
     }
-  }
-</style>
-
-<style lang="scss" rel="stylesheet/scss" scoped>
-  .addEquip-wrapper {
-    border-radius: 50%;
-    position: fixed;
-    right: 50px;
-    bottom: 70px;
-    background-color: #2d8cf0;
-    z-index: 9999;
-    height: 42px;
-    width: 42px;
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
   }
 </style>

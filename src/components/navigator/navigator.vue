@@ -22,7 +22,7 @@
       </router-link>
       <div class="personal-info">
         <span class="greeting">你好，<span class="name">{{$store.state.user.name}}</span></span>
-        <img :src="$store.state.user.avatar"  width="45" height="45">
+        <img :src="$store.state.user.avatar" width="45" height="45">
         <div class="info-panel" :class="{'navChange':navChange}">
           <div class="exit" @click="exit">
             <div class="icon-wrapper">
@@ -44,23 +44,22 @@
               <div class="icon-wrapper">
                 <img src="./icon-avatar.png" alt="">
               </div>
-              <div class="setting">
-                <router-link to="/settings/baseInfo">个人设置</router-link>
-              </div>
+              <router-link to="/settings/baseInfo">
+                <el-button size="middle">
+                  个人设置
+                </el-button>
+              </router-link>
             </div>
             <div class="right">
               <div class="icon-wrapper">
                 <img src="./icon-trends.png" alt="">
               </div>
               <router-link to="/userNews">
-                <div class="trends">
                   <el-badge :value="12" class="item">
                     <el-button size="middle">
                       用户动态
                     </el-button>
                   </el-badge>
-                  <!--<router-link to="/userNews"></router-link>-->
-                </div>
               </router-link>
             </div>
           </div>
@@ -72,6 +71,7 @@
 
 <script type="text/ecmascript-6">
   import User from '../../apis/User'
+
   const user = new User();
 
   export default {
@@ -112,7 +112,7 @@
         default: false
       }
     },
-    created(){
+    created() {
       if (!this.$store.state.user.id) {
         this.getUserInfo();
       }
@@ -120,7 +120,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import '../../common/sass/mixin';
   @import '../../common/sass/variables';
 
@@ -132,7 +132,7 @@
     flex-flow: row;
     justify-content: space-between;
     position: relative;
-    z-index: 9999;
+    z-index: 999;
     .left, .right {
       padding: 5px 0;
       display: flex;
@@ -231,21 +231,6 @@
             justify-content: center;
             cursor: pointer;
           }
-          .trends {
-            cursor: pointer;
-            padding: 0 !important;
-            .el-button {
-              padding: 4px 20px !important;
-              background-color: darkgrey;
-              color: #fff;
-              &:hover {
-                outline: 0;
-              }
-              span {
-                font-size: 20px;
-              }
-            }
-          }
           .up, .down {
             display: flex;
             flex-flow: row;
@@ -272,15 +257,6 @@
             top: 20px;
             .left, .right {
               margin: 0 20px;
-              .setting, .trends {
-                background: darkgray;
-                font-size: 20px;
-                padding: 5px 20px;
-                border-radius: 5px;
-                a {
-                  color: #fff;
-                }
-              }
               .icon-wrapper {
                 margin-right: 15px;
               }

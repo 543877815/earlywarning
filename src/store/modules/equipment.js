@@ -1,5 +1,5 @@
 const state = {
-  equipActive: {
+  equipTypeActive: {
     name: '所有',
     id: 0,
   },
@@ -29,8 +29,8 @@ const getters = {
 }
 
 const mutations = {
-  changeEquipActive(state, name) {
-    state.equipActive = name;
+  changeEquipActive(state, item) {
+    state.equipTypeActive = item;
   },
 }
 

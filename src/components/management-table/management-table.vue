@@ -1,7 +1,7 @@
 <template>
   <div class="el_table">
     <div class="table">
-      <h2>流体仪表</h2>
+      <h2>{{$store.state.equipment.equipTypeActive.name}}</h2>
       <div class="split"></div>
       <el-table
         :data="tableData"
@@ -152,7 +152,7 @@
   }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import '../../common/sass/components/equipmentModal';
 
   .el_table {

@@ -28,7 +28,6 @@
     },
     methods: {
       switchEquip(item) {
-        console.log(item);
         this.$store.commit("changeEquipActive", item);
         this.$emit('changeEquipActive');
       }
@@ -36,7 +35,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../common/sass/variables";
 
   .menu {

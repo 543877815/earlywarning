@@ -38,7 +38,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   .equipItem {
     width: 500px;
     height: 500px;

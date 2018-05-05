@@ -1,0 +1,13 @@
+@mixin modal-transition(){
+  .modal-enter, .modal-leave-to {
+    opacity: 0;
+  }
+  .modal-enter-to, .modal-leave {
+    opacity: 1;
+  }
+  .modal-leave-active {
+    z-index: 9999;
+    position: relative;
+    transition: all 0.3s;
+  }
+}

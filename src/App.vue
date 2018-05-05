@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="particles-js" class="particles-js" ref="particlesJs">
+    <div id="particles-js" class="particles-js">
 
     </div>
     <router-view/>
@@ -27,7 +27,7 @@
     width: 100%;
     .particles-js {
       position: fixed;
-      z-index: 1;
+      z-index: 2;
       left: 0;
       top: 0;
       width: 100%;

@@ -12,8 +12,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../../components/nav_index/nav_index';
-  import sidebar from '../../components/sidebar/sidebar'
+  import navigator from '../../components/navigator/navigator';
+  import sidebar from '../../components/setting-sidebar/setting-sidebar'
   import Footer from '../../components/footer/footer'
   import showControl from '../../components/showControl/showControl'
 
@@ -32,7 +32,7 @@
   };
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   .window {
     width: 100%;
     height: 100%;
@@ -64,7 +64,3 @@
   }
 </style>
 
-
-<style lang="scss" rel="stylesheet/scss" scoped>
-
-</style>

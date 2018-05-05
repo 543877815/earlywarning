@@ -8,9 +8,9 @@ import login from '@/pages/login/login'
 import index from '@/pages/index/index'
 
 import setting from '@/pages/settings/settings'
-import baseInfo from '@/components/baseInfo/baseInfo'
-import changePassword from '@/components/changePassword/changePassword'
-import emailSetting from '@/components/emailSetting/emailSetting'
+import baseInfo from '@/components/setting-info/setting-info'
+import changePassword from '@/components/setting-password/setting-password'
+import emailSetting from '@/components/setting-email/setting-email'
 
 import management from '@/pages/management/management'
 import history from '@/pages/history/history'

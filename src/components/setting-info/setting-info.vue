@@ -53,7 +53,7 @@
   const user = new User();
 
   export default {
-    name: "baseInfo",
+    name: "setting-info",
     data() {
       return {
         name: '',
@@ -145,7 +145,7 @@
   }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../common/sass/variables";
 
   $left-wrapper-width: $setting-container-left-wrapper-width;
