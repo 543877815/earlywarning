@@ -7,7 +7,7 @@
           <div class="item">当前邮箱：</div>
           <div class="input">
             <input type="text" class="presentEmail" readonly
-                   :placeholder="`${$store.state.user.email} ${$store.getters.isEmailLocked}`">
+                   :placeholder="`${$store.state.user.email||''} ${$store.getters.isEmailLocked}`">
             <div class="unlock" @click="unlockEmail" v-if="$store.state.user.isEmailLocked === 'LOCKED'">去激活</div>
           </div>
         </div>

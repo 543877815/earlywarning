@@ -4,9 +4,8 @@
     <panel ref="Panel"
            @login="login"
            @register="register"
-           :verCodeUrl="verCodeUrl"
+           :verCodeSrc="verCodeSrc"
            :loginIsActive="loginIsActive"
-           :BaseUrl="BaseUrl"
            @changeToLogin="changeToLogin"></panel>
     <showControl :right="50" :bottom="60"></showControl>
     <Footer></Footer>
@@ -19,15 +18,13 @@
   import panel from '../../components/login-panel/login-panel';
   import Footer from '../../components/footer/footer'
   import User from '../../apis/User';
-  import BaseUrl from '../../apis/BaseUrl';
 
   const user = new User();
 
   export default {
     data() {
       return {
-        BaseUrl: BaseUrl,
-        verCodeUrl: '/api/getVerCode',
+        verCodeSrc: '/api/getVerCode',
         username: null,
         password: null,
         email: null,
@@ -49,15 +46,15 @@
         this.loginIsActive = msg;
       },
       login(username, password, verCodeOrPassword) {
-        if (username === '') {
+        if (!username) {
           this.$message.error('用户名为空');
           return;
         }
-        if (password === '') {
+        if (!password) {
           this.$message.error('密码为空');
           return;
         }
-        if (verCodeOrPassword === '') {
+        if (!verCodeOrPassword) {
           this.$message.error('验证码为空');
           return;
         }
@@ -72,8 +69,8 @@
               this.$message.success('登录成功！');
               if (res.data.roles[0].name === 'user') {
                 this.$router.push('/index');
-              }else if(res.data.roles[0].name === 'admin'){
-                this.$router.push('/')
+              } else if (res.data.roles[0].name === 'maintainer') {
+                this.$router.push('/history')
               }
             } else {
               this.$message.error(res.msg);
@@ -84,11 +81,11 @@
           });
       },
       register(username, password, verCodeOrPassword) {
-        if (username === '') {
+        if (!username) {
           this.$message.error('用户名为空');
           return;
         }
-        if (password === '' || verCodeOrPassword === '') {
+        if (!password || !verCodeOrPassword) {
           this.$message.error('密码为空');
           return;
         }

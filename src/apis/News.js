@@ -13,6 +13,11 @@ export default class User extends BaseApi {
 
   setAllMessageRead(data) {
     const url = '/readAllMessage';
-    return this.post(url, data);l
+    return this.post(url, data);
+  }
+
+  deleteMessage(data){
+    const url = '/deleteMessage';
+    return this.post(url, data);
   }
 }

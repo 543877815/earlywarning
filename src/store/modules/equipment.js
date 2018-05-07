@@ -30,7 +30,7 @@ const getters = {
 
 const mutations = {
   changeEquipActive(state, item) {
-    state.equipTypeActive = item;
+    state.equipTypeActive = Object.assign({},item);
   },
 }
 

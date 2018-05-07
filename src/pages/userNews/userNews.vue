@@ -81,7 +81,9 @@
           <div class="title el-icon-setting"> 单号详情</div>
           <div class="detail">
             <div class="number">工单号：{{orderData.id}}</div>
-            <div class="crew" v-if="orderData.maintainer">维修人员：{{orderData.maintainer.name || orderData.maintainer.username}}</div>
+            <div class="crew" v-if="orderData.maintainer">维修人员：{{orderData.maintainer.name ||
+              orderData.maintainer.username}}
+            </div>
             <div class="contact" v-if="orderData.maintainer">维修人员联系方式：{{orderData.maintainer.email}}</div>
             <div class="track">
               <div class="left">单号跟踪：</div>
@@ -196,6 +198,23 @@
       modal
     },
     methods: {
+      handleDelete(index, scopeRow) {
+        var intIds = [];
+        intIds.push(scopeRow.id)
+        news
+          .deleteMessage({
+            intIds
+          })
+          .then((res)=>{
+            if (res.ret === 200 && res.msg === 'success'){
+              this.$message.success(`删除成功！`);
+              this.getMessages(this.page, this.size)
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       currentChange(val) {
         this.page = val - 1;
         this.getMessages(this.page, this.size)
@@ -337,6 +356,7 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../common/sass/components/equipmentOrder";
   @import '../../common/sass/components/modal-transition';
+
   $circle-diameter: 40px;
   $border-left-width: 8px;
   .window {
@@ -376,7 +396,7 @@
     }
     .container {
       width: 60% !important;
-      margin: 100px auto 150px;
+      margin: 100px auto 180px;
       position: relative;
       z-index: 3;
     }

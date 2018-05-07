@@ -298,7 +298,7 @@
     .container {
       width: 60%;
       margin: 100px auto 150px;
-      min-height: 575px;
+      min-height: 610px;
       display: flex;
       flex-flow: column;
       .el-pagination {

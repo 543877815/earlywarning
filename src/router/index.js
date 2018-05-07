@@ -18,7 +18,11 @@ import userNews from '@/pages/userNews/userNews'
 
 //管理员
 import AdminLogin from '@/pages/AdminLogin/AdminLogin'
-import AdminBaseLayout from '@/components/AdminBaseLayout/AdminBaseLayout'
+import AdminBaseLayout from '@/pages/AdminBaseLayout/AdminBaseLayout'
+import AdminModifyPassword from '@/components/admin-modifyPassword/admin-modifyPassword'
+import AdminIndex from '@/components/admin-index/admin-index'
+import AdminEquipmentType from '@/components/admin-equipmentType/admin-equipmentType'
+
 Vue.use(Element)
 Vue.use(Router)
 
@@ -57,37 +61,53 @@ export default new Router({
       component: userNews
     },
     {
-      path: '/adminLogin',
-      name: 'adminLogin',
+      path: '/settings',
+      name: 'settings',
+      component: setting,
+      children: [
+        {
+          path: '/baseInfo',
+          name: 'baseInfo',
+          component: baseInfo
+        },
+        {
+          path: '/changePassword',
+          name: 'changePassword',
+          component: changePassword
+        },
+        {
+          path: '/emailSetting',
+          name: 'emailSetting',
+          component: emailSetting
+        }
+      ]
+    },
+    {
+      path: '/admin/login',
+      name: 'login',
       component: AdminLogin,
     },
     {
       path: '/admin',
       name: 'layout',
       component: AdminBaseLayout,
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: setting,
-      children: [
+      children:[
         {
-          path: 'baseInfo',
-          name: 'baseInfo',
-          component: baseInfo
+          path: 'index',
+          name: 'index',
+          component: AdminIndex
         },
         {
-          path: 'changePassword',
-          name: 'changePassword',
-          component: changePassword
+          path: 'modifyPassword',
+          name: 'modifyPassword',
+          component: AdminModifyPassword
         },
         {
-          path: 'emailSetting',
-          name: 'emailSetting',
-          component: emailSetting
+          path: 'equipmentType',
+          name: 'equipmentType',
+          component: AdminEquipmentType
         }
       ]
     },
-
   ]
 })

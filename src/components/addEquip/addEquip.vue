@@ -1,6 +1,6 @@
 <template>
   <div class="addEquip-wrapper" :style="{bottom: bottom+'px', right: right+'px'}" @click.prevent.stop="showTypes">
-    <img src="./plus.png" width="34" height="30">
+    <img src="../../assets/plus.png" width="34" height="30">
     <transition name="modal">
       <Modal :wrapperClass="'EquipmentType'" v-if="messageBox" @hideDetail="hideAll">
         <div class="title" slot="header">仪器类型</div>

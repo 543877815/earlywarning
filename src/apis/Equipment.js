@@ -30,4 +30,19 @@ export default class User extends BaseApi {
     const url = '/modifyInstrument';
     return this.post(url, data);
   }
+
+  createCategory(data){
+    const url = '/admin/createCategory';
+    return this.post(url, data);
+  }
+
+  modifyCategory(data){
+    const url = '/admin/modifyCategory';
+    return this.post(url, data)
+  }
+
+  deleteCategory(data){
+    const url = '/admin/deleteCategory';
+    return this.post(url, data);
+  }
 }

@@ -25,6 +25,7 @@
     "vue-lazyload": "^1.2.3",
     "vue-parallaxy": "^1.1.1",
     "vue-router": "^3.0.1",
+    "vue-socket.io": "^2.1.1-b",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

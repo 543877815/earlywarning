@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <div class="left">
+    <div class="left" v-if="$store.state.user.roles[0].id === 1" style="cursor: pointer">
       <div class="icon-wrapper">
         <router-link to="/index">
           <img src="./icon-home.png" width="50" height="50">
@@ -12,9 +12,17 @@
         </router-link>
       </div>
     </div>
+    <div class="left" v-if="$store.state.user.roles[0].id === 2">
+      <div class="icon-wrapper">
+        <img src="./icon-home.png" width="50" height="50">
+      </div>
+      <div class="project-name">
+        工业监控预警系统
+      </div>
+    </div>
     <div class="right">
       <div class="role">当前角色：{{$store.state.user.roles[0].description}}</div>
-      <router-link to="/management">
+      <router-link to="/management" v-if="$store.state.user.roles[0].id === 1">
         <div class="management">仪器管理</div>
       </router-link>
       <router-link to="/history">
@@ -55,11 +63,11 @@
                 <img src="./icon-trends.png" alt="">
               </div>
               <router-link to="/userNews">
-                  <el-badge :value="12" class="item">
-                    <el-button size="middle">
-                      用户动态
-                    </el-button>
-                  </el-badge>
+                <el-badge :value="12" class="item">
+                  <el-button size="middle">
+                    用户动态
+                  </el-button>
+                </el-badge>
               </router-link>
             </div>
           </div>
@@ -113,9 +121,7 @@
       }
     },
     created() {
-      if (!this.$store.state.user.id) {
-        this.getUserInfo();
-      }
+      this.getUserInfo();
     },
   };
 </script>
@@ -141,9 +147,9 @@
       align-items: center;
     }
     .left {
-      cursor: pointer;
       margin-left: 44px;
       .project-name {
+        color: #fff;
         font-size: 32px;
         margin-left: 35px;
         @include word-not-select();

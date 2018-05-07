@@ -68,7 +68,9 @@
     methods: {
       searchEquipment(val) {
         this.keyword = val
-        this.getUserInstrument(this.page, this.pageSize, this.sort, this.keyword)
+        this.size = 0;
+        this.$store.state.equipment.equipTypeActive.name = val;
+        this.getUserInstrument(this.page, this.size, this.sort, this.keyword)
       },
       modifyInstrument(id, form) {
         equipment
@@ -98,7 +100,7 @@
       CurrentChange(val) {
         this.page = val - 1;
         this.$store.state.equipment.equipTypeActive.id === 0 ?
-          this.getUserInstrument(this.page, this.size) :
+          this.getUserInstrument(this.page, this.size, this.sort, this.keyword) :
           this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort);
       },
       getCategories() {
@@ -156,6 +158,7 @@
       },
       getInstrumentByCid(page, size, cid, sort = 'id') {
         this.cid = cid;
+        this.keyword = null;
         equipment
           .getInstrumentByCid({
             page: page,
@@ -174,9 +177,9 @@
       getUserInstrument(page, size, sort = 'id', keyWord = null) {
         equipment
           .getUserInstrument({
+            page,
             size,
             sort,
-            page,
             keyWord
           })
           .then((res) => {
@@ -199,7 +202,7 @@
         this.getCategories();
       }
       this.$store.state.equipment.equipTypeActive.id === 0 ?
-        this.getUserInstrument(this.page, this.size) :
+        this.getUserInstrument(this.page, this.size, this.sort, this.keyword) :
         this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort);
     }
   };

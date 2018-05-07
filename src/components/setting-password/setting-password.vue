@@ -29,7 +29,6 @@
 
 <script type="text/ecmascript-6">
   import Header from '../header/header'
-  import {heightSetting} from "../../common/js/heightSetting";
   import User from '../../apis/User';
 
   const user = new User();
@@ -63,7 +62,6 @@
           this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间');
           return;
         }
-        console.log('222')
         user
           .updatePassword({
             oldPassword: this.oldPassword,

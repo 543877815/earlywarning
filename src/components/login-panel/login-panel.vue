@@ -67,10 +67,7 @@
 
   export default {
     props: {
-      verCodeUrl: {
-        type: String
-      },
-      BaseUrl: {
+      verCodeSrc: {
         type: String
       },
       loginIsActive: {
@@ -80,7 +77,6 @@
     },
     data() {
       return {
-        verCodeSrc: '',
         lineLeft: 240,
         forgetPassword: false,
         username: 'test',
@@ -151,7 +147,8 @@
         }
       },
       getVerCode() {
-        this.verCodeSrc = `${this.verCodeUrl}?time=${Math.random()}`;
+        let temp = this.verCodeSrc;
+        this.verCodeSrc = `${temp}?time=${Math.random()}`;
       }
     },
     created() {
@@ -160,7 +157,6 @@
       })
     },
     mounted() {
-      this.verCodeSrc = this.verCodeUrl;
       this.$forceUpdate();
       window.onresize = () => {
         this.lineControl();
