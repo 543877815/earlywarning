@@ -46,11 +46,15 @@
       flex-flow: row;
       height: 100%;
       .sidebar{
-        flex: 1;
+        /*flex: 1;*/
+        width: 15%;
+        height: 100%;
+        overflow: hidden;
       }
       .container{
         margin: 100px 0 0 75px;
-        flex: 5.5;
+        width: 84%;
+        /*flex: 5.5;*/
       }
     }
     .fade-enter, .fade-leave-to {

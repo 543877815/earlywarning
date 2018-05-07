@@ -84,5 +84,7 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-
+  .modify-password{
+    width: 500px;
+  }
 </style>

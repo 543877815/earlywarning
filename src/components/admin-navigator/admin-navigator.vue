@@ -7,7 +7,11 @@
     background-color="#545c64"
     text-color="#fff"
     active-text-color="#ffd04b">
-    <el-menu-item index="1"><router-link to="/admin/index">工业预警管理系统</router-link></el-menu-item>
+    <el-menu-item index="1">
+      <router-link to="/admin/index">
+        工业预警管理系统
+      </router-link>
+    </el-menu-item>
     <el-menu-item index="3" @click="logout" style="float: right;">退出</el-menu-item>
     <el-menu-item index="2" style="float: right">admin</el-menu-item>
   </el-menu>
