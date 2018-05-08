@@ -78,7 +78,7 @@
           <span>仪器模板管理</span>
         </el-menu-item>
       </router-link>
-      <router-link to="/admin/equipmentModel">
+      <router-link to="/admin/equipmentDetail">
         <el-menu-item index="4-3">
           <i class="el-icon-search"></i>
           <span>仪器详情查询</span>

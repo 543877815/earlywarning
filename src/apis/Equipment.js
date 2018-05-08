@@ -11,6 +11,11 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
+  getInstrumentById(data){
+    const url = '/getInstrumentById';
+    return this.get(url, data);
+  }
+
   createInstrument(data) {
     const url = '/createInstrument';
     return this.post(url, data);
@@ -31,18 +36,23 @@ export default class User extends BaseApi {
     return this.post(url, data);
   }
 
-  createCategory(data){
+  createCategory(data) {
     const url = '/admin/createCategory';
     return this.post(url, data);
   }
 
-  modifyCategory(data){
+  modifyCategory(data) {
     const url = '/admin/modifyCategory';
     return this.post(url, data)
   }
 
-  deleteCategory(data){
+  deleteCategory(data) {
     const url = '/admin/deleteCategory';
+    return this.post(url, data);
+  }
+
+  createInstrument(data) {
+    const url = '/admin/createInstrument';
     return this.post(url, data);
   }
 }

@@ -338,7 +338,7 @@
         let newDate = new Date(date),
           year = newDate.getFullYear(),
           month = newDate.getMonth().toString().length === 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1,
-          day = newDate.getDate().toString().length === 1 ? `0${newDate.getDay()}` : newDate.getDay(),
+          day = newDate.getDate().toString().length === 1 ? `0${newDate.getDate()}` : newDate.getDate(),
           hour = newDate.getHours().toString().length === 1 ? `0${newDate.getHours()}` : newDate.getHours(),
           minute = newDate.getMinutes().toString().length === 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes(),
           second = newDate.getSeconds().toString().length === 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds();

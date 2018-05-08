@@ -75,17 +75,17 @@ export default new Router({
       component: setting,
       children: [
         {
-          path: '/baseInfo',
+          path: 'baseInfo',
           name: 'baseInfo',
           component: baseInfo
         },
         {
-          path: '/changePassword',
+          path: 'changePassword',
           name: 'changePassword',
           component: changePassword
         },
         {
-          path: '/emailSetting',
+          path: 'emailSetting',
           name: 'emailSetting',
           component: emailSetting
         }
@@ -93,7 +93,7 @@ export default new Router({
     },
     {
       path: '/admin/login',
-      name: 'login',
+      name: 'admin-login',
       component: AdminLogin,
     },
     {
@@ -103,7 +103,7 @@ export default new Router({
       children: [
         {
           path: 'index',
-          name: 'index',
+          name: 'admin-index',
           component: AdminIndex
         },
         {
