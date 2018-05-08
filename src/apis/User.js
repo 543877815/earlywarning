@@ -21,6 +21,11 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
+  getUsersInfo(data){
+    const url = '/admin/getUsersInfo';
+    return this.get(url, data);
+  }
+
   modifyUserInfo(data) {
     const url = '/modifyUserInfo';
     return this.post(url, data);
@@ -35,4 +40,6 @@ export default class User extends BaseApi {
     const url = '/updateEmail';
     return this.post(url, data);
   }
+
+
 }

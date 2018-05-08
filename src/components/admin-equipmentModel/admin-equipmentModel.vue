@@ -46,13 +46,55 @@
         </el-table-column>
         <el-table-column
           prop="description"
+          width="300"
           label="描述">
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)">修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
     </template>
     <div class="addEquip-wrapper" @click.prevent.stop="showModal">
       <img src="../../assets/plus.png" width="34" height="30">
     </div>
+    <transition name="modal">
+      <Modal :wrapperClass="'EquipmentModal'" v-if="ModifyEquipmentModal" @hideDetail="hideAll">
+        <div class="title" slot="header">修改模板仪器</div>
+        <el-form ref="form" :model="newEquipmentForm" label-width="80px" slot="body">
+          <el-form-item label="仪器名称">
+            <el-input v-model="newEquipmentForm.name" :placeholder="oldEquipmentForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="仪器型号">
+            <el-input v-model="newEquipmentForm.insType" :placeholder="oldEquipmentForm.insType"></el-input>
+          </el-form-item>
+          <el-form-item label="仪器参数">
+            <el-input v-model="newEquipmentForm.param" :placeholder="oldEquipmentForm.param"></el-input>
+          </el-form-item>
+          <el-form-item label="使用年限">
+            <el-input v-model="newEquipmentForm.durableYears" :placeholder="oldEquipmentForm.durableYears"></el-input>
+          </el-form-item>
+          <el-form-item label="告警阈值">
+            <el-input v-model.number="newEquipmentForm.thresholdValue" type="number"
+                      :placeholder="oldEquipmentForm.thresholdValue"></el-input>
+          </el-form-item>
+          <el-form-item label="仪器描述">
+            <el-input type="textarea" v-model="newEquipmentForm.description"
+                      :placeholder="oldEquipmentForm.description"></el-input>
+          </el-form-item>
+        </el-form>
+        <button class="btn btn-primary" slot="footer" @click.prevent.stop="modifyEquipment">修改</button>
+      </Modal>
+    </transition>
     <transition name="modal">
       <Modal :wrapperClass="'EquipmentModal'" v-if="CreateEquipmentModal" @hideDetail="hideAll">
         <div class="title" slot="header">创建模板仪器</div>
@@ -98,8 +140,17 @@
     data() {
       return {
         CreateEquipmentModal: false,
+        ModifyEquipmentModal: false,
         newEquipmentForm: {
           radio: 1,
+          name: '',
+          insType: '',
+          param: '',
+          durableYears: '',
+          thresholdValue: '',
+          description: ''
+        },
+        oldEquipmentForm: {
           name: '',
           insType: '',
           param: '',
@@ -120,6 +171,44 @@
       Modal
     },
     methods: {
+      handleEdit(index, scopeRow) {
+        this.newEquipmentForm.radio = scopeRow.id;
+        this.oldEquipmentForm.name = scopeRow.name;
+        this.oldEquipmentForm.insType = scopeRow.insType;
+        this.oldEquipmentForm.param = scopeRow.param
+        this.oldEquipmentForm.durableYears = scopeRow.durableYears;
+        this.oldEquipmentForm.thresholdValue = scopeRow.thresholdValue;
+        this.oldEquipmentForm.description = scopeRow.description;
+        this.ModifyEquipmentModal = true
+      },
+      handleDelete(index, scopeRow) {
+
+      },
+      modifyEquipment() {
+        equipment
+          .modifyInstrument({
+            id: this.newEquipmentForm.radio,
+            name: this.newEquipmentForm.name || this.oldEquipmentForm.name,
+            insType: this.newEquipmentForm.insType || this.oldEquipmentForm.insType,
+            param: this.newEquipmentForm.param || this.oldEquipmentForm.param,
+            durableYears: this.newEquipmentForm.durableYears || this.oldEquipmentForm.durableYears,
+            thresholdValue: this.newEquipmentForm.thresholdValue || this.oldEquipmentForm.thresholdValue,
+            description: this.newEquipmentForm.description || this.oldEquipmentForm.description
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`模板仪器 ${this.newEquipmentForm.name || this.oldEquipmentForm.name} 修改成功！`)
+              this.hideAll();
+              this.getCategories();
+              for (let key in this.newEquipmentForm){
+                key === 'radio' ? this.newEquipmentForm[key] = 1 : this.newEquipmentForm[key] = ''
+              }
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       createEquipment() {
         for (let key in this.newEquipmentForm) {
           if (!this.newEquipmentForm[key]) {
@@ -156,7 +245,7 @@
         this.CreateEquipmentModal = true
       },
       hideAll() {
-        this.CreateEquipmentModal = false
+        this.CreateEquipmentModal = this.ModifyEquipmentModal = false
       },
       handleClick(tab, event) {
         this.page = 0

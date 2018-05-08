@@ -1,10 +1,30 @@
 <template>
   <div class="order-detail">
-    <el-input placeholder="请输入仪器ID" v-model.number="input">
+    <el-input placeholder="请输入维修单号" v-model.number="input">
       <el-button slot="append" icon="el-icon-search" @click="getOrder"></el-button>
     </el-input>
-    <el-form ref="form" :model="order" label-width="80px" slot="body">
-
+    <el-form ref="form" :model="order" label-width="100px" slot="body">
+      <el-form-item label="工单创建时间">
+        <el-input v-model="createTime"></el-input>
+      </el-form-item>
+      <el-form-item label="仪器ID">
+        <el-input v-model="order.instrument.id"></el-input>
+      </el-form-item>
+      <el-form-item label="仪器名称">
+        <el-input v-model="order.instrument.name"></el-input>
+      </el-form-item>
+      <el-form-item label="仪器类型">
+        <el-input v-model="order.instrument.category.name"></el-input>
+      </el-form-item>
+      <el-form-item label="仪器所有者">
+        <el-input v-model="order.owner.username"></el-input>
+      </el-form-item>
+      <el-form-item label="维修人员">
+        <el-input v-model="order.maintainer.username"></el-input>
+      </el-form-item>
+      <el-form-item label="仪器状态">
+        <el-input v-model="maintainStatus"></el-input>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -18,7 +38,41 @@
     data() {
       return {
         input: 0,
-        order: {}
+        order: {
+          createTime: null,
+          id: 0,
+          instrument: {
+            category: {
+              description: '',
+              id: 0,
+              name: '',
+            },
+            description: '',
+            durableYears: '',
+            id: 0,
+            insType: '',
+            name: '',
+            param: '',
+            time: 0,
+          },
+          maintainStatus: -1,
+          maintainer: {
+            email: '',
+            id: 0,
+            isEmailLocked: 1,
+            isLocked: 1,
+            roles: [],
+            username: ''
+          },
+          owner: {
+            email: '',
+            id: 0,
+            isEmailLocked: 1,
+            isLocked: 1,
+            roles: [],
+            username: ''
+          }
+        }
       }
     },
     methods: {
@@ -32,14 +86,50 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-
+              this.$message.success(`查找成功!`)
+              console.log(this.order.maintainStatus)
+              this.order = res.data;
             }
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
-      }
-    }
+      },
+      timeParse: function (date) {
+        let newDate = new Date(date),
+          year = newDate.getFullYear(),
+          month = newDate.getMonth().toString().length == 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1,
+          day = newDate.getDate().toString().length == 1 ? `0${newDate.getDate()}` : newDate.getDate(),
+          hour = newDate.getHours().toString().length == 1 ? `0${newDate.getHours()}` : newDate.getHours(),
+          minute = newDate.getMinutes().toString().length == 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes(),
+          second = newDate.getSeconds().toString().length == 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds();
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      },
+    },
+    computed:{
+      createTime:{
+        get: function () {
+          return this.timeParse(this.order.createTime)
+        },
+      },
+      maintainStatus: {
+        get: function () {
+          switch (this.order.maintainStatus) {
+            case 0:
+              return '等待确认';
+            case 1:
+              return '等待维修';
+            case 2:
+              return '正在维修';
+            case 3:
+              return '维修完成';
+          }
+        }
+      },
+    },
+    filters: {
+
+    },
   };
 </script>
 

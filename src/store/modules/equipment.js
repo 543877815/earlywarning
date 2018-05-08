@@ -26,12 +26,27 @@ const getters = {
       return state.equipItems.filter((item) => item.id === id);
     }
   }
+
+
 }
 
 const mutations = {
   changeEquipActive(state, item) {
     state.equipTypeActive = Object.assign({},item);
   },
+
+  maintainStatus(state, status){
+    switch (status){
+      case 0:
+        return '等待确认';
+      case 1:
+        return '等待维修';
+      case 2:
+        return '正在维修';
+      case 3:
+        return '维修完成';
+    }
+  }
 }
 
 const action = {}

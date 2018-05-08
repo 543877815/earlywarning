@@ -62,6 +62,7 @@
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
               this.equipment = res.data;
+              this.$message.success(`查找成功！`)
             }
           })
           .catch((err) => {
