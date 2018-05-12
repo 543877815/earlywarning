@@ -1,5 +1,10 @@
 <template>
   <div class="user-equipment-lists">
+    <div class="input-wrapper">
+      <el-input placeholder="请输入用户ID" v-model.number="input" class="input-with-select">
+        <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
+      </el-input>
+    </div>
     <el-table
       :data="tableData"
       style="width: 100%">
@@ -27,41 +32,57 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import Equipment from '../../apis/Equipment'
+
+  const equipment = new Equipment();
+
   export default {
     data() {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        tableData: [],
         page: 0,
-        size: 0,
+        size: 10,
         sort: 'id',
         keyword: null
       }
+    },
+    methods: {
+      getUserInstruments(page, size, sort, uid = null, keyWord = null) {
+        equipment
+          .adminGetUserInstrument({
+            page,
+            size,
+            sort,
+            uid,
+            keyWord
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      }
+    },
+    mounted() {
+        this.getUserInstruments(this.page, this.size, this.sort, this.uid, this.keyWord);
     }
   };
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+  .input-wrapper {
+    width: 500px;
+    margin-bottom: 30px;
+  }
+
   .user-equipment-lists {
 
   }
 
-  .el-pagination{
+  .el-pagination {
     margin-top: 20px;
   }
 </style>

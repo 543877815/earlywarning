@@ -11,7 +11,7 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
-  getInstrumentById(data){
+  getInstrumentById(data) {
     const url = '/getInstrumentById';
     return this.get(url, data);
   }
@@ -23,6 +23,11 @@ export default class User extends BaseApi {
 
   getUserInstrument(data) {
     const url = '/getUserInstrument';
+    return this.get(url, data);
+  }
+
+  adminGetUserInstrument(data) {
+    const url = '/admin/getInstruments';
     return this.get(url, data);
   }
 

@@ -1,67 +1,145 @@
 <template>
   <div class="user-order-lists">
+    <div class="input-wrapper">
+      <el-input :placeholder="!uid?'请输入用户ID':uid" v-model.number="input" class="input-with-select">
+        <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
+      </el-input>
+    </div>
     <el-table
       :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="date"
-        label="日期"
+        prop="id"
+        label="工单号"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="name"
-        label="姓名"
+        label="创建时间"
         width="180">
+        <template slot-scope="scope">
+          {{ scope.row.createTime | timeParse }}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="地址">
+        width="180"
+        label="订单状态">
+        <template slot-scope="scope">
+          {{ scope.row.maintainStatus | maintainStatus }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="success"
+            @click="viewDetail(scope.$index, scope.row)">查看详情
+          </el-button>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
       background
       layout="total, prev, pager, next"
-      :total="1000">
+      :total="total">
     </el-pagination>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import Order from '../../apis/Order';
+
+  const order = new Order();
+
   export default {
     data() {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        total: 0,
+        input: '',
+        tableData: [],
         page: 0,
-        size: 0,
+        size: 10,
         sort: 'id',
-        keyword: null
+        uid: null,
+        status: 0
       }
+    },
+    methods: {
+      viewDetail(){
+        this.$router.push('/admin/orderDetail')
+      },
+      back(){
+        this.$router.push('/admin/userInfoLists');
+      },
+      search() {
+        this.page = 0;
+        this.uid = this.input;
+        this.getOrderList(this.page, this.size, this.sort, this.uid)
+      },
+      getOrderList(page, size, sort, uid = null, status = null) {
+        if (!uid) {
+          order
+            .getOrderList({
+              page,
+              size,
+              sort
+            })
+            .then((res) => {
+              if (res.ret === 200 && res.msg === 'success') {
+                this.tableData = res.data.content;
+                this.total = res.data.totalElements;
+              }
+            })
+            .catch((err) => {
+              this.$message.error(`[系统提醒: ${err.msg}]`);
+            });
+        } else {
+          order
+            .adminGetOrderList({
+              page,
+              size,
+              sort,
+              uid,
+              status
+            })
+            .then((res) => {
+              if (res.ret === 200 && res.msg === 'success') {
+                if (res.data) {
+                  this.tableData = res.data.content;
+                  this.total = res.data.totalElements;
+                } else {
+                  this.tableData = [];
+                  this.total = 0;
+                }
+              }
+            })
+            .catch((err) => {
+              this.$message.error(`[系统提醒: ${err.msg}]`);
+            });
+        }
+      }
+    },
+    mounted() {
+      this.uid = this.$route.query.uid;
+      this.getOrderList(this.page, this.size, this.sort, this.uid, this.status);
     }
   };
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+  .back {
+    margin-bottom: 30px !important;
+  }
+
+  .input-wrapper {
+    width: 500px;
+    margin-bottom: 30px;
+  }
+
   .user-order-lists {
 
   }
 
-  .el-pagination{
+  .el-pagination {
     margin-top: 20px;
   }
 </style>

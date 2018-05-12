@@ -108,7 +108,7 @@
       margin: 0 auto;
       position: absolute;
       left: 50%;
-      top: 35%;
+      top: 25%;
       z-index: 999;
       border-radius: 10px;
       box-shadow: darkgrey 10px 10px 30px 5px;

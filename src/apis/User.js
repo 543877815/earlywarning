@@ -22,7 +22,7 @@ export default class User extends BaseApi {
   }
 
   getUsersInfo(data){
-    const url = '/admin/getUsersInfo';
+    const url = '/admin/getUserInfo';
     return this.get(url, data);
   }
 

@@ -15,4 +15,9 @@ export default class User extends BaseApi {
     const url = '/getOrderDetail';
     return this.get(url, data);
   }
+
+  adminGetOrderList(data){
+    const url = '/admin/getOrderList';
+    return this.get(url, data);
+  }
 }

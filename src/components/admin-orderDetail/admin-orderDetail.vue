@@ -76,6 +76,16 @@
       }
     },
     methods: {
+      timeParse(date){
+        let newDate = new Date(date),
+          year = newDate.getFullYear(),
+          month = newDate.getMonth().toString().length == 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1,
+          day = newDate.getDate().toString().length == 1 ? `0${newDate.getDate()}` : newDate.getDate(),
+          hour = newDate.getHours().toString().length == 1 ? `0${newDate.getHours()}` : newDate.getHours(),
+          minute = newDate.getMinutes().toString().length == 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes(),
+          second = newDate.getSeconds().toString().length == 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds();
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      },
       getOrder() {
         this.getOrderDetail(this.input)
       },
@@ -94,16 +104,6 @@
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
-      },
-      timeParse: function (date) {
-        let newDate = new Date(date),
-          year = newDate.getFullYear(),
-          month = newDate.getMonth().toString().length == 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1,
-          day = newDate.getDate().toString().length == 1 ? `0${newDate.getDate()}` : newDate.getDate(),
-          hour = newDate.getHours().toString().length == 1 ? `0${newDate.getHours()}` : newDate.getHours(),
-          minute = newDate.getMinutes().toString().length == 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes(),
-          second = newDate.getSeconds().toString().length == 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds();
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
       },
     },
     computed:{
@@ -126,9 +126,6 @@
           }
         }
       },
-    },
-    filters: {
-
     },
   };
 </script>
