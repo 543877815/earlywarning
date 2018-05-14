@@ -71,6 +71,16 @@
       <Modal :wrapperClass="'EquipmentModal'" v-if="ModifyEquipmentModal" @hideDetail="hideAll">
         <div class="title" slot="header">修改模板仪器</div>
         <el-form ref="form" :model="newEquipmentForm" label-width="80px" slot="body">
+          <el-form-item label="仪器图片">
+            <el-card :body-style="{ padding: '0px' }">
+              <img src="" class="image">
+              <div style="padding: 14px;">
+                <div class="bottom clearfix">
+                  <el-button type="text" class="button">操作按钮</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-form-item>
           <el-form-item label="仪器名称">
             <el-input v-model="newEquipmentForm.name" :placeholder="oldEquipmentForm.name"></el-input>
           </el-form-item>
@@ -106,6 +116,20 @@
               </el-radio>
             </div>
           </el-form-item>
+          <el-form-item label="仪器图片">
+            <el-card :body-style="{ padding: '0px' }">
+              <img src="" class="image" height="400px" width="400px" ref="img">
+              <div style="padding: 14px;">
+                <div class="bottom clearfix">
+                  <el-button type="text" class="button">
+                    本地读取图片
+                    <input type="file" accept="*image/*" @click.stop="addImg($event)" ref="file" class="fileReader">
+                  </el-button>
+                  <el-button type="text" class="button">上传图片</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-form-item>
           <el-form-item label="仪器名称">
             <el-input v-model="newEquipmentForm.name"></el-input>
           </el-form-item>
@@ -134,6 +158,7 @@
 <script type="text/ecmascript-6">
   import Modal from '../modal/modal'
   import Equipment from '../../apis/Equipment'
+  import {createObjectURL} from "../../common/js/createObjectURL";
 
   const equipment = new Equipment();
   export default {
@@ -171,6 +196,35 @@
       Modal
     },
     methods: {
+      addImg($event) {
+        $event.target.removeEventListener('change', this.loadImg)
+        $event.target.addEventListener('change', this.loadImg)
+      },
+      loadImg(event) {
+        let files = event.target.files,
+          reader = new FileReader(),
+          url = createObjectURL(files[0]);
+        if (url) {
+          if (/image/.test(files[0].type)) {
+            this.$refs.img.src = url;
+            reader.readAsDataURL(files[0]);
+          } else {
+            this.$message.error('不是图片');
+            this.isPic = false
+            return;
+          }
+        }
+        reader.onerror = () => {
+          this.$message.error('读取文件出错!')
+        }
+        reader.onprogress = (event) => {
+          console.log('读取中...')
+        }
+        reader.onload = () => {
+          this.$message.success('读取文件成功!');
+          this.isPic = true;
+        }
+      },
       handleEdit(index, scopeRow) {
         this.newEquipmentForm.radio = scopeRow.id;
         this.oldEquipmentForm.name = scopeRow.name;
@@ -313,9 +367,7 @@
 
   .EquipmentModal /deep/ .modal {
     .modal-dialog {
-      top: 50% !important;
-      transform: translateY(-50%);
-      margin: 0 auto;
+      margin: 5% auto;
       width: 700px !important;
       .el-form {
         margin: 0 12px 0;
@@ -328,6 +380,19 @@
           }
         }
       }
+     .el-button{
+       position: relative;
+       .fileReader{
+         position: absolute;
+         left: 0;
+         top: 0;
+         height: 100%;
+         width: 100%;
+         cursor: pointer;
+         opacity: 0;
+         z-index: 2;
+       }
+     }
     }
   }
 </style>

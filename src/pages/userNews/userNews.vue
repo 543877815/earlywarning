@@ -4,7 +4,7 @@
     <div class="jumbotron">
       <div class="info">
         <div class="avatar">
-          <img src="./avatar.png" width="150" height="150">
+          <img :src="$store.state.user.avatar" width="150" height="150" class="avatar-circle">
         </div>
         <div class="username">
           <div class="name">{{$store.state.user.name}}</div>
@@ -378,8 +378,9 @@
           position: relative;
           z-index: 2;
           top: 30px;
-          img {
+          .avatar-circle{
             z-index: 2;
+            border-radius: 50%;
           }
         }
         .username {

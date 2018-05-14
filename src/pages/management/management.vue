@@ -6,6 +6,7 @@
            :total="total"
            @CurrentChange="CurrentChange"
            @modifyInstrument="modifyInstrument"
+           @addImg="addImg"
     ></Table>
     <search :right="50"
             :bottom="225"
@@ -15,6 +16,7 @@
               :right="50"
               :bottom="170"
               :total="modelTotal"
+              @addImg="addImg"
               @modelCurrentChange="modelCurrentChange"
               @getModel="getModel"
               @createEquip="createEquip"></addEquip>
@@ -34,12 +36,14 @@
   import addEquip from '../../components/addEquip/addEquip'
   import scrollToY from '../../components/scrollToY/scrollToY'
   import Equipment from '../../apis/Equipment'
+  import {createObjectURL} from "../../common/js/createObjectURL";
 
   const equipment = new Equipment();
 
   export default {
     data() {
       return {
+        isPic: false,
         getByCid: false,
         tableData: [],
         page: 0,
@@ -66,6 +70,36 @@
       search
     },
     methods: {
+      addImg($event) {
+        console.log($event);
+        $event.target.removeEventListener('change', this.loadImg)
+        $event.target.addEventListener('change', this.loadImg)
+      },
+      loadImg(event) {
+        let files = event.target.files,
+          reader = new FileReader(),
+          url = createObjectURL(files[0]);
+        if (url) {
+          if (/image/.test(files[0].type)) {
+            event.target.previousElementSibling.setAttribute('src', url);
+            reader.readAsDataURL(files[0]);
+          } else {
+            this.$message.error('不是图片');
+            this.isPic = false
+            return;
+          }
+        }
+        reader.onerror = () => {
+          this.$message.error('读取文件出错!')
+        }
+        reader.onprogress = (event) => {
+          console.log('读取中...')
+        }
+        reader.onload = () => {
+          this.$message.success('读取文件成功!');
+          this.isPic = true;
+        }
+      },
       searchEquipment(val) {
         this.keyword = val
         this.size = 0;

@@ -26,7 +26,7 @@
         <div class="right-wrapper">
           <div class="avatar-wrapper">
             <img :src="$store.state.user.avatar" height="250" width="250" ref="avatar">
-            <input type="file" accept="*image/*" @click.stop="addImg($event)">
+            <input type="file" accept="*image/*" @click.stop="addImg($event)" ref="file">
           </div>
           <div class="update-wrapper">
             <div class="update" @click="imgUpdate">图片上传</div>
@@ -48,8 +48,9 @@
 <script>
   import Header from '../header/header'
   import {createObjectURL} from "../../common/js/createObjectURL";
-  import {heightSetting} from "../../common/js/heightSetting";
+  import Url from '../../apis/Url'
   import User from '../../apis/User';
+
   const user = new User();
 
   export default {
@@ -57,7 +58,8 @@
     data() {
       return {
         name: '',
-        description: ''
+        description: '',
+        isPic: false
       }
     },
     components: {
@@ -67,20 +69,23 @@
       getUserInfo() {
         user.getUserInfo()
           .then((res) => {
-            this.name = this.description = '';
-            this.$store.state.user.username = res.data.username;
-            this.$store.state.user.name = res.data.name;
-            this.$store.state.user.id = res.data.id;
-            this.$store.state.user.email = res.data.email;
-            this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
-            this.$store.state.user.description = res.data.description;
-            this.$store.state.user.avatar = res.data.avatar;
-            this.$store.state.user.roles = res.data.roles;
+            if (res.ret === 200 && res.msg === 'success') {
+              this.name = this.description = '';
+              this.$store.state.user.username = res.data.username;
+              this.$store.state.user.name = res.data.name;
+              this.$store.state.user.id = res.data.id;
+              this.$store.state.user.email = res.data.email;
+              this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
+              this.$store.state.user.description = res.data.description;
+              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}?_=${new Date().getTime()}`;
+              this.$store.state.user.roles = res.data.roles;
+            }
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
       },
+
       modifyUserInfo() {
         if (!this.name && !this.description) {
           this.$message.error(`输入为空！`)
@@ -106,14 +111,36 @@
           });
       },
       imgUpdate() {
-        console.log('ddd')
+        let file = this.$refs.file.files[0],
+          data = new FormData();
+        data.append('avatar', file);
+        if (!file) {
+          this.$message.error('图片为空！');
+          return;
+        }
+        if (!this.isPic) {
+          this.$message.error(`不是图片！`);
+          return;
+        }
+        user
+          .uploadAvatar({
+            avatar: file
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`图片上传成功！`);
+              this.getUserInfo();
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       },
       addImg($event) {
         $event.target.removeEventListener('change', this.loadImg)
         $event.target.addEventListener('change', this.loadImg)
       },
       loadImg(event) {
-        console.log(event.target.files);
         let files = event.target.files,
           reader = new FileReader(),
           url = createObjectURL(files[0]);
@@ -122,7 +149,9 @@
             this.$refs.avatar.src = url;
             reader.readAsDataURL(files[0]);
           } else {
-            this.$message.error('不是图片')
+            this.$message.error('不是图片');
+            this.isPic = false
+            return;
           }
         }
         reader.onerror = () => {
@@ -132,7 +161,8 @@
           console.log('读取中...')
         }
         reader.onload = () => {
-          this.$message.success('读取文件成功!')
+          this.$message.success('读取文件成功!');
+          this.isPic = true;
         }
       }
     },

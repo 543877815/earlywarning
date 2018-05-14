@@ -58,8 +58,11 @@
         <div class="title" slot="header">仪器详情</div>
         <div class="intro" slot="body">
           <div class="img-wrapper">
-            <img :src="form.picUrl" width="300" height="300">
-            <input type="file" accept="*image/*" @click.stop="addImg($event)">
+            <div class="img">
+              <img :src="form.picUrl" width="300" height="300">
+              <input type="file" accept="*image/*" @click.stop="addImg($event)">
+            </div>
+            <div class="update" @click="imgUpdate">图片上传</div>
           </div>
           <div class="intro-wrapper">
             <div class="name">
@@ -131,32 +134,8 @@
       }
     },
     methods: {
-      addImg($event) {
-        $event.target.removeEventListener('change', this.loadImg)
-        $event.target.addEventListener('change', this.loadImg)
-      },
-      loadImg(event) {
-        console.log(event.target.files);
-        let files = event.target.files,
-          reader = new FileReader(),
-          url = createObjectURL(files[0]);
-        if (url) {
-          if (/image/.test(files[0].type)) {
-            this.form.picUrl = url;
-            reader.readAsDataURL(files[0]);
-          } else {
-            this.$message.error('不是图片')
-          }
-        }
-        reader.onerror = () => {
-          this.$message.error('读取文件出错!')
-        }
-        reader.onprogress = (event) => {
-          console.log('读取中...')
-        }
-        reader.onload = () => {
-          this.$message.success('读取文件成功!')
-        }
+      addImg(event){
+        this.$emit('addImg',event);
       },
       hideAll() {
         this.messageBox =

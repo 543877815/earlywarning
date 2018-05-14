@@ -148,7 +148,7 @@
       },
       getVerCode() {
         let temp = this.verCodeSrc;
-        this.verCodeSrc = `${temp}?time=${Math.random()}`;
+        this.verCodeSrc = `${temp}?_=${new Date().getTime()}`;
       }
     },
     created() {

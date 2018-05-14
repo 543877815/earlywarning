@@ -65,8 +65,11 @@
         <div class="title" slot="header">仪器详情</div>
         <div class="intro" slot="body">
           <div class="img-wrapper">
-            <img :src="form.picUrl" width="300" height="300">
-            <input type="file" accept="*image/*" @click.stop="addImg($event)">
+            <div class="img">
+              <img :src="form.picUrl" width="300" height="300">
+              <input type="file" accept="*image/*" @click.stop="addImg($event)">
+            </div>
+            <div class="update" @click="imgUpdate">图片上传</div>
           </div>
           <div class="intro-wrapper">
             <div class="name">
@@ -93,7 +96,7 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" slot="footer" @click="hideEdit">修改</button>
+        <button class="btn btn-primary" slot="footer" @click="moidify">修改</button>
       </Modal>
     </transition>
   </div>
@@ -124,7 +127,7 @@
         default: [],
         type: Array
       },
-      total:{
+      total: {
         default: 100,
         type: Number
       }
@@ -133,11 +136,20 @@
       Modal
     },
     methods: {
+      imgUpdate() {
+
+      },
+      addImg(event){
+        this.$emit('addImg',event);
+      },
       handleCurrentChange(val) {
         this.$emit('CurrentChange', val)
       },
+      moidify() {
+        this.hideEdit();
+        this.$emit('modifyInstrument', this.$store.state.equipment.equipOnShowItem.id, this.form);
+      },
       hideEdit() {
-        this.$emit('modifyInstrument',this.$store.state.equipment.equipOnShowItem.id, this.form);
         this.$store.state.equipment.equipOnShow = false;
       },
       handleEdit(index, scpoeRow) {

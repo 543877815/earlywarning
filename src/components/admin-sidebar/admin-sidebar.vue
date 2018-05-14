@@ -95,25 +95,40 @@
 </template>
 
 <script type="text/ecmascript-6">
-    export default {
-      data(){
-        return {
-          activeIndex: '1',
-        };
+  export default {
+    data() {
+      return {
+        activeIndex: '1',
+      };
+    },
+    methods: {
+      handleOpen() {
+
       },
-      methods:{
-        handleOpen(){
+      handleClose() {
 
-        },
-        handleClose(){
-
-        }
       }
-    };
+    }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .el-menu-vertical-demo{
-
+  .el-menu-vertical-demo {
+    .el-menu {
+      .el-menu-item {
+        color: rgb(255, 255, 255) !important;
+        i{
+          color: #909399;
+        }
+      }
+      .router-link-active {
+        .el-menu-item {
+          color: rgb(255, 208, 75) !important;
+          i {
+            color: rgb(255, 208, 75) !important;
+          }
+        }
+      }
+    }
   }
 </style>

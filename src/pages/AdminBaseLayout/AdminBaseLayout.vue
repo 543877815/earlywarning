@@ -36,7 +36,6 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-
   .window {
     position: relative;
     height: 100%;
@@ -45,13 +44,13 @@
       display: flex;
       flex-flow: row;
       height: 100%;
-      .sidebar{
+      .sidebar {
         /*flex: 1;*/
         width: 15%;
         height: 100%;
         overflow: hidden;
       }
-      .container{
+      .container {
         margin: 100px 0 0 75px;
         width: 84%;
         /*flex: 5.5;*/
@@ -60,13 +59,17 @@
     .fade-enter, .fade-leave-to {
       opacity: 0;
     }
+
     .fade-enter {
     }
+
     .fade-leave-to {
     }
+
     .fade-enter-to, .fade-leave {
       opacity: 1;
     }
+
     .fade-enter-active {
       transition: all 0.3s;
     }

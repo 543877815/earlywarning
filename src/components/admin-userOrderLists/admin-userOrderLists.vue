@@ -40,7 +40,8 @@
     <el-pagination
       background
       layout="total, prev, pager, next"
-      :total="total">
+      :total="total"
+      @current-change="handleCurrentChange">
     </el-pagination>
   </div>
 </template>
@@ -64,11 +65,12 @@
       }
     },
     methods: {
-      viewDetail(){
-        this.$router.push('/admin/orderDetail')
+      handleCurrentChange(val) {
+        this.page = val - 1;
+        this.getOrderList(this.page, this.size, this.sort, this.uid)
       },
-      back(){
-        this.$router.push('/admin/userInfoLists');
+      viewDetail(index, scopeRow) {
+        this.$router.push(`/admin/orderDetail?id=${scopeRow.id}`)
       },
       search() {
         this.page = 0;

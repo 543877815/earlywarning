@@ -119,7 +119,7 @@ export default new Router({
         {
           path: 'equipmentDetail',
           name: 'equipmentDetail',
-          component:AdminEquipmentDetail
+          component: AdminEquipmentDetail
         },
         {
           path: 'equipmentModel',

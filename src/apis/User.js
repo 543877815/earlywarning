@@ -5,15 +5,24 @@ export default class User extends BaseApi {
     const url = '/getVerCode';
     return this.get(url);
   }
-
   userRegister(data) {
     const url = '/register';
+    return this.post(url, data);
+  }
+
+  createMaintainer(data){
+    const url = '/admin/createMaintainer';
     return this.post(url, data);
   }
 
   userLogin(data) {
     const url = '/login';
     return this.post(url, data);
+  }
+
+  uploadAvatar(data){
+    const url = '/uploadAvatar';
+    return this.post(url, data, 'form-data');
   }
 
   getUserInfo(data) {

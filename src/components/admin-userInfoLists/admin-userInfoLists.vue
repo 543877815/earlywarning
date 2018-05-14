@@ -4,9 +4,11 @@
       :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="id"
-        label="uid"
+        label="ID"
         width="180">
+        <template slot-scope="scope">
+          {{scope.$index+1}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="username"
@@ -42,7 +44,7 @@
           <el-button
             size="mini"
             type="primary"
-            @click="handleEdit(scope.$index, scope.row)">查看仪器列表
+            @click="viewEquipmentLists(scope.$index, scope.row)">查看仪器列表
           </el-button>
           <el-button
             size="mini"
@@ -60,7 +62,8 @@
     <el-pagination
       background
       layout="total, prev, pager, next"
-      :total="total">
+      :total="total"
+      @current-change="handleCurrentChange">
     </el-pagination>
   </div>
 </template>
@@ -83,14 +86,14 @@
     },
     methods: {
       handleCurrentChange(val) {
-        this.page = val
+        this.page = val - 1;
         this.getUsersInfo(this.page, this.size)
       },
       viewOrderList(index, scopeRow) {
-        this.$router.push({path: '/admin/userOrderLists', query:{uid:scopeRow.id}});
+        this.$router.push({path: '/admin/userOrderLists', query: {uid: scopeRow.id}});
       },
-      handleEdit() {
-
+      viewEquipmentLists(index, scopeRow) {
+        this.$router.push({path: '/admin/userEquipmentLists', query: {uid: scopeRow.id}});
       },
       handleDelete() {
 

@@ -1,6 +1,6 @@
 <template>
   <div class="equipment-detail">
-    <el-input placeholder="请输入仪器ID" v-model.number="input">
+    <el-input :placeholder="!equipment.id?'请输入仪器ID':equipment.id" v-model.number="input">
       <el-button slot="append" icon="el-icon-search" @click="getEquipmentDetail"></el-button>
     </el-input>
     <el-form ref="form" :model="equipment" label-width="80px" slot="body">
@@ -38,6 +38,7 @@
       return {
         input: 0,
         equipment: {
+          id: 0,
           name: '',
           category: {
             name: ''
@@ -68,6 +69,12 @@
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
+      }
+    },
+    mounted() {
+      if (this.$route.query.id){
+        this.equipment.id = this.$route.query.id;
+        this.getInstrumentById(this.equipment.id);
       }
     }
   };

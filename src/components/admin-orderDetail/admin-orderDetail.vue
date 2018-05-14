@@ -1,6 +1,6 @@
 <template>
   <div class="order-detail">
-    <el-input placeholder="请输入维修单号" v-model.number="input">
+    <el-input :placeholder="!order.id?'请输入维修单号':order.id" v-model.number="input">
       <el-button slot="append" icon="el-icon-search" @click="getOrder"></el-button>
     </el-input>
     <el-form ref="form" :model="order" label-width="100px" slot="body">
@@ -127,6 +127,12 @@
         }
       },
     },
+    mounted(){
+      if (this.$route.query.id){
+        this.order.id = this.$route.query.id;
+        this.getOrderDetail(this.order.id);
+      }
+    }
   };
 </script>
 
