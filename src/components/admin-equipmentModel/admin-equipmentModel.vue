@@ -159,7 +159,6 @@
   import Modal from '../modal/modal'
   import Equipment from '../../apis/Equipment'
   import {createObjectURL} from "../../common/js/createObjectURL";
-
   const equipment = new Equipment();
   export default {
     data() {
@@ -197,8 +196,8 @@
     },
     methods: {
       addImg($event) {
-        $event.target.removeEventListener('change', this.loadImg)
-        $event.target.addEventListener('change', this.loadImg)
+        $event.target.removeEventListener('change', this.loadImg);
+        $event.target.addEventListener('change', this.loadImg);
       },
       loadImg(event) {
         let files = event.target.files,
@@ -254,7 +253,7 @@
               this.$message.success(`模板仪器 ${this.newEquipmentForm.name || this.oldEquipmentForm.name} 修改成功！`)
               this.hideAll();
               this.getCategories();
-              for (let key in this.newEquipmentForm){
+              for (let key in this.newEquipmentForm) {
                 key === 'radio' ? this.newEquipmentForm[key] = 1 : this.newEquipmentForm[key] = ''
               }
             }
@@ -380,19 +379,19 @@
           }
         }
       }
-     .el-button{
-       position: relative;
-       .fileReader{
-         position: absolute;
-         left: 0;
-         top: 0;
-         height: 100%;
-         width: 100%;
-         cursor: pointer;
-         opacity: 0;
-         z-index: 2;
-       }
-     }
+      .el-button {
+        position: relative;
+        .fileReader {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 100%;
+          cursor: pointer;
+          opacity: 0;
+          z-index: 2;
+        }
+      }
     }
   }
 </style>

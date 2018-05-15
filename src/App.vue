@@ -1,15 +1,12 @@
 <template>
   <div id="app">
-    <div id="particles-js" class="particles-js">
-
-    </div>
+    <div id="particles-js" class="particles-js"></div>
     <router-view/>
   </div>
 </template>
 
 <script>
   import '../static/css/reset.css';
-
   export default {
     name: 'App',
     mounted() {

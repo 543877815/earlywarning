@@ -26,16 +26,23 @@
         <el-table-column
           prop="instrument.id"
           label="仪器编号"
-          width="240">
+          width="100">
         </el-table-column>
         <el-table-column
+          v-if="$store.state.user.roles[0].id===1"
           label="维修人员"
           width="100">
           <template slot-scope="scope">{{ scope.row.maintainer.name || scope.row.maintainer.username}}</template>
         </el-table-column>
         <el-table-column
+          v-if="$store.state.user.roles[0].id===2"
+          label="用户"
+          width="140">
+          <template slot-scope="scope">{{ scope.row.owner.name || scope.row.owner.username}}</template>
+        </el-table-column>
+        <el-table-column
           label="状态"
-          width="100">
+          width="140">
           <template slot-scope="scope">{{ scope.row.maintainStatus | equipStatus}}</template>
         </el-table-column>
         <el-table-column label="操作">
@@ -72,7 +79,9 @@
           <div class="title el-icon-setting"> 单号详情</div>
           <div class="detail">
             <div class="number">工单号：{{orderData.id}}</div>
-            <div class="crew" v-if="orderData.maintainer">维修人员：{{orderData.maintainer.name || orderData.maintainer.username}}</div>
+            <div class="crew" v-if="orderData.maintainer">维修人员：{{orderData.maintainer.name ||
+              orderData.maintainer.username}}
+            </div>
             <div class="contact" v-if="orderData.maintainer">维修人员联系方式：{{orderData.maintainer.email}}</div>
             <div class="track">
               <div class="left">单号跟踪：</div>
@@ -105,10 +114,8 @@
               <img src="/static/loading-svg" width="300" height="300">
             </div>
             <div class="intro-wrapper">
-              <div class="name">
-                {{orderData.instrument.name}}
-                <span class="id">{{orderData.instrument.id}}</span>
-              </div>
+              <div class="name">{{orderData.instrument.name}}</div>
+              <div class="id">仪器ID:{{orderData.instrument.id}}</div>
               <div class="type">仪器类型：{{orderData.instrument.category.name}}</div>
               <div class="insType">型号：{{orderData.instrument.insType}}</div>
               <div class="param">参数：{{orderData.instrument.param}}</div>
@@ -120,6 +127,22 @@
             </div>
           </div>
         </div>
+        <!--<button class="btn btn-primary" slot="footer" @click="confirmOrder" v-if="orderData.maintainStatus===0">确认订单-->
+        <!--</button>-->
+        <!--<button class="btn btn-primary" slot="footer" @click="fixingOrder" v-else-if="orderData.maintainStatus===1">-->
+          <!--开始维修-->
+        <!--</button>-->
+        <!--<button class="btn btn-primary" slot="footer" @click="finishOrder" v-else-if="orderData.maintainStatus===2">-->
+          <!--维修完成-->
+        <!--</button>-->
+        <button class="btn btn-primary" slot="footer" @click="confirmOrder">确认订单
+        </button>
+        <button class="btn btn-primary" slot="footer" @click="fixingOrder">
+          开始维修
+        </button>
+        <button class="btn btn-primary" slot="footer" @click="finishOrder">
+          维修完成
+        </button>
       </modal>
     </transition>
     <scrollToY :right="50" :bottom="115"></scrollToY>
@@ -191,6 +214,63 @@
       modal
     },
     methods: {
+      confirmOrder() {
+        let orderIds = [this.orderData.id];
+        order
+          .confirmOrder({
+            orderIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success('订单状态：[确认]');
+              this.hideDetail();
+              this.activeName === '-1' ?
+                this.getOrderList(this.page, this.size) :
+                this.getOrderByStatus(this.page, this.size, this.activeName);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      fixingOrder() {
+        let orderIds = [this.orderData.id];
+        order
+          .fixingOrder({
+            orderIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success('订单状态：[正在维修]');
+              this.hideDetail();
+              this.activeName === '-1' ?
+                this.getOrderList(this.page, this.size) :
+                this.getOrderByStatus(this.page, this.size, this.activeName);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      finishOrder() {
+        let orderIds = [this.orderData.id];
+        order
+          .finishOrder({
+            orderIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success('订单状态：[维修完成]');
+              this.hideDetail();
+              this.activeName === '-1' ?
+                this.getOrderList(this.page, this.size) :
+                this.getOrderByStatus(this.page, this.size, this.activeName);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       getOrderDetail(id) {
         order
           .getOrderDetail({
@@ -205,7 +285,7 @@
           });
       },
       currentChange(val) {
-        this.page = val;
+        this.page = val - 1;
         this.activeName === '-1' ?
           this.getOrderList(this.page, this.size) :
           this.getOrderByStatus(this.page, this.size, this.activeName)
@@ -218,7 +298,6 @@
       },
       handleEdit(index, scopeRow) {
         this.getOrderDetail(scopeRow.id)
-        console.log(index, scopeRow.id);
       },
       handleDelete(index, row) {
         // console.log(index, row);

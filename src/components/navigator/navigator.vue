@@ -126,7 +126,9 @@
       }
     },
     created() {
-      this.getUserInfo();
+      if ( this.$route.name !== 'index') {
+        this.getUserInfo();
+      }
     },
   };
 </script>

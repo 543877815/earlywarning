@@ -26,6 +26,11 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
+  deleteInstrument(data){
+    const url = '/deleteInstrument';
+    return this.post(url, data);
+  }
+
   adminGetUserInstrument(data) {
     const url = '/admin/getInstruments';
     return this.get(url, data);

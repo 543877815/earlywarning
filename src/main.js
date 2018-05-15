@@ -6,6 +6,12 @@ import router from './router'
 import particlesJS from 'particles.js'
 import store from './store'
 import infiniteScroll from 'vue-infinite-scroll'
+// import {t} from './common/js/lib/sockjs.min'
+
+// console.log(t);
+// import VueSocketio from 'vue-socket.io';
+
+// Vue.use(VueSocketio, 'http://192.168.100.152:8080/user/msg/user');
 
 Vue.config.productionTip = false
 Vue.use(particlesJS)

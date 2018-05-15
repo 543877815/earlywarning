@@ -6,6 +6,7 @@
            :total="total"
            @CurrentChange="CurrentChange"
            @modifyInstrument="modifyInstrument"
+           @deleteEquipment="deleteEquipment"
            @addImg="addImg"
     ></Table>
     <search :right="50"
@@ -70,8 +71,25 @@
       search
     },
     methods: {
+      deleteEquipment(id){
+        console.log(id);
+        equipment
+          .deleteInstrument({
+            id
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`删除成功!`);
+              this.$store.state.equipment.equipTypeActive.id === 0 ?
+                this.getUserInstrument(this.page, this.size, this.sort, this.keyword) :
+                this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort);
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       addImg($event) {
-        console.log($event);
         $event.target.removeEventListener('change', this.loadImg)
         $event.target.addEventListener('change', this.loadImg)
       },

@@ -104,7 +104,6 @@
 
 <script>
   import Modal from '../../components/modal/modal'
-
   export default {
     data() {
       return {
@@ -157,7 +156,18 @@
         this.$store.state.equipment.equipOnShowItem = scpoeRow;
       },
       handleDelete(index, row) {
-        console.log(index, row);
+        this.$confirm(`此操作将永久删除仪器 ${row.name}, 是否继续?`, '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$emit('deleteEquipment', row.id);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       }
     },
 

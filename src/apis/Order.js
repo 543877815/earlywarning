@@ -20,4 +20,19 @@ export default class User extends BaseApi {
     const url = '/admin/getOrderList';
     return this.get(url, data);
   }
+
+  confirmOrder(data){
+    const url = '/confirmOrder';
+    return this.post(url, data);
+  }
+
+  fixingOrder(data){
+    const url = '/fixingOrder';
+    return this.post(url, data);
+  }
+
+  finishOrder(data){
+    const url = '/finishOrder';
+    return this.post(url, data);
+  }
 }

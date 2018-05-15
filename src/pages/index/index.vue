@@ -89,13 +89,16 @@
   import showControl from '../../components/showControl/showControl'
   import ScrollToY from '../../components/scrollToY/scrollToY'
   import modal from '../../components/modal/modal'
-
+  import '../../common/js/lib/sockjs.min'
+  import '../../common/js/lib/stomp.min'
+  import Url from '../../apis/Url'
   import _ from 'underscore'
 
   import Equipment from '../../apis/Equipment'
+  import User from '../../apis/User'
 
   const equipment = new Equipment();
-
+  const user = new User();
   export default {
     data() {
       return {
@@ -112,7 +115,9 @@
         desc: false,
         busy: true,
         loading: false,
-        getByCid: false
+        getByCid: false,
+
+        stompClient: null
       }
     },
     components: {
@@ -127,6 +132,8 @@
       modal
     },
     mounted() {
+      this.getUserInfo();
+
       document.getElementsByTagName('body')[0].className =
         document.getElementsByTagName('html')[0].className = 'scrollPage';
 
@@ -150,6 +157,51 @@
 
     },
     methods: {
+      getUserInfo() {
+        user.getUserInfo()
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              // 如果邮箱为空或者未激活则提醒用户
+              if (res.data.isEmailLocked === 0 || res.data.email === '') {
+                this.$notify({
+                  title: '警告',
+                  message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
+                  type: 'warning',
+                  offset: 100
+                });
+              }
+
+
+              let socket = new SockJS('http://localhost:8080/api/webSocket');
+              this.stompClient = Stomp.over(socket);
+              console.log(this.stompClient);
+
+              this.stompClient.connect({},
+                function (frame) {
+                  console.log(`Connect!!!`);
+                  this.stompClient.subscribe('/user/msg/user', function (message) {
+                    console.log(message)
+                  });
+                },
+                function (error) {
+                  console.log(error);
+                });
+
+              this.$store.state.user.username = res.data.username;
+              this.$store.state.user.name = res.data.name;
+              this.$store.state.user.id = res.data.id;
+              this.$store.state.user.email = res.data.email;
+              this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
+              this.$store.state.user.description = res.data.description;
+              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`;
+              this.$store.state.user.roles = res.data.roles;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       hideDetail() {
         this.$store.state.equipment.equipOnShow = false;
         document.getElementsByTagName('body')[0].style.overflow = "auto";
