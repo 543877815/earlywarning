@@ -16,7 +16,7 @@
         </el-table-column>
         <el-table-column
           prop="name"
-          label="姓名"
+          label="模板名称"
           width="120">
         </el-table-column>
         <el-table-column
@@ -53,7 +53,7 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)">修改
+              @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
             <el-button
               size="mini"
@@ -73,10 +73,14 @@
         <el-form ref="form" :model="newEquipmentForm" label-width="80px" slot="body">
           <el-form-item label="仪器图片">
             <el-card :body-style="{ padding: '0px' }">
-              <img src="" class="image">
+              <img :src="oldEquipmentForm.picUrl" class="image" height="400px"
+                   width="400px" ref="img">
               <div style="padding: 14px;">
                 <div class="bottom clearfix">
-                  <el-button type="text" class="button">操作按钮</el-button>
+                  <el-button type="text" class="button">更改模板图片
+                    <input type="file" accept="*image/*" @click.stop="addImg($event)" ref="file" class="fileReader">
+                  </el-button>
+                  <el-button type="text" class="button" @click.stop="imgUpdate">上传图片</el-button>
                 </div>
               </div>
             </el-card>
@@ -118,14 +122,13 @@
           </el-form-item>
           <el-form-item label="仪器图片">
             <el-card :body-style="{ padding: '0px' }">
-              <img src="" class="image" height="400px" width="400px" ref="img">
+              <img src="../../assets/equipment_default.png" class="image" height="400px" width="400px" ref="img">
               <div style="padding: 14px;">
                 <div class="bottom clearfix">
-                  <el-button type="text" class="button">
-                    本地读取图片
+                  <el-button type="text" class="button">本地读取图片
                     <input type="file" accept="*image/*" @click.stop="addImg($event)" ref="file" class="fileReader">
                   </el-button>
-                  <el-button type="text" class="button">上传图片</el-button>
+                  <el-button type="text" class="button" @click.stop="imgUpdate">上传图片</el-button>
                 </div>
               </div>
             </el-card>
@@ -159,6 +162,9 @@
   import Modal from '../modal/modal'
   import Equipment from '../../apis/Equipment'
   import {createObjectURL} from "../../common/js/createObjectURL";
+  import Url from '../../apis/Url'
+  import equipment_default from '../../assets/equipment_default.png'
+
   const equipment = new Equipment();
   export default {
     data() {
@@ -172,7 +178,8 @@
           param: '',
           durableYears: '',
           thresholdValue: '',
-          description: ''
+          description: '',
+          picUrl: ''
         },
         oldEquipmentForm: {
           name: '',
@@ -180,7 +187,8 @@
           param: '',
           durableYears: '',
           thresholdValue: '',
-          description: ''
+          description: '',
+          picUrl: ''
         },
         activeName: '1',
         equipmentTypes: [],
@@ -195,6 +203,32 @@
       Modal
     },
     methods: {
+      imgUpdate() {
+        let file = this.$refs.file.files[0],
+          data = new FormData();
+        data.append('avatar', file);
+        if (!file) {
+          this.$message.error('图片为空！');
+          return;
+        }
+        if (!this.isPic) {
+          this.$message.error(`不是图片！`);
+          return;
+        }
+        equipment
+          .uploadInstPic({
+            file: file
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`图片上传成功！`);
+              this.newEquipmentForm.picUrl = res.data;
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       addImg($event) {
         $event.target.removeEventListener('change', this.loadImg);
         $event.target.addEventListener('change', this.loadImg);
@@ -232,10 +266,38 @@
         this.oldEquipmentForm.durableYears = scopeRow.durableYears;
         this.oldEquipmentForm.thresholdValue = scopeRow.thresholdValue;
         this.oldEquipmentForm.description = scopeRow.description;
+        this.oldEquipmentForm.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipment_default;
+
         this.ModifyEquipmentModal = true
       },
       handleDelete(index, scopeRow) {
-
+        this.$confirm('此操作将永久删除该仪器模板, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          equipment
+            .deleteInstrument({
+              id: scopeRow.id
+            })
+            .then((res) => {
+              if (res.ret === 200 && res.msg === 'success') {
+                this.$message({
+                  type: 'success',
+                  message: `仪器 ${scopeRow.name} 删除成功!`
+                });
+                this.getCategories();
+              }
+            })
+            .catch((err) => {
+              this.$message.error(`[系统提醒: ${err.msg}]`);
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       modifyEquipment() {
         equipment
@@ -246,7 +308,8 @@
             param: this.newEquipmentForm.param || this.oldEquipmentForm.param,
             durableYears: this.newEquipmentForm.durableYears || this.oldEquipmentForm.durableYears,
             thresholdValue: this.newEquipmentForm.thresholdValue || this.oldEquipmentForm.thresholdValue,
-            description: this.newEquipmentForm.description || this.oldEquipmentForm.description
+            description: this.newEquipmentForm.description || this.oldEquipmentForm.description,
+            picUrl: this.newEquipmentForm.picUrl || this.oldEquipmentForm.picUrl
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
@@ -270,14 +333,15 @@
           }
         }
         equipment
-          .createInstrument({
+          .createInstrumentModal({
             cid: this.newEquipmentForm.radio,
             name: this.newEquipmentForm.name,
             insType: this.newEquipmentForm.insType,
             param: this.newEquipmentForm.param,
             durableYears: this.newEquipmentForm.durableYears,
             thresholdValue: this.newEquipmentForm.thresholdValue,
-            description: this.newEquipmentForm.description
+            description: this.newEquipmentForm.description,
+            picUrl: this.newEquipmentForm.picUrl
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {

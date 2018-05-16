@@ -54,7 +54,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)"  v-if="$store.state.user.roles[0].id===1">删除
             </el-button>
           </template>
         </el-table-column>
@@ -363,7 +363,7 @@
 
   .window {
     position: relative;
-    z-index: 9999;
+    z-index: 999;
     .container {
       width: 60%;
       margin: 100px auto 150px;

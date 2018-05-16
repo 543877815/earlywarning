@@ -4,11 +4,12 @@
     <Menu @switchType="switchType"></Menu>
     <Table :tableData="tableData"
            :total="total"
+           ref="Table"
            @CurrentChange="CurrentChange"
            @modifyInstrument="modifyInstrument"
            @deleteEquipment="deleteEquipment"
-           @addImg="addImg"
-    ></Table>
+           @addImg="addImg">
+    </Table>
     <search :right="50"
             :bottom="225"
             @searchEquipment="searchEquipment">
@@ -17,6 +18,7 @@
               :right="50"
               :bottom="170"
               :total="modelTotal"
+              @imgUpdate="imgUpdate"
               @addImg="addImg"
               @modelCurrentChange="modelCurrentChange"
               @getModel="getModel"
@@ -38,6 +40,7 @@
   import scrollToY from '../../components/scrollToY/scrollToY'
   import Equipment from '../../apis/Equipment'
   import {createObjectURL} from "../../common/js/createObjectURL";
+  import Url from '../../apis/Url'
 
   const equipment = new Equipment();
 
@@ -57,7 +60,9 @@
         modelPage: 0,
         modelSize: 10,
         modelCid: 1,
-        modelTotal: 10
+        modelTotal: 10,
+
+        picUrl: ''
       }
     },
     components: {
@@ -71,8 +76,7 @@
       search
     },
     methods: {
-      deleteEquipment(id){
-        console.log(id);
+      deleteEquipment(id) {
         equipment
           .deleteInstrument({
             id
@@ -92,6 +96,32 @@
       addImg($event) {
         $event.target.removeEventListener('change', this.loadImg)
         $event.target.addEventListener('change', this.loadImg)
+      },
+      imgUpdate(file) {
+        var file = file,
+          data = new FormData();
+        data.append('avatar', file);
+        if (!file) {
+          this.$message.error('图片为空！');
+          return;
+        }
+        if (!this.isPic) {
+          this.$message.error(`不是图片！`);
+          return;
+        }
+        equipment
+          .uploadInstPic({
+            file: file
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`图片上传成功！`);
+              this.picUrl = res.data;
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       },
       loadImg(event) {
         let files = event.target.files,
@@ -133,7 +163,8 @@
             durableYears: form.durableYears,
             param: form.param,
             description: form.param,
-            thresholdValue: form.thresholdValue
+            thresholdValue: form.thresholdValue,
+            picUrl: this.picUrl
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
@@ -193,18 +224,21 @@
             durableYears: form.durableYears || currentRow.durableYears,
             param: form.param || currentRow.param,
             description: form.description || currentRow.description,
-            thresholdValue: form.thresholdValue || currentRow.thresholdValue
+            thresholdValue: form.thresholdValue || currentRow.thresholdValue,
+            picUrl: this.picUrl || form.picUrl.replace(Url.request, '') || currentRow.picUrl.replace(Url.request, '')
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`仪器 ${form.name || currentRow.name} 创建成功!`);
+              this.$store.state.equipment.equipTypeActive.id === 0 ?
+                this.getUserInstrument(this.page, this.size, this.sort, this.keyword) :
+                this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort);
               this.$refs.addEquip.hideAll();
             } else {
               this.$message.error(`创建失败！`)
             }
           })
           .catch((err) => {
-            console.log(err)
             this.$message.error(`[系统提醒: ${err.msg}]`);
           })
       },
@@ -221,6 +255,7 @@
           .then((res) => {
             this.tableData = res.data.content;
             this.total = res.data.totalElements;
+            // this.$refs.Table.setcurrentPage(1);
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
@@ -245,6 +280,8 @@
       switchType(cid) {
         this.page = 0;
         this.getInstrumentByCid(this.page, this.size, cid, this.sort)
+        this.$refs.Table.setcurrentPage(1);
+
       }
     },
     mounted() {
@@ -287,6 +324,7 @@
       z-index: 9999;
     }
   }
+
   @include modal-transition;
 
   @media screen and (max-width: 1280px) {

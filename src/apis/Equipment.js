@@ -16,6 +16,11 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
+  uploadInstPic(data){
+    const url = '/uploadInstPic';
+    return this.post(url, data, 'form-data');
+  }
+
   createInstrument(data) {
     const url = '/createInstrument';
     return this.post(url, data);
@@ -61,7 +66,7 @@ export default class User extends BaseApi {
     return this.post(url, data);
   }
 
-  createInstrument(data) {
+  createInstrumentModal(data) {
     const url = '/admin/createInstrument';
     return this.post(url, data);
   }

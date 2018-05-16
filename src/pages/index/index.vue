@@ -89,9 +89,7 @@
   import showControl from '../../components/showControl/showControl'
   import ScrollToY from '../../components/scrollToY/scrollToY'
   import modal from '../../components/modal/modal'
-  import '../../common/js/lib/sockjs.min'
-  import '../../common/js/lib/stomp.min'
-  import Url from '../../apis/Url'
+
   import _ from 'underscore'
 
   import Equipment from '../../apis/Equipment'
@@ -132,8 +130,6 @@
       modal
     },
     mounted() {
-      this.getUserInfo();
-
       document.getElementsByTagName('body')[0].className =
         document.getElementsByTagName('html')[0].className = 'scrollPage';
 
@@ -171,34 +167,14 @@
                 });
               }
 
-
-              let socket = new SockJS('http://localhost:8080/api/webSocket');
-              this.stompClient = Stomp.over(socket);
-              console.log(this.stompClient);
-
-              this.stompClient.connect({},
-                function (frame) {
-                  console.log(`Connect!!!`);
-                  this.stompClient.subscribe('/user/msg/user', function (message) {
-                    console.log(message)
-                  });
-                },
-                function (error) {
-                  console.log(error);
-                });
-
-              this.$store.state.user.username = res.data.username;
-              this.$store.state.user.name = res.data.name;
-              this.$store.state.user.id = res.data.id;
-              this.$store.state.user.email = res.data.email;
-              this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
-              this.$store.state.user.description = res.data.description;
+              this.$store.state.user = res.data;
               this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`;
-              this.$store.state.user.roles = res.data.roles;
+
+
+
             }
           })
           .catch((err) => {
-            console.log(err);
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
       },

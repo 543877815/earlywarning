@@ -79,17 +79,23 @@
 
 <script type="text/ecmascript-6">
   import User from '../../apis/User'
+  import '../../common/js/lib/sockjs.min'
+  import '../../common/js/lib/stomp.min'
+  import avatar_default from '../../assets/avatar_default.png'
   import Url from '../../apis/Url'
 
   const user = new User();
-
+  var stompClient;
   export default {
     data() {
       return {}
     },
     methods: {
       exit() {
-        this.$router.push('/login')
+        this.$router.push('/login');
+        stompClient.disconnect(() => {
+          console.log('stompClient disconnect');
+        })
       },
       getUserInfo() {
         user.getUserInfo()
@@ -104,14 +110,27 @@
                   offset: 100
                 });
               }
-              this.$store.state.user.username = res.data.username;
-              this.$store.state.user.name = res.data.name;
-              this.$store.state.user.id = res.data.id;
-              this.$store.state.user.email = res.data.email;
-              this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
-              this.$store.state.user.description = res.data.description;
-              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`;
-              this.$store.state.user.roles = res.data.roles;
+              this.$store.state.user = res.data;
+              this.$store.state.user.avatar = res.data.avatar ? `${Url.request}${res.data.avatar}` : avatar_default;
+
+              let subscribeAddress;
+              res.data.roles[0].name === 'user' ? subscribeAddress = '/user/msg/user' : subscribeAddress = '/user/msg/maintainer';
+              let socket = new SockJS('/api/webSocket');
+              stompClient = Stomp.over(socket);
+              stompClient.connect({username: res.data.username},
+                (frame) => {
+                  stompClient.subscribe(subscribeAddress, (message) => {
+                    console.log('111')
+                    this.$notify.info({
+                      title: '消息',
+                      message: JSON.parse(message.body).content,
+                      offset: 100
+                    });
+                  });
+                },
+                (error) => {
+                  console.log(error);
+                });
             }
           })
           .catch((err) => {
@@ -126,9 +145,7 @@
       }
     },
     created() {
-      if ( this.$route.name !== 'index') {
-        this.getUserInfo();
-      }
+      this.getUserInfo();
     },
   };
 </script>

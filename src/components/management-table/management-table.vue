@@ -8,7 +8,6 @@
         style="width: 100%"
         max-height="700">
         <el-table-column
-          fixed
           prop="id"
           label="ID"
           width="120">
@@ -54,9 +53,9 @@
     <div class="block">
       <el-pagination
         background
+        layout="total, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
     </div>
@@ -104,12 +103,15 @@
 
 <script>
   import Modal from '../../components/modal/modal'
+  import Url from '../../apis/Url'
+  import equipment_default from '../../assets/equipment_default.png'
+
   export default {
     data() {
       return {
         EquipEdit: false,
-        currentPage: 1,
         currentRow: null,
+        currentPage:2,
         form: {
           name: '',
           insType: '',
@@ -138,10 +140,14 @@
       imgUpdate() {
 
       },
-      addImg(event){
-        this.$emit('addImg',event);
+      setcurrentPage(page){
+        this.currentPage = page;
+      },
+      addImg(event) {
+        this.$emit('addImg', event);
       },
       handleCurrentChange(val) {
+        this.currentPage = val;
         this.$emit('CurrentChange', val)
       },
       moidify() {
@@ -151,9 +157,10 @@
       hideEdit() {
         this.$store.state.equipment.equipOnShow = false;
       },
-      handleEdit(index, scpoeRow) {
+      handleEdit(index, scopeRow) {
         this.$store.state.equipment.equipOnShow = true;
-        this.$store.state.equipment.equipOnShowItem = scpoeRow;
+        this.$store.state.equipment.equipOnShowItem = scopeRow;
+        this.form.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipment_default;
       },
       handleDelete(index, row) {
         this.$confirm(`此操作将永久删除仪器 ${row.name}, 是否继续?`, '警告', {

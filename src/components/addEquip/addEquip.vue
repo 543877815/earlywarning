@@ -60,7 +60,7 @@
           <div class="img-wrapper">
             <div class="img">
               <img :src="form.picUrl" width="300" height="300">
-              <input type="file" accept="*image/*" @click.stop="addImg($event)">
+              <input type="file" accept="*image/*" @click.stop="addImg($event)" ref="file">
             </div>
             <div class="update" @click="imgUpdate">图片上传</div>
           </div>
@@ -95,6 +95,8 @@
 <script type="text/ecmascript-6">
   import Modal from '../../components/modal/modal'
   import {createObjectURL} from "../../common/js/createObjectURL";
+  import Url from '../../apis/Url'
+  import equipment_default from '../../assets/equipment_default.png'
 
   export default {
     data() {
@@ -134,8 +136,11 @@
       }
     },
     methods: {
-      addImg(event){
-        this.$emit('addImg',event);
+      addImg(event) {
+        this.$emit('addImg', event);
+      },
+      imgUpdate() {
+        this.$emit('imgUpdate', this.$refs.file.files[0]);
       },
       hideAll() {
         this.messageBox =
@@ -154,7 +159,7 @@
           this.template = true;
           this.messageBox =
             this.templateList = false;
-          this.form.picUrl = this.currentRow.picUrl;
+          this.form.picUrl = this.currentRow.picUrl ? `${Url.request}${this.currentRow.picUrl}` : equipment_default;
         } else {
           this.$message.warning(`请选择一种类型！`)
         }
@@ -182,6 +187,7 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import '../../common/sass/components/equipmentModal';
   @import '../../common/sass/components/modal-transition';
+
   @include modal-transition;
   .addEquip-wrapper {
     border-radius: 50%;
