@@ -5,6 +5,7 @@
     <Table :tableData="tableData"
            :total="total"
            ref="Table"
+           @imgUpdate="imgUpdate"
            @CurrentChange="CurrentChange"
            @modifyInstrument="modifyInstrument"
            @deleteEquipment="deleteEquipment"
@@ -154,21 +155,21 @@
         this.$store.state.equipment.equipTypeActive.name = val;
         this.getUserInstrument(this.page, this.size, this.sort, this.keyword)
       },
-      modifyInstrument(id, form) {
+      modifyInstrument(currentRow, form) {
         equipment
           .modifyInstrument({
-            id,
-            name: form.name,
-            insType: form.insType,
-            durableYears: form.durableYears,
-            param: form.param,
-            description: form.param,
-            thresholdValue: form.thresholdValue,
-            picUrl: this.picUrl
+            id: currentRow.id,
+            name: form.name || currentRow.name,
+            insType: form.insType || currentRow.insType,
+            durableYears: form.durableYears || currentRow.durableYears,
+            param: form.param || currentRow.param,
+            description: form.description || currentRow.description,
+            thresholdValue: form.thresholdValue || currentRow.thresholdValue,
+            picUrl: this.picUrl || form.picUrl.replace(Url.request, '') || currentRow.picUrl.replace(Url.request, '')
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success(`修改成功！`);
+              this.$message.success(`仪器 ${form.name || currentRow.name} 修改成功！`);
               this.getInstrumentByCid(this.page, this.size, this.cid, this.sort);
             }
           })

@@ -20,6 +20,11 @@ export default class User extends BaseApi {
     return this.post(url, data);
   }
 
+  logout(data){
+    const url = '/logout';
+    return this.get(url, data);
+  }
+
   uploadAvatar(data){
     const url = '/uploadAvatar';
     return this.post(url, data, 'form-data');

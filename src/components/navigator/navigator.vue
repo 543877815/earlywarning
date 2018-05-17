@@ -92,10 +92,20 @@
     },
     methods: {
       exit() {
-        this.$router.push('/login');
-        stompClient.disconnect(() => {
-          console.log('stompClient disconnect');
-        })
+        console.log('1111');
+        user
+          .logout()
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$router.push('/login');
+              stompClient.disconnect(() => {
+                console.log('stompClient disconnect');
+              })
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       },
       getUserInfo() {
         user.getUserInfo()

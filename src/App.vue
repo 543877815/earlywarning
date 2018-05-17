@@ -7,6 +7,7 @@
 
 <script>
   import '../static/css/reset.css';
+
   export default {
     name: 'App',
     mounted() {
@@ -23,6 +24,7 @@
     height: 100%;
     width: 100%;
     .particles-js {
+      background-color: rgba(7, 17, 27, 0.05);
       position: fixed;
       z-index: 2;
       left: 0;
@@ -89,10 +91,12 @@
       position: relative;
     }
   }
-  .v-modal{
-    z-index: 99998!important;
+
+  .v-modal {
+    z-index: 99998 !important;
   }
+
   .el-message-box__wrapper, .el-message {
-    z-index: 99999!important;
+    z-index: 99999 !important;
   }
 </style>

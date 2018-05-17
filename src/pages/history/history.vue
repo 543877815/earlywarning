@@ -127,22 +127,24 @@
             </div>
           </div>
         </div>
-        <!--<button class="btn btn-primary" slot="footer" @click="confirmOrder" v-if="orderData.maintainStatus===0">确认订单-->
-        <!--</button>-->
-        <!--<button class="btn btn-primary" slot="footer" @click="fixingOrder" v-else-if="orderData.maintainStatus===1">-->
-          <!--开始维修-->
-        <!--</button>-->
-        <!--<button class="btn btn-primary" slot="footer" @click="finishOrder" v-else-if="orderData.maintainStatus===2">-->
-          <!--维修完成-->
-        <!--</button>-->
-        <button class="btn btn-primary" slot="footer" @click="confirmOrder">确认订单
-        </button>
-        <button class="btn btn-primary" slot="footer" @click="fixingOrder">
+        <span slot="footer" v-if="$store.state.user.roles[0].name === 'maintainer'">
+          <!--<button class="btn btn-primary"  @click="confirmOrder" v-if="orderData.maintainStatus===0">确认订单-->
+          <!--</button>-->
+          <!--<button class="btn btn-primary"  @click="fixingOrder" v-else-if="orderData.maintainStatus===1">-->
+            <!--开始维修-->
+          <!--</button>-->
+          <!--<button class="btn btn-primary"  @click="finishOrder" v-else-if="orderData.maintainStatus===2">-->
+            <!--维修完成-->
+          <!--</button>-->
+          <button class="btn btn-primary" @click="confirmOrder">确认订单
+          </button>
+          <button class="btn btn-primary" @click="fixingOrder">
           开始维修
-        </button>
-        <button class="btn btn-primary" slot="footer" @click="finishOrder">
+          </button>
+          <button class="btn btn-primary" @click="finishOrder">
           维修完成
-        </button>
+          </button>
+        </span>
       </modal>
     </transition>
     <scrollToY :right="50" :bottom="115"></scrollToY>
@@ -364,10 +366,16 @@
   .window {
     position: relative;
     z-index: 999;
+    width: 100%;
+    height: 100%;
     .container {
+      box-shadow: 10px 10px 50px #888888;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
       width: 60%;
-      margin: 100px auto 150px;
-      min-height: 610px;
+      margin: 100px auto;
+      min-height: 60%;
       display: flex;
       flex-flow: column;
       .el-pagination {
@@ -383,6 +391,11 @@
 
     .recordDetail {
       @include equipmentOrder;
+    }
+
+    #footer{
+      position: absolute !important;
+      bottom: 0;
     }
   }
 </style>

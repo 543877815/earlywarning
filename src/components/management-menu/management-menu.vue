@@ -52,8 +52,15 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+  .el_NavMenu{
+    box-shadow: 10px 10px 50px #888888;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 150px;
+    width: 138px;
     min-height: 400px;
   }
 

@@ -53,7 +53,7 @@
           <div class="title" slot="header">仪器详情</div>
           <div class="intro" slot="body">
             <div class="img-wrapper">
-              <img v-lazy="$store.state.equipment.equipOnShowItem.picUrl" width="300" height="300">
+              <img v-lazy="`${Url}${$store.state.equipment.equipOnShowItem.picUrl}`" width="300" height="300">
             </div>
             <div class="intro-wrapper">
               <div class="name">
@@ -89,7 +89,7 @@
   import showControl from '../../components/showControl/showControl'
   import ScrollToY from '../../components/scrollToY/scrollToY'
   import modal from '../../components/modal/modal'
-
+  import Url from '../../apis/Url'
   import _ from 'underscore'
 
   import Equipment from '../../apis/Equipment'
@@ -100,6 +100,7 @@
   export default {
     data() {
       return {
+        Url:'',
         particlesShow: true,
         navHeight: 78,
         navChange: false,
@@ -130,6 +131,8 @@
       modal
     },
     mounted() {
+      this.Url = Url.request;
+
       document.getElementsByTagName('body')[0].className =
         document.getElementsByTagName('html')[0].className = 'scrollPage';
 
@@ -166,12 +169,8 @@
                   offset: 100
                 });
               }
-
               this.$store.state.user = res.data;
               this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`;
-
-
-
             }
           })
           .catch((err) => {

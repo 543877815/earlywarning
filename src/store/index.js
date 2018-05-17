@@ -4,6 +4,7 @@ import common from './modules/common'
 import equipment from './modules/equipment'
 import particles from './modules/particles'
 import user from './modules/user'
+import sockJs from './modules/sockJs'
 import VueLazyLoad from 'vue-lazyload'
 
 Vue.use(Vuex)
@@ -18,7 +19,8 @@ export default new Vuex.Store({
     common,
     equipment,
     particles,
-    user
+    user,
+    sockJs
   },
   // strict: debug,
   // plugins: debug ? [createLogger()] : []

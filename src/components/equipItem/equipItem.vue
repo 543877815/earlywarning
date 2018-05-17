@@ -1,6 +1,6 @@
 <template>
-  <div class="equipItem"  @click="showDetail(equipItem)">
-    <img v-lazy="equipItem.picUrl" width="500" height="500" class="brief-img">
+  <div class="equipItem" @click="showDetail(equipItem)">
+    <img v-lazy="`${Url}${equipItem.picUrl}`" width="500" height="500" class="brief-img">
     <div class="equipIntro">
       <h3 class="name">{{equipItem.name}}<span class="id">ID：{{equipItem.id}}</span></h3>
       <p>种类：{{equipItem.category.name}}</p>
@@ -15,25 +15,31 @@
 </template>
 <script type="text/ecmascript-6">
   import modal from '../modal/modal'
+  import Url from '../../apis/Url'
   export default {
+    data() {
+      return {
+        Url: '',
+      }
+    },
     props: {
       equipItem: {
         default: {},
         type: Object
       }
     },
-    components:{
+    components: {
       modal
     },
-    methods:{
-      showDetail(item){
+    methods: {
+      showDetail(item) {
         this.$store.state.equipment.equipOnShow = true;
         this.$store.state.equipment.equipOnShowItem = item;
         document.getElementsByTagName('body')[0].style.overflow = "hidden";
       },
     },
-    mounted(){
-
+    mounted() {
+      this.Url = Url.request;
     }
   };
 </script>

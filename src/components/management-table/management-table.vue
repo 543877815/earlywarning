@@ -66,7 +66,7 @@
           <div class="img-wrapper">
             <div class="img">
               <img :src="form.picUrl" width="300" height="300">
-              <input type="file" accept="*image/*" @click.stop="addImg($event)">
+              <input type="file" accept="*image/*" @click.stop="addImg($event)" ref="file">
             </div>
             <div class="update" @click="imgUpdate">图片上传</div>
           </div>
@@ -138,7 +138,7 @@
     },
     methods: {
       imgUpdate() {
-
+        this.$emit('imgUpdate', this.$refs.file.files[0]);
       },
       setcurrentPage(page){
         this.currentPage = page;
@@ -152,7 +152,7 @@
       },
       moidify() {
         this.hideEdit();
-        this.$emit('modifyInstrument', this.$store.state.equipment.equipOnShowItem.id, this.form);
+        this.$emit('modifyInstrument', this.$store.state.equipment.equipOnShowItem, this.form);
       },
       hideEdit() {
         this.$store.state.equipment.equipOnShow = false;
@@ -160,6 +160,7 @@
       handleEdit(index, scopeRow) {
         this.$store.state.equipment.equipOnShow = true;
         this.$store.state.equipment.equipOnShowItem = scopeRow;
+        this.form = {};
         this.form.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipment_default;
       },
       handleDelete(index, row) {
@@ -185,14 +186,17 @@
   @import '../../common/sass/components/equipmentModal';
 
   .el_table {
-    margin-bottom: 100px;
+    box-shadow: 10px 10px 50px #888888;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 3%;
     .table {
-      min-height: 620px;
-      margin-top: 50px;
+      min-height: 60%;
       .split {
         width: 100%;
-        height: 4px;
-        background: linear-gradient(left, #000, #fff);
+        height: 1px;
+        background: #ccc;
       }
       h2 {
         padding-left: 10px;
