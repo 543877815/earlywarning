@@ -67,7 +67,7 @@
           <div class="intro-wrapper">
             <div class="name">
               <input type="text" :placeholder="currentRow.name" v-model="form.name">
-              <span class="id">ID：{{currentRow.thresholdValue}}</span>
+              <!--<span class="id">ID：{{currentRow.thresholdValue}}</span>-->
             </div>
             <div class="insType">型号：
               <input type="text" :placeholder="currentRow.insType" v-model="form.insType">

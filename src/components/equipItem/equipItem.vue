@@ -36,9 +36,10 @@
         this.$store.state.equipment.equipOnShow = true;
         this.$store.state.equipment.equipOnShowItem = item;
         document.getElementsByTagName('body')[0].style.overflow = "hidden";
+        this.$emit('getEquipData', item.id);
       },
     },
-    mounted() {
+    created() {
       this.Url = Url.request;
     }
   };

@@ -7,7 +7,7 @@
         label="ID"
         width="180">
         <template slot-scope="scope">
-          {{scope.$index+1}}
+          {{scope.row.id}}
         </template>
       </el-table-column>
       <el-table-column
@@ -43,18 +43,24 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
+            type="danger"
+            v-if="scope.row.isLocked===1"
+            @click="handleLock(scope.$index, scope.row)">禁用
+          </el-button>
+          <el-button
+            size="mini"
+            type="success"
+            v-if="scope.row.isLocked===0"
+            @click="hanldeUnlock(scope.$index, scope.row)">激活
+          </el-button>
+          <el-button
+            size="mini"
             type="primary"
             @click="viewEquipmentLists(scope.$index, scope.row)">查看仪器列表
           </el-button>
           <el-button
             size="mini"
-            type="success"
             @click="viewOrderList(scope.$index, scope.row)">查看订单列表
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">禁用
           </el-button>
         </template>
       </el-table-column>
@@ -95,8 +101,37 @@
       viewEquipmentLists(index, scopeRow) {
         this.$router.push({path: '/admin/userEquipmentLists', query: {uid: scopeRow.id}});
       },
-      handleDelete() {
-
+      handleLock(index, scopeRow) {
+        let intIds = [scopeRow.id];
+        user
+          .lockUser({
+            intIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`用户 ${scopeRow.username} 锁定成功！`);
+              this.getUsersInfo(this.page, this.size)
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
+      hanldeUnlock(index, scopeRow) {
+        let intIds = [scopeRow.id];
+        user
+          .unlockUser({
+            intIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`用户 ${scopeRow.username} 激活成功！`);
+              this.getUsersInfo(this.page, this.size)
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       },
       getUsersInfo(page, size, roleName = this.roleName, sort = this.sort, keyWord = this.keyWord) {
         user

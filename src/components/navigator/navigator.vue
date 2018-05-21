@@ -63,7 +63,7 @@
                 <img src="./icon-trends.png" alt="">
               </div>
               <router-link to="/userNews">
-                <el-badge :value="12" class="item">
+                <el-badge :value="unReadMsgNum" class="item">
                   <el-button size="middle">
                     用户动态
                   </el-button>
@@ -79,20 +79,22 @@
 
 <script type="text/ecmascript-6">
   import User from '../../apis/User'
+  import News from '../../apis/News'
   import '../../common/js/lib/sockjs.min'
   import '../../common/js/lib/stomp.min'
   import avatar_default from '../../assets/avatar_default.png'
   import Url from '../../apis/Url'
-
+  const news = new News();
   const user = new User();
   var stompClient;
   export default {
     data() {
-      return {}
+      return {
+        unReadMsgNum:0
+      }
     },
     methods: {
       exit() {
-        console.log('1111');
         user
           .logout()
           .then((res) => {
@@ -146,6 +148,18 @@
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
+      },
+      getUnReadNum(){
+        news
+          .getUnReadNum()
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.unReadMsgNum = res.data;
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
       }
     },
     props: {
@@ -156,6 +170,7 @@
     },
     created() {
       this.getUserInfo();
+      this.getUnReadNum();
     },
   };
 </script>

@@ -20,4 +20,9 @@ export default class User extends BaseApi {
     const url = '/deleteMessage';
     return this.post(url, data);
   }
+
+  getUnReadNum(data){
+    const url = '/getUnReadNum';
+    return this.get(url, data);
+  }
 }

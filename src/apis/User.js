@@ -5,12 +5,13 @@ export default class User extends BaseApi {
     const url = '/getVerCode';
     return this.get(url);
   }
+
   userRegister(data) {
     const url = '/register';
     return this.post(url, data);
   }
 
-  createMaintainer(data){
+  createMaintainer(data) {
     const url = '/admin/createMaintainer';
     return this.post(url, data);
   }
@@ -20,12 +21,12 @@ export default class User extends BaseApi {
     return this.post(url, data);
   }
 
-  logout(data){
+  logout(data) {
     const url = '/logout';
     return this.get(url, data);
   }
 
-  uploadAvatar(data){
+  uploadAvatar(data) {
     const url = '/uploadAvatar';
     return this.post(url, data, 'form-data');
   }
@@ -35,7 +36,7 @@ export default class User extends BaseApi {
     return this.get(url, data);
   }
 
-  getUsersInfo(data){
+  getUsersInfo(data) {
     const url = '/admin/getUserInfo';
     return this.get(url, data);
   }
@@ -45,15 +46,23 @@ export default class User extends BaseApi {
     return this.post(url, data);
   }
 
-  updatePassword(data){
+  updatePassword(data) {
     const url = '/updatePassword';
     return this.post(url, data);
   }
 
-  updateEmail(data){
+  updateEmail(data) {
     const url = '/updateEmail';
     return this.post(url, data);
   }
 
+  lockUser(data) {
+    const url = '/admin/lockUser';
+    return this.post(url, data);
+  }
 
+  unlockUser(data) {
+    const url = '/admin/unlockUser';
+    return this.post(url, data);
+  }
 }

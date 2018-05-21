@@ -9,6 +9,7 @@
            @CurrentChange="CurrentChange"
            @modifyInstrument="modifyInstrument"
            @deleteEquipment="deleteEquipment"
+           @page="page"
            @addImg="addImg">
     </Table>
     <search :right="50"

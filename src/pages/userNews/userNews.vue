@@ -199,21 +199,31 @@
     },
     methods: {
       handleDelete(index, scopeRow) {
-        var intIds = [];
-        intIds.push(scopeRow.id)
-        news
-          .deleteMessage({
-            intIds
-          })
-          .then((res)=>{
-            if (res.ret === 200 && res.msg === 'success'){
-              this.$message.success(`删除成功！`);
-              this.getMessages(this.page, this.size)
-            }
-          })
-          .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
+        var intIds = [scopeRow.id];
+        this.$confirm('此操作将永久删除该消息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          news
+            .deleteMessage({
+              intIds
+            })
+            .then((res) => {
+              if (res.ret === 200 && res.msg === 'success') {
+                this.$message.success(`删除成功！`);
+                this.getMessages(this.page, this.size)
+              }
+            })
+            .catch((err) => {
+              this.$message.error(`[系统提醒: ${err.msg}]`);
+            });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
           });
+        });
       },
       currentChange(val) {
         this.page = val - 1;
@@ -378,7 +388,7 @@
           position: relative;
           z-index: 2;
           top: 30px;
-          .avatar-circle{
+          .avatar-circle {
             z-index: 2;
             border-radius: 50%;
           }

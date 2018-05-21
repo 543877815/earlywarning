@@ -27,6 +27,7 @@
           添加仪器吧！
         </p>
         <equipItem v-for="(item,index) in $store.state.equipment.equipItems"
+                   @getEquipData="getEquipData"
                    :equipItem="item"
                    :key="index">
         </equipItem>
@@ -65,11 +66,11 @@
               <div class="param">使用年限：{{$store.state.equipment.equipOnShowItem.durableYears}}</div>
               <div class="detail-intro">仪器简介：{{$store.state.equipment.equipOnShowItem.description}}</div>
               <div class="thresholdValue">告警阈值：{{$store.state.equipment.equipOnShowItem.thresholdValue}}</div>
-              <div class="present-thresholdValue">当前阈值：</div>
             </div>
           </div>
           <div class="history" slot="body">
             <div class="title">历史阈值</div>
+            <div id="history-data"></div>
           </div>
           <div class="others" slot="body"></div>
         </modal>
@@ -91,6 +92,7 @@
   import modal from '../../components/modal/modal'
   import Url from '../../apis/Url'
   import _ from 'underscore'
+  import Highcharts from 'highcharts'
 
   import Equipment from '../../apis/Equipment'
   import User from '../../apis/User'
@@ -100,7 +102,7 @@
   export default {
     data() {
       return {
-        Url:'',
+        Url: '',
         particlesShow: true,
         navHeight: 78,
         navChange: false,
@@ -152,10 +154,97 @@
         this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
         this.getUserInstrument(this.page, this.size, this.sort, false);
     },
-    created() {
-
-    },
     methods: {
+      getEquipData(machineId) {
+        equipment
+          .getDataByMachineId({
+            machineId
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+             let chart = Highcharts.chart('history-data', {
+                chart: {
+                  zoomType: 'x'
+                },
+                title: {
+                  text: '仪器历史阈值'
+                },
+                subtitle: {
+                  text: document.ontouchstart === undefined ?
+                    '鼠标拖动可以进行缩放' : '手势操作进行缩放'
+                },
+                xAxis: {
+                  type: 'datetime',
+                  dateTimeLabelFormats: {
+                    millisecond: '%H:%M:%S.%L',
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%m-%d',
+                    week: '%m-%d',
+                    month: '%Y-%m',
+                    year: '%Y'
+                  }
+                },
+                tooltip: {
+                  dateTimeLabelFormats: {
+                    millisecond: '%H:%M:%S.%L',
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M',
+                    day: '%Y-%m-%d',
+                    week: '%m-%d',
+                    month: '%Y-%m',
+                    year: '%Y'
+                  }
+                },
+                yAxis: {
+                  title: {
+                    text: '阈值'
+                  }
+                },
+                legend: {
+                  enabled: false
+                },
+                plotOptions: {
+                  area: {
+                    fillColor: {
+                      linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                      },
+                      stops: [
+                        [0, Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                      ]
+                    },
+                    marker: {
+                      radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                      hover: {
+                        lineWidth: 1
+                      }
+                    },
+                    threshold: null
+                  }
+                },
+                series: [{
+                  type: 'area',
+                  name: '阈值',
+                  data: res.data
+                }]
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            this.$message.error(`[系统提醒: ${err.msg}]`);
+          });
+      },
       getUserInfo() {
         user.getUserInfo()
           .then((res) => {
@@ -231,7 +320,7 @@
       switchSort(desc) {
         this.page = 0;
         this.size = 10;
-        desc === true ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`;
+        desc === false ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`;
         this.getByCid ?
           this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
           this.getUserInstrument(this.page, this.size, this.sort, false);

@@ -8,9 +8,10 @@
         style="width: 100%"
         max-height="700">
         <el-table-column
-          prop="id"
-          label="ID"
           width="120">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="name"
@@ -111,7 +112,7 @@
       return {
         EquipEdit: false,
         currentRow: null,
-        currentPage:2,
+        currentPage: 2,
         form: {
           name: '',
           insType: '',
@@ -131,7 +132,7 @@
       total: {
         default: 100,
         type: Number
-      }
+      },
     },
     components: {
       Modal
@@ -140,7 +141,7 @@
       imgUpdate() {
         this.$emit('imgUpdate', this.$refs.file.files[0]);
       },
-      setcurrentPage(page){
+      setcurrentPage(page) {
         this.currentPage = page;
       },
       addImg(event) {

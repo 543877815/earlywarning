@@ -108,7 +108,7 @@
           </div>
         </div>
         <div class="intro" slot="body">
-          <div class="title el-icon-setting">仪器详情</div>
+          <div class="title el-icon-setting"> 仪器详情</div>
           <div class="wrapper">
             <div class="img-wrapper">
               <img src="/static/loading-svg" width="300" height="300">
@@ -354,6 +354,8 @@
       },
     },
     mounted() {
+      document.getElementsByTagName('body')[0].className =
+        document.getElementsByTagName('html')[0].className = 'shortPage';
       this.getOrderList(this.page, this.size);
     }
   };
