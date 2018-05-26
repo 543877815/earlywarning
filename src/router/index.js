@@ -16,7 +16,7 @@ import management from '@/pages/management/management'
 import history from '@/pages/history/history'
 import userNews from '@/pages/userNews/userNews'
 
-//管理员
+// 管理员
 import AdminLogin from '@/pages/AdminLogin/AdminLogin'
 import AdminBaseLayout from '@/pages/AdminBaseLayout/AdminBaseLayout'
 import AdminModifyPassword from '@/components/admin-modifyPassword/admin-modifyPassword'
@@ -31,10 +31,8 @@ import AdminUserOrderLists from '@/components/admin-userOrderLists/admin-userOrd
 import AdminServerInfoLists from '@/components/admin-serverInfoLists/admin-serverInfoLists'
 import AdminServerOrderLists from '@/components/admin-serverOrderLists/admin-serverOrderLists'
 
-
 Vue.use(Element)
 Vue.use(Router)
-
 
 export default new Router({
   routes: [
@@ -45,7 +43,7 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      component: login,
+      component: login
     },
     {
       path: '/index',
@@ -94,7 +92,7 @@ export default new Router({
     {
       path: '/admin/login',
       name: 'admin-login',
-      component: AdminLogin,
+      component: AdminLogin
     },
     {
       path: '/admin',
@@ -155,8 +153,8 @@ export default new Router({
           path: 'serverOrderLists',
           name: 'serverOrderLists',
           component: AdminServerOrderLists
-        },
+        }
       ]
-    },
+    }
   ]
 })

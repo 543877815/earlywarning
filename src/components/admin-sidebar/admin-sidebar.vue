@@ -96,20 +96,20 @@
 
 <script type="text/ecmascript-6">
   export default {
-    data() {
+    data () {
       return {
-        activeIndex: '1',
-      };
+        activeIndex: '1'
+      }
     },
     methods: {
-      handleOpen() {
+      handleOpen () {
 
       },
-      handleClose() {
+      handleClose () {
 
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -117,7 +117,7 @@
     .el-menu {
       .el-menu-item {
         color: rgb(255, 255, 255) !important;
-        i{
+        i {
           color: #909399;
         }
       }

@@ -28,22 +28,22 @@
 
 <script type="text/ecmascript-6">
   export default {
-    data() {
+    data () {
       return {
         triangleDown: false
       }
     },
     components: {},
     methods: {
-      switchSort() {
-        this.triangleDown = !this.triangleDown;
-        this.$emit('switchSort', this.triangleDown);
+      switchSort () {
+        this.triangleDown = !this.triangleDown
+        this.$emit('switchSort', this.triangleDown)
       },
-      menuControl() {
-        this.$emit("menuControl");
+      menuControl () {
+        this.$emit('menuControl')
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

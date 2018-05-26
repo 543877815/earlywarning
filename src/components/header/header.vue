@@ -11,12 +11,12 @@
       title: {
         type: String
       },
-      icon:{
+      icon: {
         type: String,
         default: ''
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

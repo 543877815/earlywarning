@@ -97,10 +97,10 @@
   import Equipment from '../../apis/Equipment'
   import User from '../../apis/User'
 
-  const equipment = new Equipment();
-  const user = new User();
+  const equipment = new Equipment()
+  const user = new User()
   export default {
-    data() {
+    data () {
       return {
         Url: '',
         particlesShow: true,
@@ -112,7 +112,7 @@
         menuShow: false,
         size: 10,
         page: 0,
-        sort: "id",
+        sort: 'id',
         desc: false,
         busy: true,
         loading: false,
@@ -132,37 +132,35 @@
       ScrollToY,
       modal
     },
-    mounted() {
-      this.Url = Url.request;
+    mounted () {
+      this.Url = Url.request
 
       document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'scrollPage';
+        document.getElementsByTagName('html')[0].className = 'scrollPage'
 
-      particlesJS("particles-js", this.$store.state.common.particlesConfig);
-
-      this.navHeight = this.$refs.nav.$el.offsetHeight;
-      this.iconShowHeight = this.$refs.Masthead.$el.offsetHeight;
+      this.navHeight = this.$refs.nav.$el.offsetHeight
+      this.iconShowHeight = this.$refs.Masthead.$el.offsetHeight
 
       this.throttleload = _.throttle(this.scrollControl, 100)
-      window.addEventListener("scroll", this.throttleload, false);
+      window.addEventListener('scroll', this.throttleload, false)
 
       if (this.$store.state.equipment.equipTypes.length === 0) {
-        this.getCategories();
+        this.getCategories()
       }
 
-      this.getByCid ?
-        this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
-        this.getUserInstrument(this.page, this.size, this.sort, false);
+      this.getByCid
+        ? this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false)
+        : this.getUserInstrument(this.page, this.size, this.sort, false)
     },
     methods: {
-      getEquipData(machineId) {
+      getEquipData (machineId) {
         equipment
           .getDataByMachineId({
             machineId
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-             let chart = Highcharts.chart('history-data', {
+              Highcharts.chart('history-data', {
                 chart: {
                   zoomType: 'x'
                 },
@@ -170,8 +168,8 @@
                   text: '仪器历史阈值'
                 },
                 subtitle: {
-                  text: document.ontouchstart === undefined ?
-                    '鼠标拖动可以进行缩放' : '手势操作进行缩放'
+                  text: document.ontouchstart === undefined
+                    ? '鼠标拖动可以进行缩放' : '手势操作进行缩放'
                 },
                 xAxis: {
                   type: 'datetime',
@@ -237,15 +235,15 @@
                   name: '阈值',
                   data: res.data
                 }]
-              });
+              })
             }
           })
           .catch((err) => {
-            console.log(err);
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            console.log(err)
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getUserInfo() {
+      getUserInfo () {
         user.getUserInfo()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
@@ -256,76 +254,76 @@
                   message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
                   type: 'warning',
                   offset: 100
-                });
+                })
               }
-              this.$store.state.user = res.data;
-              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`;
+              this.$store.state.user = res.data
+              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      hideDetail() {
-        this.$store.state.equipment.equipOnShow = false;
-        document.getElementsByTagName('body')[0].style.overflow = "auto";
+      hideDetail () {
+        this.$store.state.equipment.equipOnShow = false
+        document.getElementsByTagName('body')[0].style.overflow = 'auto'
       },
-      loadMore() {
-        this.busy = true;
+      loadMore () {
+        this.busy = true
         setTimeout(() => {
-          this.busy = false;
-          this.page++;
-          this.getByCid ?
-            this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, true) :
-            this.getUserInstrument(this.page, this.size, this.sort, true);
-        }, 500);
+          this.busy = false
+          this.page++
+          this.getByCid
+            ? this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, true)
+            : this.getUserInstrument(this.page, this.size, this.sort, true)
+        }, 500)
       },
-      changeEquipActive() {
-        this.page = 0;
-        this.size = 10;
-        this.$store.state.equipment.equipTypeActive.id === 0 ? this.getByCid = false : this.getByCid = true;
-        this.getByCid ?
-          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
-          this.getUserInstrument(this.page, this.size, this.sort, false);
+      changeEquipActive () {
+        this.page = 0
+        this.size = 10
+        this.$store.state.equipment.equipTypeActive.id === 0 ? this.getByCid = false : this.getByCid = true
+        this.getByCid
+          ? this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false)
+          : this.getUserInstrument(this.page, this.size, this.sort, false)
       },
-      getInstrumentByCid(page, size, cid, sort = 'id', flag = false) {
-        this.loading = true;
+      getInstrumentByCid (page, size, cid, sort = 'id', flag = false) {
+        this.loading = true
         equipment
           .getInstrumentByCid({
             page: page,
             size: size,
             cid: cid,
-            sort: sort,
+            sort: sort
           })
           .then((res) => {
-            this.loading = false;
+            this.loading = false
             if (flag) {
               this.$store.state.equipment.equipItems =
                 this.$store.state.equipment.equipItems.concat(res.data.content)
               if (res.data.content.length === 0) {
-                this.busy = true;
+                this.busy = true
               } else {
-                this.busy = false;
+                this.busy = false
               }
             } else {
               this.$store.state.equipment.equipItems =
-                res.data.content;
-              this.busy = false;
+                res.data.content
+              this.busy = false
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      switchSort(desc) {
-        this.page = 0;
-        this.size = 10;
-        desc === false ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`;
-        this.getByCid ?
-          this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false) :
-          this.getUserInstrument(this.page, this.size, this.sort, false);
+      switchSort (desc) {
+        this.page = 0
+        this.size = 10
+        desc === false ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`
+        this.getByCid
+          ? this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false)
+          : this.getUserInstrument(this.page, this.size, this.sort, false)
       },
-      getUserInstrument(page, size, sort = 'id', flag = false) {
+      getUserInstrument (page, size, sort = 'id', flag = false) {
         this.loading = true
         equipment
           .getUserInstrument({
@@ -334,40 +332,40 @@
             page: page
           })
           .then((res) => {
-            this.loading = false;
+            this.loading = false
             if (flag) {
               this.$store.state.equipment.equipItems =
                 this.$store.state.equipment.equipItems.concat(res.data.content)
               if (res.data.content.length === 0) {
                 this.busy = true
               } else {
-                this.busy = false;
+                this.busy = false
               }
             } else {
               this.$store.state.equipment.equipItems =
-                res.data.content;
-              this.busy = false;
+                res.data.content
+              this.busy = false
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getCategories() {
+      getCategories () {
         equipment
           .getCategories()
           .then((res) => {
-            this.$store.state.equipment.equipTypes = res.data;
+            this.$store.state.equipment.equipTypes = res.data
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
       /**
        * minitor the icon show/hidden
        * monitor thr nav color black/Transparent
        */
-      scrollControl() {
+      scrollControl () {
         this.navHeight > window.pageYOffset
           ? this.navChange = false
           : this.navChange = true
@@ -378,19 +376,19 @@
       /**
        * turn on/off the particles
        */
-      switchShowAndHide() {
-        let particlesCanvas = this.$refs.particlesJs.getElementsByClassName('particles-js-canvas-el')[0];
-        !this.$store.state.particles.show ? particlesCanvas.style.display = 'none' : particlesCanvas.style.display = 'block';
+      switchShowAndHide () {
+        let particlesCanvas = this.$refs.particlesJs.getElementsByClassName('particles-js-canvas-el')[0]
+        !this.$store.state.particles.show ? particlesCanvas.style.display = 'none' : particlesCanvas.style.display = 'block'
       },
       /**
        * toggle the index-menu
        */
-      menuControl() {
-        this.menuShow = !this.menuShow;
-      },
+      menuControl () {
+        this.menuShow = !this.menuShow
+      }
     },
-    beforeDestroy() {
-      window.removeEventListener("scroll", this.throttleload, false);
+    beforeDestroy () {
+      window.removeEventListener('scroll', this.throttleload, false)
     }
   }
 </script>

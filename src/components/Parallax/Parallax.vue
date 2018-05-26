@@ -52,14 +52,14 @@
       }
     },
 
-    data() {
+    data () {
       return {
         el: null,
         mediaQuery: null
       }
     },
 
-    mounted() {
+    mounted () {
       if (this.parallax && !this.fixed) {
         this.el = this.$refs.parallax
         window.requestAnimationFrame = window.requestAnimationFrame ||
@@ -74,7 +74,7 @@
     },
 
     methods: {
-      animateElement() {
+      animateElement () {
         const parentHeight = this.$refs.block.offsetHeight
         const parallaxHeight = this.$refs.parallax.offsetHeight
         const availableOffset = parallaxHeight - parentHeight
@@ -85,7 +85,7 @@
         }
       },
 
-      scrollHandler() {
+      scrollHandler () {
         window.requestAnimationFrame(() => {
           if (this.isInView(this.$refs.parallax)) {
             this.animateElement()
@@ -93,7 +93,7 @@
         })
       },
 
-      isInView(el) {
+      isInView (el) {
         let rect = el.getBoundingClientRect()
 
         return (
@@ -102,15 +102,15 @@
         )
       },
 
-      setupListener() {
+      setupListener () {
         if (this.mediaQuery.matches) {
-            window.addEventListener('scroll', this.scrollHandler, false)
+          window.addEventListener('scroll', this.scrollHandler, false)
         } else {
           window.removeEventListener('scroll', this.scrollHandler, false)
         }
       },
 
-      init() {
+      init () {
         this.mediaQuery = window.matchMedia(this.breakpoint)
         if (this.mediaQuery) {
           this.mediaQuery.addListener(this.setupListener)
@@ -119,12 +119,12 @@
       }
     },
 
-    beforeDestroy() {
+    beforeDestroy () {
       window.removeEventListener('scroll', this.scrollHandler, false)
     },
 
     computed: {
-      directionValue() {
+      directionValue () {
         return this.direction === 'down' ? +1 : -1
       }
     }

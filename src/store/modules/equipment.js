@@ -1,13 +1,13 @@
 const state = {
   equipTypeActive: {
     name: '所有',
-    id: 0,
+    id: 0
   },
   equipTypes: [],
   equipItems: [],
   equipOnShow: false,
   equipOnShowItem: {},
-  equipModelList:[]
+  equipModelList: []
 }
 
 const getters = {
@@ -16,35 +16,34 @@ const getters = {
    * @return The name of the equipment types whose cid is the same as param
    */
   equipTypeName: (state) => (id) => {
-    return state.equipTypes.filter((equipTypes) => equipTypes.id === id)[0].name;
+    return state.equipTypes.filter((equipTypes) => equipTypes.id === id)[0].name
   },
 
   equipTypeLists: (state) => (id) => {
     if (id === 0) {
-      return state.equipItems;
+      return state.equipItems
     } else {
-      return state.equipItems.filter((item) => item.id === id);
+      return state.equipItems.filter((item) => item.id === id)
     }
   }
-
 
 }
 
 const mutations = {
-  changeEquipActive(state, item) {
-    state.equipTypeActive = Object.assign({},item);
+  changeEquipActive (state, item) {
+    state.equipTypeActive = Object.assign({}, item)
   },
 
-  maintainStatus(state, status){
-    switch (status){
+  maintainStatus (state, status) {
+    switch (status) {
       case 0:
-        return '等待确认';
+        return '等待确认'
       case 1:
-        return '等待维修';
+        return '等待维修'
       case 2:
-        return '正在维修';
+        return '正在维修'
       case 3:
-        return '维修完成';
+        return '维修完成'
     }
   }
 }

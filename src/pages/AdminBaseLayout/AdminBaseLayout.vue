@@ -19,20 +19,20 @@
   import showControl from '../../components/showControl/showControl'
 
   export default {
-    data() {
+    data () {
       return {}
     },
     methods: {},
     components: {
       vHeader,
       vSidebar,
-      showControl,
+      showControl
     },
-    mounted() {
+    mounted () {
       document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'shortPage';
+        document.getElementsByTagName('html')[0].className = 'shortPage'
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

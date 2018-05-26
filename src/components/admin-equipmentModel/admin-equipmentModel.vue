@@ -161,13 +161,13 @@
 <script type="text/ecmascript-6">
   import Modal from '../modal/modal'
   import Equipment from '../../apis/Equipment'
-  import {createObjectURL} from "../../common/js/createObjectURL";
+  import {createObjectURL} from '../../common/js/createObjectURL'
   import Url from '../../apis/Url'
-  import equipment_default from '../../assets/equipment_default.png'
+  import equipmentDefault from '../../assets/equipment_default.png'
 
-  const equipment = new Equipment();
+  const equipment = new Equipment()
   export default {
-    data() {
+    data () {
       return {
         CreateEquipmentModal: false,
         ModifyEquipmentModal: false,
@@ -197,23 +197,24 @@
         size: 0,
         cid: 0,
         sort: 'id'
-      };
+      }
     },
     components: {
       Modal
     },
     methods: {
-      imgUpdate() {
-        let file = this.$refs.file.files[0],
-          data = new FormData();
-        data.append('avatar', file);
+      imgUpdate () {
+        /* global FileReader FormData */
+        let file = this.$refs.file.files[0]
+        let data = new FormData()
+        data.append('avatar', file)
         if (!file) {
-          this.$message.error('图片为空！');
-          return;
+          this.$message.error('图片为空！')
+          return
         }
         if (!this.isPic) {
-          this.$message.error(`不是图片！`);
-          return;
+          this.$message.error(`不是图片！`)
+          return
         }
         equipment
           .uploadInstPic({
@@ -221,30 +222,30 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success(`图片上传成功！`);
-              this.newEquipmentForm.picUrl = res.data;
+              this.$message.success(`图片上传成功！`)
+              this.newEquipmentForm.picUrl = res.data
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      addImg($event) {
-        $event.target.removeEventListener('change', this.loadImg);
-        $event.target.addEventListener('change', this.loadImg);
+      addImg ($event) {
+        $event.target.removeEventListener('change', this.loadImg)
+        $event.target.addEventListener('change', this.loadImg)
       },
-      loadImg(event) {
-        let files = event.target.files,
-          reader = new FileReader(),
-          url = createObjectURL(files[0]);
+      loadImg (event) {
+        let files = event.target.files
+        let reader = new FileReader()
+        let url = createObjectURL(files[0])
         if (url) {
           if (/image/.test(files[0].type)) {
-            this.$refs.img.src = url;
-            reader.readAsDataURL(files[0]);
+            this.$refs.img.src = url
+            reader.readAsDataURL(files[0])
           } else {
-            this.$message.error('不是图片');
+            this.$message.error('不是图片')
             this.isPic = false
-            return;
+            return
           }
         }
         reader.onerror = () => {
@@ -254,23 +255,23 @@
           console.log('读取中...')
         }
         reader.onload = () => {
-          this.$message.success('读取文件成功!');
-          this.isPic = true;
+          this.$message.success('读取文件成功!')
+          this.isPic = true
         }
       },
-      handleEdit(index, scopeRow) {
-        this.newEquipmentForm.radio = scopeRow.id;
-        this.oldEquipmentForm.name = scopeRow.name;
-        this.oldEquipmentForm.insType = scopeRow.insType;
+      handleEdit (index, scopeRow) {
+        this.newEquipmentForm.radio = scopeRow.id
+        this.oldEquipmentForm.name = scopeRow.name
+        this.oldEquipmentForm.insType = scopeRow.insType
         this.oldEquipmentForm.param = scopeRow.param
-        this.oldEquipmentForm.durableYears = scopeRow.durableYears;
-        this.oldEquipmentForm.thresholdValue = scopeRow.thresholdValue;
-        this.oldEquipmentForm.description = scopeRow.description;
-        this.oldEquipmentForm.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipment_default;
+        this.oldEquipmentForm.durableYears = scopeRow.durableYears
+        this.oldEquipmentForm.thresholdValue = scopeRow.thresholdValue
+        this.oldEquipmentForm.description = scopeRow.description
+        this.oldEquipmentForm.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipmentDefault
 
         this.ModifyEquipmentModal = true
       },
-      handleDelete(index, scopeRow) {
+      handleDelete (index, scopeRow) {
         this.$confirm('此操作将永久删除该仪器模板, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -285,21 +286,21 @@
                 this.$message({
                   type: 'success',
                   message: `仪器 ${scopeRow.name} 删除成功!`
-                });
-                this.getCategories();
+                })
+                this.getCategories()
               }
             })
             .catch((err) => {
-              this.$message.error(`[系统提醒: ${err.msg}]`);
-            });
+              this.$message.error(`[系统提醒: ${err.msg}]`)
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });
-        });
+          })
+        })
       },
-      modifyEquipment() {
+      modifyEquipment () {
         equipment
           .modifyInstrument({
             id: this.newEquipmentForm.radio,
@@ -314,22 +315,22 @@
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`模板仪器 ${this.newEquipmentForm.name || this.oldEquipmentForm.name} 修改成功！`)
-              this.hideAll();
-              this.getCategories();
+              this.hideAll()
+              this.getCategories()
               for (let key in this.newEquipmentForm) {
                 key === 'radio' ? this.newEquipmentForm[key] = 1 : this.newEquipmentForm[key] = ''
               }
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      createEquipment() {
+      createEquipment () {
         for (let key in this.newEquipmentForm) {
           if (!this.newEquipmentForm[key]) {
             this.$message.error(`输入不能为空！`)
-            return;
+            return
           }
         }
         equipment
@@ -346,40 +347,40 @@
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`仪器模板 ${this.newEquipmentForm.name} 创建成功！`)
-              this.hideAll();
+              this.hideAll()
               this.getCategories()
               for (let key in this.newEquipmentForm) {
                 key === 'radio' ? this.newEquipmentForm[key] = 1 : this.newEquipmentForm[key] = ''
               }
-              this.activeName = '1';
+              this.activeName = '1'
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      showModal() {
+      showModal () {
         this.CreateEquipmentModal = true
       },
-      hideAll() {
+      hideAll () {
         this.CreateEquipmentModal = this.ModifyEquipmentModal = false
       },
-      handleClick(tab, event) {
+      handleClick (tab, event) {
         this.page = 0
-        this.getModelInstrumentByCid(this.page, this.size, tab.name);
+        this.getModelInstrumentByCid(this.page, this.size, tab.name)
       },
-      getCategories() {
+      getCategories () {
         equipment
           .getCategories()
           .then((res) => {
-            this.equipmentTypes = res.data;
+            this.equipmentTypes = res.data
             this.getModelInstrumentByCid(this.page, this.size, this.equipmentTypes[0].id)
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getModelInstrumentByCid(page, size = this.size, cid, sort = this.sort) {
+      getModelInstrumentByCid (page, size = this.size, cid, sort = this.sort) {
         equipment
           .getModelInstrumentByCid({
             page,
@@ -389,18 +390,18 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.tableData = res.data.content;
+              this.tableData = res.data.content
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
-    mounted() {
+    mounted () {
       this.getCategories()
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

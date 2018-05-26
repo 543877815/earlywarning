@@ -54,7 +54,7 @@
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)"  v-if="$store.state.user.roles[0].id===1">删除
+              @click="handleDelete(scope.$index, scope.row)" v-if="$store.state.user.roles[0].id===1">删除
             </el-button>
           </template>
         </el-table-column>
@@ -131,10 +131,10 @@
           <!--<button class="btn btn-primary"  @click="confirmOrder" v-if="orderData.maintainStatus===0">确认订单-->
           <!--</button>-->
           <!--<button class="btn btn-primary"  @click="fixingOrder" v-else-if="orderData.maintainStatus===1">-->
-            <!--开始维修-->
+          <!--开始维修-->
           <!--</button>-->
           <!--<button class="btn btn-primary"  @click="finishOrder" v-else-if="orderData.maintainStatus===2">-->
-            <!--维修完成-->
+          <!--维修完成-->
           <!--</button>-->
           <button class="btn btn-primary" @click="confirmOrder">确认订单
           </button>
@@ -162,10 +162,10 @@
   import Order from '../../apis/Order'
   import modal from '../../components/modal/modal'
 
-  const order = new Order();
+  const order = new Order()
 
   export default {
-    data() {
+    data () {
       return {
         activeName: '-1',
         tableData: [],
@@ -182,30 +182,30 @@
           fixTime: 0,
           finishTime: 0,
           instrument: {
-            description: "",
-            durableYears: "",
+            description: '',
+            durableYears: '',
             id: 1,
-            insType: "",
-            name: "",
-            param: "",
+            insType: '',
+            name: '',
+            param: '',
             time: 0,
             maintainer: {
-              username: "",
-              id: "",
-              email: "",
+              username: '',
+              id: '',
+              email: '',
               isEmailLocked: 0,
-              description: "",
-              name: "",
-              avatar: "",
+              description: '',
+              name: '',
+              avatar: ''
             },
             category: {
-              description: "",
+              description: '',
               id: 1,
-              name: ""
+              name: ''
             }
           }
-        },
-      };
+        }
+      }
     },
     components: {
       navIndex,
@@ -216,98 +216,98 @@
       modal
     },
     methods: {
-      confirmOrder() {
-        let orderIds = [this.orderData.id];
+      confirmOrder () {
+        let orderIds = [this.orderData.id]
         order
           .confirmOrder({
             orderIds
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success('订单状态：[确认]');
-              this.hideDetail();
-              this.activeName === '-1' ?
-                this.getOrderList(this.page, this.size) :
-                this.getOrderByStatus(this.page, this.size, this.activeName);
+              this.$message.success('订单状态：[确认]')
+              this.hideDetail()
+              this.activeName === '-1'
+                ? this.getOrderList(this.page, this.size)
+                : this.getOrderByStatus(this.page, this.size, this.activeName)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      fixingOrder() {
-        let orderIds = [this.orderData.id];
+      fixingOrder () {
+        let orderIds = [this.orderData.id]
         order
           .fixingOrder({
             orderIds
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success('订单状态：[正在维修]');
-              this.hideDetail();
-              this.activeName === '-1' ?
-                this.getOrderList(this.page, this.size) :
-                this.getOrderByStatus(this.page, this.size, this.activeName);
+              this.$message.success('订单状态：[正在维修]')
+              this.hideDetail()
+              this.activeName === '-1'
+                ? this.getOrderList(this.page, this.size)
+                : this.getOrderByStatus(this.page, this.size, this.activeName)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      finishOrder() {
-        let orderIds = [this.orderData.id];
+      finishOrder () {
+        let orderIds = [this.orderData.id]
         order
           .finishOrder({
             orderIds
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success('订单状态：[维修完成]');
-              this.hideDetail();
-              this.activeName === '-1' ?
-                this.getOrderList(this.page, this.size) :
-                this.getOrderByStatus(this.page, this.size, this.activeName);
+              this.$message.success('订单状态：[维修完成]')
+              this.hideDetail()
+              this.activeName === '-1'
+                ? this.getOrderList(this.page, this.size)
+                : this.getOrderByStatus(this.page, this.size, this.activeName)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getOrderDetail(id) {
+      getOrderDetail (id) {
         order
           .getOrderDetail({
             id
           })
           .then((res) => {
-            this.orderData = res.data;
+            this.orderData = res.data
             this.modelShow = true
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      currentChange(val) {
-        this.page = val - 1;
-        this.activeName === '-1' ?
-          this.getOrderList(this.page, this.size) :
-          this.getOrderByStatus(this.page, this.size, this.activeName)
+      currentChange (val) {
+        this.page = val - 1
+        this.activeName === '-1'
+          ? this.getOrderList(this.page, this.size)
+          : this.getOrderByStatus(this.page, this.size, this.activeName)
       },
-      handleClick() {
-        this.page = 0;
-        this.activeName === '-1' ?
-          this.getOrderList(this.page, this.size) :
-          this.getOrderByStatus(this.page, this.size, this.activeName)
+      handleClick () {
+        this.page = 0
+        this.activeName === '-1'
+          ? this.getOrderList(this.page, this.size)
+          : this.getOrderByStatus(this.page, this.size, this.activeName)
       },
-      handleEdit(index, scopeRow) {
+      handleEdit (index, scopeRow) {
         this.getOrderDetail(scopeRow.id)
       },
-      handleDelete(index, row) {
+      handleDelete (index, row) {
         // console.log(index, row);
       },
-      hideDetail() {
-        this.modelShow = false;
+      hideDetail () {
+        this.modelShow = false
       },
-      getOrderByStatus(page, size, status, sort = this.sort) {
+      getOrderByStatus (page, size, status, sort = this.sort) {
         order
           .getOrderByStatus({
             page,
@@ -316,49 +316,49 @@
             sort
           })
           .then((res) => {
-            this.tableData = res.data.content;
-            this.total = res.data.totalElements;
+            this.tableData = res.data.content
+            this.total = res.data.totalElements
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getOrderList(page, size, sort = this.sort) {
+      getOrderList (page, size, sort = this.sort) {
         order
           .getOrderList({
             page,
             size,
-            sort,
+            sort
           })
           .then((res) => {
-            this.tableData = res.data.content;
-            this.total = res.data.totalElements;
+            this.tableData = res.data.content
+            this.total = res.data.totalElements
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
     filters: {
       equipStatus: function (val) {
         switch (val) {
           case 0:
-            return '等待确认';
+            return '等待确认'
           case 1:
-            return '维修人员接单';
+            return '维修人员接单'
           case 2:
-            return '正在维修';
+            return '正在维修'
           case 3:
             return '维修完成'
         }
-      },
+      }
     },
-    mounted() {
+    mounted () {
       document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'shortPage';
-      this.getOrderList(this.page, this.size);
+        document.getElementsByTagName('html')[0].className = 'shortPage'
+      this.getOrderList(this.page, this.size)
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -395,7 +395,7 @@
       @include equipmentOrder;
     }
 
-    #footer{
+    #footer {
       position: absolute !important;
       bottom: 0;
     }

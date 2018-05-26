@@ -81,35 +81,35 @@
   import News from '../../apis/News'
   import '../../common/js/lib/sockjs.min'
   import '../../common/js/lib/stomp.min'
-  import avatar_default from '../../assets/avatar_default.png'
+  import avatarDefault from '../../assets/avatar_default.png'
   import Url from '../../apis/Url'
 
-  const news = new News();
-  const user = new User();
-  var stompClient;
+  const news = new News()
+  const user = new User()
+  var stompClient
   export default {
-    data() {
+    data () {
       return {
         unReadMsgNum: ''
       }
     },
     methods: {
-      exit() {
+      exit () {
         user
           .logout()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$router.push('/login');
+              this.$router.push('/login')
               stompClient.disconnect(() => {
-                console.log('stompClient disconnect');
+                console.log('stompClient disconnect')
               })
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getUserInfo() {
+      getUserInfo () {
         user.getUserInfo()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
@@ -120,15 +120,16 @@
                   message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
                   type: 'warning',
                   offset: 100
-                });
+                })
               }
-              this.$store.state.user = res.data;
-              this.$store.state.user.avatar = res.data.avatar ? `${Url.request}${res.data.avatar}` : avatar_default;
+              this.$store.state.user = res.data
+              this.$store.state.user.avatar = res.data.avatar ? `${Url.request}${res.data.avatar}` : avatarDefault
 
-              let subscribeAddress;
-              res.data.roles[0].name === 'user' ? subscribeAddress = '/user/msg/user' : subscribeAddress = '/user/msg/maintainer';
-              let socket = new SockJS('/api/webSocket');
-              stompClient = Stomp.over(socket);
+              let subscribeAddress
+              res.data.roles[0].name === 'user' ? subscribeAddress = '/user/msg/user' : subscribeAddress = '/user/msg/maintainer'
+              /* global SockJS Stomp */
+              let socket = new SockJS('/api/webSocket')
+              stompClient = Stomp.over(socket)
               stompClient.connect({username: res.data.username},
                 (frame) => {
                   stompClient.subscribe(subscribeAddress, (message) => {
@@ -137,29 +138,29 @@
                       title: '消息',
                       message: JSON.parse(message.body).content,
                       offset: 100
-                    });
-                  });
+                    })
+                  })
                 },
                 (error) => {
-                  console.log(error);
-                });
+                  console.log(error)
+                })
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getUnReadNum() {
+      getUnReadNum () {
         news
           .getUnReadNum()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.unReadMsgNum = res.data;
+              this.unReadMsgNum = res.data
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
     props: {
@@ -168,11 +169,11 @@
         default: false
       }
     },
-    created() {
-      this.getUserInfo();
-      this.getUnReadNum();
-    },
-  };
+    created () {
+      this.getUserInfo()
+      this.getUnReadNum()
+    }
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

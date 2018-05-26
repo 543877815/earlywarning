@@ -47,12 +47,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Order from '../../apis/Order';
+  import Order from '../../apis/Order'
 
-  const order = new Order();
+  const order = new Order()
 
   export default {
-    data() {
+    data () {
       return {
         total: 0,
         input: '',
@@ -65,19 +65,19 @@
       }
     },
     methods: {
-      handleCurrentChange(val) {
-        this.page = val - 1;
+      handleCurrentChange (val) {
+        this.page = val - 1
         this.getOrderList(this.page, this.size, this.sort, this.uid)
       },
-      viewDetail(index, scopeRow) {
+      viewDetail (index, scopeRow) {
         this.$router.push(`/admin/orderDetail?id=${scopeRow.id}`)
       },
-      search() {
-        this.page = 0;
-        this.uid = this.input;
+      search () {
+        this.page = 0
+        this.uid = this.input
         this.getOrderList(this.page, this.size, this.sort, this.uid)
       },
-      getOrderList(page, size, sort, uid = null, status = null) {
+      getOrderList (page, size, sort, uid = null, status = null) {
         if (!uid) {
           order
             .getOrderList({
@@ -87,13 +87,13 @@
             })
             .then((res) => {
               if (res.ret === 200 && res.msg === 'success') {
-                this.tableData = res.data.content;
-                this.total = res.data.totalElements;
+                this.tableData = res.data.content
+                this.total = res.data.totalElements
               }
             })
             .catch((err) => {
-              this.$message.error(`[系统提醒: ${err.msg}]`);
-            });
+              this.$message.error(`[系统提醒: ${err.msg}]`)
+            })
         } else {
           order
             .adminGetOrderList({
@@ -106,25 +106,25 @@
             .then((res) => {
               if (res.ret === 200 && res.msg === 'success') {
                 if (res.data) {
-                  this.tableData = res.data.content;
-                  this.total = res.data.totalElements;
+                  this.tableData = res.data.content
+                  this.total = res.data.totalElements
                 } else {
-                  this.tableData = [];
-                  this.total = 0;
+                  this.tableData = []
+                  this.total = 0
                 }
               }
             })
             .catch((err) => {
-              this.$message.error(`[系统提醒: ${err.msg}]`);
-            });
+              this.$message.error(`[系统提醒: ${err.msg}]`)
+            })
         }
       }
     },
-    mounted() {
-      this.uid = this.$route.query.uid;
-      this.getOrderList(this.page, this.size, this.sort, this.uid, this.status);
+    mounted () {
+      this.uid = this.$route.query.uid
+      this.getOrderList(this.page, this.size, this.sort, this.uid, this.status)
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

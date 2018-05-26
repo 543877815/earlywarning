@@ -16,10 +16,11 @@
 <script type="text/ecmascript-6">
   import modal from '../modal/modal'
   import Url from '../../apis/Url'
+
   export default {
-    data() {
+    data () {
       return {
-        Url: '',
+        Url: ''
       }
     },
     props: {
@@ -32,17 +33,17 @@
       modal
     },
     methods: {
-      showDetail(item) {
-        this.$store.state.equipment.equipOnShow = true;
-        this.$store.state.equipment.equipOnShowItem = item;
-        document.getElementsByTagName('body')[0].style.overflow = "hidden";
-        this.$emit('getEquipData', item.id);
-      },
+      showDetail (item) {
+        this.$store.state.equipment.equipOnShow = true
+        this.$store.state.equipment.equipOnShowItem = item
+        document.getElementsByTagName('body')[0].style.overflow = 'hidden'
+        this.$emit('getEquipData', item.id)
+      }
     },
-    created() {
-      this.Url = Url.request;
+    created () {
+      this.Url = Url.request
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

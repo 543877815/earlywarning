@@ -5,9 +5,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {scrollToY} from "../../common/js/scrollToY";
+  import {scrollToY} from '../../common/js/scrollToY'
 
-  export default {
+export default {
     props: {
       scrollTargetY: {
         default: 0,
@@ -18,7 +18,7 @@
         type: Number
       },
       easing: {
-        default: "easeInOutQuint",
+        default: 'easeInOutQuint',
         type: String
       },
       right: {
@@ -31,11 +31,11 @@
       }
     },
     methods: {
-      scrollTo() {
-        scrollToY(this.scrollTargetY, this.speed, this.easing);
+      scrollTo () {
+        scrollToY(this.scrollTargetY, this.speed, this.easing)
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

@@ -146,10 +146,10 @@
   import News from '../../apis/News'
   import Order from '../../apis/Order'
 
-  const news = new News();
-  const order = new Order();
+  const news = new News()
+  const order = new Order()
   export default {
-    data() {
+    data () {
       return {
         modelShow: false,
         page: 0,
@@ -166,29 +166,29 @@
           fixTime: 0,
           finishTime: 0,
           instrument: {
-            description: "",
-            durableYears: "",
+            description: '',
+            durableYears: '',
             id: 1,
-            insType: "",
-            name: "",
-            param: "",
+            insType: '',
+            name: '',
+            param: '',
             time: 0,
             maintainer: {
-              username: "",
-              id: "",
-              email: "",
+              username: '',
+              id: '',
+              email: '',
               isEmailLocked: 0,
-              description: "",
-              name: "",
-              avatar: "",
+              description: '',
+              name: '',
+              avatar: ''
             },
             category: {
-              description: "",
+              description: '',
               id: 1,
-              name: ""
+              name: ''
             }
           }
-        },
+        }
       }
     },
     components: {
@@ -198,8 +198,8 @@
       modal
     },
     methods: {
-      handleDelete(index, scopeRow) {
-        var intIds = [scopeRow.id];
+      handleDelete (index, scopeRow) {
+        var intIds = [scopeRow.id]
         this.$confirm('此操作将永久删除该消息, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -211,48 +211,48 @@
             })
             .then((res) => {
               if (res.ret === 200 && res.msg === 'success') {
-                this.$message.success(`删除成功！`);
+                this.$message.success(`删除成功！`)
                 this.getMessages(this.page, this.size)
               }
             })
             .catch((err) => {
-              this.$message.error(`[系统提醒: ${err.msg}]`);
-            });
+              this.$message.error(`[系统提醒: ${err.msg}]`)
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });
-        });
+          })
+        })
       },
-      currentChange(val) {
-        this.page = val - 1;
+      currentChange (val) {
+        this.page = val - 1
         this.getMessages(this.page, this.size)
       },
-      getOrderDetail(id) {
+      getOrderDetail (id) {
         order
           .getOrderDetail({
             id
           })
           .then((res) => {
-            this.orderData = res.data;
+            this.orderData = res.data
             this.modelShow = true
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      viewDetail(index, scopeRow) {
+      viewDetail (index, scopeRow) {
         this.$confirm(scopeRow.content, '消息详情', {
           confirmButtonText: '查看订单详情',
-          cancelButtonText: '取消',
+          cancelButtonText: '取消'
         }).then(() => {
           this.getOrderDetail(scopeRow.orderId)
         }).catch(() => {
 
-        });
+        })
       },
-      setAllMessageRead() {
+      setAllMessageRead () {
         news
           .setAllMessageRead()
           .then((res) => {
@@ -262,48 +262,48 @@
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      setMessageRead() {
+      setMessageRead () {
         var intIds = []
         this.multipleSelection.forEach((item) => {
-          intIds.push(item.id);
+          intIds.push(item.id)
         })
         news
           .setMessageRead({
             intIds
           })
           .then((res) => {
-            console.log(res);
+            console.log(res)
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success('标记成功！')
               this.getMessages(this.page, this.size)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      toggleSelection(rows) {
+      toggleSelection (rows) {
         if (rows) {
           rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
+            this.$refs.multipleTable.toggleRowSelection(row)
+          })
         } else {
-          this.$refs.multipleTable.clearSelection();
+          this.$refs.multipleTable.clearSelection()
         }
       },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
+      handleSelectionChange (val) {
+        this.multipleSelection = val
       },
-      showDetail() {
-        this.modelShow = true;
+      showDetail () {
+        this.modelShow = true
       },
-      hideDetail() {
-        this.modelShow = false;
+      hideDetail () {
+        this.modelShow = false
       },
-      getMessages(page, size) {
+      getMessages (page, size) {
         news
           .getMessages({
             page,
@@ -311,23 +311,23 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.tableData = res.data.content;
-              this.total = res.data.totalElements;
+              this.tableData = res.data.content
+              this.total = res.data.totalElements
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
-    mounted() {
+    mounted () {
       document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'longPage'
       this.getMessages(this.page, this.size)
     },
     computed: {
       disable: function () {
-        let disable;
-        this.multipleSelection.length === 0 ? disable = true : disable = false;
+        let disable
+        this.multipleSelection.length === 0 ? disable = true : disable = false
         return disable
       }
     },
@@ -335,28 +335,28 @@
       equipStatus: function (val) {
         switch (val) {
           case 0:
-            return '等待确认';
+            return '等待确认'
           case 1:
-            return '维修人员接单';
+            return '维修人员接单'
           case 2:
-            return '正在维修';
+            return '正在维修'
           case 3:
             return '维修完成'
         }
       },
       timeParse: function (date) {
-        let newDate = new Date(date),
-          year = newDate.getFullYear(),
-          month = newDate.getMonth().toString().length === 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1,
-          day = newDate.getDate().toString().length === 1 ? `0${newDate.getDate()}` : newDate.getDate(),
-          hour = newDate.getHours().toString().length === 1 ? `0${newDate.getHours()}` : newDate.getHours(),
-          minute = newDate.getMinutes().toString().length === 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes(),
-          second = newDate.getSeconds().toString().length === 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds();
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        let newDate = new Date(date)
+        let year = newDate.getFullYear()
+        let month = newDate.getMonth().toString().length === 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1
+        let day = newDate.getDate().toString().length === 1 ? `0${newDate.getDate()}` : newDate.getDate()
+        let hour = newDate.getHours().toString().length === 1 ? `0${newDate.getHours()}` : newDate.getHours()
+        let minute = newDate.getMinutes().toString().length === 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes()
+        let second = newDate.getSeconds().toString().length === 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds()
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`
       },
       readStatus: function (read) {
-        let stauts;
-        read ? stauts = '已读' : stauts = '未读';
+        let stauts
+        read ? stauts = '已读' : stauts = '未读'
         return stauts
       }
     }

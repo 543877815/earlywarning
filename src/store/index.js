@@ -8,8 +8,8 @@ import sockJs from './modules/sockJs'
 import VueLazyLoad from 'vue-lazyload'
 
 Vue.use(Vuex)
-Vue.use(VueLazyLoad,{
-  loading: "/static/loading-svg/loading-bars.svg"
+Vue.use(VueLazyLoad, {
+  loading: '/static/loading-svg/loading-bars.svg'
 })
 
 // const debug = process.env.NODE_ENV !== 'production'
@@ -21,7 +21,7 @@ export default new Vuex.Store({
     particles,
     user,
     sockJs
-  },
+  }
   // strict: debug,
   // plugins: debug ? [createLogger()] : []
 })

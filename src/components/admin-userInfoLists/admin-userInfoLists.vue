@@ -75,11 +75,11 @@
 </template>
 
 <script>
-  import User from '../../apis/User';
+  import User from '../../apis/User'
 
-  const user = new User();
-  export default {
-    data() {
+const user = new User()
+export default {
+    data () {
       return {
         tableData: [],
         page: 0,
@@ -91,49 +91,49 @@
       }
     },
     methods: {
-      handleCurrentChange(val) {
-        this.page = val - 1;
+      handleCurrentChange (val) {
+        this.page = val - 1
         this.getUsersInfo(this.page, this.size)
       },
-      viewOrderList(index, scopeRow) {
-        this.$router.push({path: '/admin/userOrderLists', query: {uid: scopeRow.id}});
+      viewOrderList (index, scopeRow) {
+        this.$router.push({path: '/admin/userOrderLists', query: {uid: scopeRow.id}})
       },
-      viewEquipmentLists(index, scopeRow) {
-        this.$router.push({path: '/admin/userEquipmentLists', query: {uid: scopeRow.id}});
+      viewEquipmentLists (index, scopeRow) {
+        this.$router.push({path: '/admin/userEquipmentLists', query: {uid: scopeRow.id}})
       },
-      handleLock(index, scopeRow) {
-        let intIds = [scopeRow.id];
+      handleLock (index, scopeRow) {
+        let intIds = [scopeRow.id]
         user
           .lockUser({
             intIds
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success(`用户 ${scopeRow.username} 锁定成功！`);
+              this.$message.success(`用户 ${scopeRow.username} 锁定成功！`)
               this.getUsersInfo(this.page, this.size)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      hanldeUnlock(index, scopeRow) {
-        let intIds = [scopeRow.id];
+      hanldeUnlock (index, scopeRow) {
+        let intIds = [scopeRow.id]
         user
           .unlockUser({
             intIds
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success(`用户 ${scopeRow.username} 激活成功！`);
+              this.$message.success(`用户 ${scopeRow.username} 激活成功！`)
               this.getUsersInfo(this.page, this.size)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getUsersInfo(page, size, roleName = this.roleName, sort = this.sort, keyWord = this.keyWord) {
+      getUsersInfo (page, size, roleName = this.roleName, sort = this.sort, keyWord = this.keyWord) {
         user
           .getUsersInfo({
             page,
@@ -144,17 +144,17 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.tableData = res.data.content;
-              this.tableData.numberOfElements = res.data.numberOfElements;
-              this.total = res.data.totalElements;
+              this.tableData = res.data.content
+              this.tableData.numberOfElements = res.data.numberOfElements
+              this.total = res.data.totalElements
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
-      },
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
+      }
     },
-    mounted() {
+    mounted () {
       this.getUsersInfo(this.page, this.size)
     }
   }

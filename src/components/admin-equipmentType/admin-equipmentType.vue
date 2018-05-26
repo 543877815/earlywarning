@@ -76,9 +76,9 @@
   import Modal from '../modal/modal'
   import Equipment from '../../apis/Equipment'
 
-  const equipment = new Equipment();
+  const equipment = new Equipment()
   export default {
-    data() {
+    data () {
       return {
         tableData: [],
         addEquipmentModal: false,
@@ -104,21 +104,21 @@
       Modal
     },
     methods: {
-      hideAll() {
+      hideAll () {
         this.addEquipmentModal = this.modifyEquipmentModal = false
       },
-      handleEdit(index, scopeRow) {
-        this.modifyEquipmentModal = true;
-        this.modifyEquipment.id = scopeRow.id;
+      handleEdit (index, scopeRow) {
+        this.modifyEquipmentModal = true
+        this.modifyEquipment.id = scopeRow.id
         this.modifyEquipment.old.name = scopeRow.name
-        this.modifyEquipment.old.description = scopeRow.description;
+        this.modifyEquipment.old.description = scopeRow.description
         this.modifyEquipment.new.name =
           this.modifyEquipment.new.description = ''
       },
-      modifyEquipmentType() {
+      modifyEquipmentType () {
         if (!this.modifyEquipment.new.name && !this.modifyEquipment.new.description) {
-          this.$message.error(`输入不能全为空！`);
-          return;
+          this.$message.error(`输入不能全为空！`)
+          return
         }
         equipment
           .modifyCategory({
@@ -132,17 +132,17 @@
               this.modifyEquipment.new.name =
                 this.modifyEquipment.old.name =
                   this.modifyEquipment.new.description =
-                    this.modifyEquipment.old.description = '';
+                    this.modifyEquipment.old.description = ''
               this.hideAll()
               this.getCategories()
             }
           })
           .catch((err) => {
             console.log(err)
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      handleDelete(index, scopeRow) {
+      handleDelete (index, scopeRow) {
         this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -155,23 +155,23 @@
             .then((res) => {
               if (res.ret === 200 && res.msg === 'success') {
                 this.$message.success(`分类 ${scopeRow.name} 删除成功！`)
-                this.getCategories();
+                this.getCategories()
               }
             })
             .catch((err) => {
-              this.$message.error(`[系统提醒: ${err.msg}]`);
-            });
+              this.$message.error(`[系统提醒: ${err.msg}]`)
+            })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });
-        });
+          })
+        })
       },
-      showModal() {
+      showModal () {
         this.addEquipmentModal = true
       },
-      addEquipmentType() {
+      addEquipmentType () {
         equipment
           .createCategory({
             name: this.addEquipment.name,
@@ -179,31 +179,31 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.hideAll();
+              this.hideAll()
               this.addEquipment.name = this.addEquipment.description = ''
               this.$message.success(`分类 ${this.addEquipment.name} 创建成功！`)
-              this.getCategories();
+              this.getCategories()
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getCategories() {
+      getCategories () {
         equipment
           .getCategories()
           .then((res) => {
-            this.tableData = res.data;
+            this.tableData = res.data
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
-      },
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
+      }
     },
-    mounted() {
-      this.getCategories();
+    mounted () {
+      this.getCategories()
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

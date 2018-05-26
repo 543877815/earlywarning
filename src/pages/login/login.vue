@@ -13,23 +13,23 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigation from '../../components/login-nav/login-nav';
-  import showControl from '../../components/showControl/showControl';
-  import panel from '../../components/login-panel/login-panel';
+  import navigation from '../../components/login-nav/login-nav'
+  import showControl from '../../components/showControl/showControl'
+  import panel from '../../components/login-panel/login-panel'
   import Footer from '../../components/footer/footer'
-  import User from '../../apis/User';
+  import User from '../../apis/User'
 
-  const user = new User();
+  const user = new User()
 
   export default {
-    data() {
+    data () {
       return {
         verCodeSrc: '/api/getVerCode',
         username: null,
         password: null,
         email: null,
         verCode: null,
-        loginIsActive: true,
+        loginIsActive: true
       }
     },
     components: {
@@ -38,25 +38,25 @@
       showControl,
       Footer
     },
-    mounted() {
-      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage';
+    mounted () {
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
     },
     methods: {
-      changeToLogin(msg) {
-        this.loginIsActive = msg;
+      changeToLogin (msg) {
+        this.loginIsActive = msg
       },
-      login(username, password, verCodeOrPassword) {
+      login (username, password, verCodeOrPassword) {
         if (!username) {
-          this.$message.error('用户名为空');
-          return;
+          this.$message.error('用户名为空')
+          return
         }
         if (!password) {
-          this.$message.error('密码为空');
-          return;
+          this.$message.error('密码为空')
+          return
         }
         if (!verCodeOrPassword) {
-          this.$message.error('验证码为空');
-          return;
+          this.$message.error('验证码为空')
+          return
         }
         user
           .userLogin({
@@ -66,40 +66,40 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success('登录成功！');
+              this.$message.success('登录成功！')
               if (res.data.roles[0].name === 'user') {
-                this.$router.push('/index');
+                this.$router.push('/index')
               } else if (res.data.roles[0].name === 'maintainer') {
                 this.$router.push('/history')
               }
             } else {
-              this.$message.error(res.msg);
+              this.$message.error(res.msg)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      register(username, password, verCodeOrPassword) {
+      register (username, password, verCodeOrPassword) {
         if (!username) {
-          this.$message.error('用户名为空');
-          return;
+          this.$message.error('用户名为空')
+          return
         }
         if (!password || !verCodeOrPassword) {
-          this.$message.error('密码为空');
-          return;
+          this.$message.error('密码为空')
+          return
         }
         if (password !== verCodeOrPassword) {
-          this.$message.error('两次密码输入不一致');
-          return;
+          this.$message.error('两次密码输入不一致')
+          return
         }
         if (!/^.*[a-zA-Z]+.*$/.test(password) ||
           !/^.*[0-9]+.*$/.test(password) ||
           !/^.*[/^/$/.//,;:'!@#%&/*/|/?/+/(/)/[/\]/{/}]+.*$/.test(password) ||
           password.length <= 5 ||
           password.length >= 17) {
-          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间');
-          return;
+          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间')
+          return
         }
         user
           .userRegister({
@@ -108,16 +108,16 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success('注册成功！');
-              this.changeToLogin(true);
-              this.$refs.Panel.activeChange('login');
+              this.$message.success('注册成功！')
+              this.changeToLogin(true)
+              this.$refs.Panel.activeChange('login')
             } else {
-              this.$message.error(res.msg);
+              this.$message.error(res.msg)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     }
   }

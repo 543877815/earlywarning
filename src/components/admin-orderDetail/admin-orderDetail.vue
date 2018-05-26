@@ -32,10 +32,10 @@
 <script type="text/ecmascript-6">
   import Order from '../../apis/Order'
 
-  const order = new Order();
+  const order = new Order()
 
   export default {
-    data() {
+    data () {
       return {
         input: 0,
         order: {
@@ -45,7 +45,7 @@
             category: {
               description: '',
               id: 0,
-              name: '',
+              name: ''
             },
             description: '',
             durableYears: '',
@@ -53,7 +53,7 @@
             insType: '',
             name: '',
             param: '',
-            time: 0,
+            time: 0
           },
           maintainStatus: -1,
           maintainer: {
@@ -76,20 +76,20 @@
       }
     },
     methods: {
-      timeParse(date){
-        let newDate = new Date(date),
-          year = newDate.getFullYear(),
-          month = newDate.getMonth().toString().length == 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1,
-          day = newDate.getDate().toString().length == 1 ? `0${newDate.getDate()}` : newDate.getDate(),
-          hour = newDate.getHours().toString().length == 1 ? `0${newDate.getHours()}` : newDate.getHours(),
-          minute = newDate.getMinutes().toString().length == 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes(),
-          second = newDate.getSeconds().toString().length == 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds();
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      timeParse (date) {
+        let newDate = new Date(date)
+        let year = newDate.getFullYear()
+        let month = newDate.getMonth().toString().length === 1 ? `0${newDate.getMonth() + 1}` : newDate.getMonth() + 1
+        let day = newDate.getDate().toString().length === 1 ? `0${newDate.getDate()}` : newDate.getDate()
+        let hour = newDate.getHours().toString().length === 1 ? `0${newDate.getHours()}` : newDate.getHours()
+        let minute = newDate.getMinutes().toString().length === 1 ? `0${newDate.getMinutes()}` : newDate.getMinutes()
+        let second = newDate.getSeconds().toString().length === 1 ? `0${newDate.getSeconds()}` : newDate.getSeconds()
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`
       },
-      getOrder() {
+      getOrder () {
         this.getOrderDetail(this.input)
       },
-      getOrderDetail(id) {
+      getOrderDetail (id) {
         order
           .getOrderDetail({
             id
@@ -98,42 +98,42 @@
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`查找成功!`)
               console.log(this.order.maintainStatus)
-              this.order = res.data;
+              this.order = res.data
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
-      },
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
+      }
     },
-    computed:{
-      createTime:{
+    computed: {
+      createTime: {
         get: function () {
           return this.timeParse(this.order.createTime)
-        },
+        }
       },
       maintainStatus: {
         get: function () {
           switch (this.order.maintainStatus) {
             case 0:
-              return '等待确认';
+              return '等待确认'
             case 1:
-              return '等待维修';
+              return '等待维修'
             case 2:
-              return '正在维修';
+              return '正在维修'
             case 3:
-              return '维修完成';
+              return '维修完成'
           }
         }
-      },
+      }
     },
-    mounted(){
-      if (this.$route.query.id){
-        this.order.id = this.$route.query.id;
-        this.getOrderDetail(this.order.id);
+    mounted () {
+      if (this.$route.query.id) {
+        this.order.id = this.$route.query.id
+        this.getOrderDetail(this.order.id)
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

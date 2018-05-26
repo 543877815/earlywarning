@@ -12,11 +12,11 @@
 
 <script type="text/ecmascript-6">
   export default {
-    data() {
+    data () {
       return {
         all: {
           name: '所有',
-          id: 0,
+          id: 0
         }
       }
     },
@@ -27,12 +27,12 @@
       }
     },
     methods: {
-      switchEquip(item) {
-        this.$store.commit("changeEquipActive", item);
-        this.$emit('changeEquipActive');
+      switchEquip (item) {
+        this.$store.commit('changeEquipActive', item)
+        this.$emit('changeEquipActive')
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

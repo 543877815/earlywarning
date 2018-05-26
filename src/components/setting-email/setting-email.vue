@@ -28,13 +28,12 @@
 
 <script type="text/ecmascript-6">
   import Header from '../header/header'
-  import {heightSetting} from "../../common/js/heightSetting";
-  import User from '../../apis/User';
+import User from '../../apis/User'
 
-  const user = new User();
+const user = new User()
 
-  export default {
-    data() {
+export default {
+    data () {
       return {
         email: '',
         activeTips: false
@@ -44,32 +43,32 @@
       Header
     },
     methods: {
-      unlockEmail() {
-        this.email = this.$store.state.user.email;
-        this.activeTips = true;
+      unlockEmail () {
+        this.email = this.$store.state.user.email
+        this.activeTips = true
       },
-      updateEmail() {
+      updateEmail () {
         if (!this.email || !/^[0-9A-Za-z\-_.]+@[0-9A-Za-z\-_]+(\.[0-9A-Za-z\-_]+)+$/.test(this.email)) {
-          this.$message.error('邮箱有误');
-          return;
+          this.$message.error('邮箱有误')
+          return
         }
         user
           .updateEmail({
             email: this.email
           })
           .then((res) => {
-            if (res.ret === 200 && res.msg === 'success'){
+            if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`邮箱发送成功！`)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
-    mounted() {
+    mounted () {
       this.$nextTick(() => {
-        document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage';
+        document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
       })
     }
   }

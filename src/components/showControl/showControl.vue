@@ -5,10 +5,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import showImg from './visible.png';
-  import hideImg from './invisible.png';
+  import showImg from './visible.png'
+import hideImg from './invisible.png'
 
-  export default {
+export default {
     props: {
       show: {
         type: Boolean,
@@ -23,19 +23,19 @@
         default: 0
       }
     },
-    data() {
+    data () {
       return {
         hideImg: hideImg,
         showImg: showImg
       }
     },
     methods: {
-      switchShowAndHide() {
-        var particlesCanvas = document.getElementsByClassName('particles-js-canvas-el')[0];
+      switchShowAndHide () {
+        var particlesCanvas = document.getElementsByClassName('particles-js-canvas-el')[0]
         this.$store.commit('particlesControl', particlesCanvas)
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

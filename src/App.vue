@@ -6,12 +6,13 @@
 </template>
 
 <script>
-  import '../static/css/reset.css';
+  import '../static/css/reset.css'
 
   export default {
     name: 'App',
-    mounted() {
-      particlesJS("particles-js", this.$store.state.common.particlesConfig);
+    mounted () {
+      /* global particlesJS */
+      particlesJS('particles-js', this.$store.state.common.particlesConfig)
     }
   }
 </script>

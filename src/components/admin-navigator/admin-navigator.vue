@@ -19,19 +19,19 @@
 
 <script type="text/ecmascript-6">
   export default {
-    data() {
+    data () {
       return {
-        activeIndex: '1',
-      };
-    },
-    methods: {
-      handleSelect(key, keyPath) {
-      },
-      logout() {
-        this.$router.push('/admin/login');
+        activeIndex: '1'
       }
     },
-  };
+    methods: {
+      handleSelect (key, keyPath) {
+      },
+      logout () {
+        this.$router.push('/admin/login')
+      }
+    }
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

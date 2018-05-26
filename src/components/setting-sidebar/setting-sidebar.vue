@@ -18,16 +18,16 @@
 <script type="text/ecmascript-6">
   export default {
     methods: {
-      changePassword() {
-        window.scrollTo(0, 0);
+      changePassword () {
+        window.scrollTo(0, 0)
         this.$router.push('changePassword')
       },
-      emailSetting() {
-        window.scrollTo(0, 0);
-        this.$router.push('emailSetting');
+      emailSetting () {
+        window.scrollTo(0, 0)
+        this.$router.push('emailSetting')
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

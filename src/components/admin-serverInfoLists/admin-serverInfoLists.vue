@@ -89,9 +89,9 @@
   import User from '../../apis/User'
   import Modal from '../modal/modal'
 
-  const user = new User();
+  const user = new User()
   export default {
-    data() {
+    data () {
       return {
         tableData: [],
         page: 0,
@@ -112,26 +112,26 @@
       Modal
     },
     methods: {
-      addMaintainer() {
+      addMaintainer () {
         if (!this.form.username) {
-          this.$message.error('用户名为空');
-          return;
+          this.$message.error('用户名为空')
+          return
         }
         if (!this.form.password || !this.form.repeatPassword) {
-          this.$message.error('密码为空');
-          return;
+          this.$message.error('密码为空')
+          return
         }
         if (this.form.password !== this.form.repeatPassword) {
-          this.$message.error('两次密码输入不一致');
-          return;
+          this.$message.error('两次密码输入不一致')
+          return
         }
         if (!/^.*[a-zA-Z]+.*$/.test(this.form.password) ||
           !/^.*[0-9]+.*$/.test(this.form.password) ||
           !/^.*[/^/$/.//,;:'!@#%&/*/|/?/+/(/)/[/\]/{/}]+.*$/.test(this.form.password) ||
           this.form.password.length <= 5 ||
           this.form.password.length >= 17) {
-          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间');
-          return;
+          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间')
+          return
         }
         user
           .createMaintainer({
@@ -141,30 +141,30 @@
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`维修人员 ${this.form.username} 创建成功！`)
-              this.form.username = this.form.password = this.form.repeatPassword = '';
-              this.hideAll();
+              this.form.username = this.form.password = this.form.repeatPassword = ''
+              this.hideAll()
               this.getUsersInfo(this.page, this.size)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      hideAll() {
-        this.addMaintainerModal = false;
+      hideAll () {
+        this.addMaintainerModal = false
       },
-      showModal() {
+      showModal () {
         this.addMaintainerModal = true
       },
-      handleCurrentChange(val) {
+      handleCurrentChange (val) {
         this.page = val - 1
         this.getUsersInfo(this.page, this.size)
       },
-      viewOrderList(index, scopeRow) {
-        console.log(scopeRow.id);
-        this.$router.push({path: '/admin/serverOrderLists', query: {uid: scopeRow.id}});
+      viewOrderList (index, scopeRow) {
+        console.log(scopeRow.id)
+        this.$router.push({path: '/admin/serverOrderLists', query: {uid: scopeRow.id}})
       },
-      getUsersInfo(page, size, roleName = this.roleName, sort = this.sort, keyword = this.keyword) {
+      getUsersInfo (page, size, roleName = this.roleName, sort = this.sort, keyword = this.keyword) {
         user
           .getUsersInfo({
             page,
@@ -180,21 +180,21 @@
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
     filters: {
       Status: function (value) {
-        let status;
-        value === 0 ? status = '未激活' : status = '已激活';
+        let status
+        value === 0 ? status = '未激活' : status = '已激活'
         return status
       }
     },
-    mounted() {
+    mounted () {
       this.getUsersInfo(this.page, this.size)
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

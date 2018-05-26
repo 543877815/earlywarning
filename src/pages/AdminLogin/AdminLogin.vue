@@ -44,9 +44,9 @@
   import showControl from '../../components/showControl/showControl'
   import User from '../../apis/User'
 
-  const user = new User();
-  export default {
-    data() {
+  const user = new User()
+export default {
+    data () {
       return {
         verCodeSrc: '/api/getVerCode',
         username: 'admin',
@@ -58,42 +58,41 @@
       showControl
     },
     methods: {
-      login() {
+      login () {
         if (!this.username) {
-          this.$message.error('用户名为空');
-          return;
+          this.$message.error('用户名为空')
+          return
         }
         if (!this.password) {
-          this.$message.error('密码为空');
-          return;
+          this.$message.error('密码为空')
+          return
         }
         if (!this.verCode) {
-          this.$message.error('验证码为空');
-          return;
+          this.$message.error('验证码为空')
+          return
         }
         user
           .userLogin({
-          username: this.username,
-          password: this.password,
-          verCode: this.verCode
-        })
-          .then((res)=>{
-            if (res.ret === 200 && res.msg === 'success'){
+            username: this.username,
+            password: this.password,
+            verCode: this.verCode
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`登陆成功！`)
-              this.$router.push('/admin/index');
+              this.$router.push('/admin/index')
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
-
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      getVerCode() {
-        let temp = this.verCodeSrc;
-        this.verCodeSrc = `${temp}?time=${Math.random()}`;
+      getVerCode () {
+        let temp = this.verCodeSrc
+        this.verCodeSrc = `${temp}?time=${Math.random()}`
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

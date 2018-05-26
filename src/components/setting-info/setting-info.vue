@@ -47,15 +47,15 @@
 
 <script>
   import Header from '../header/header'
-  import {createObjectURL} from "../../common/js/createObjectURL";
+  import {createObjectURL} from '../../common/js/createObjectURL'
   import Url from '../../apis/Url'
-  import User from '../../apis/User';
+  import User from '../../apis/User'
 
-  const user = new User();
+  const user = new User()
 
   export default {
-    name: "setting-info",
-    data() {
+    name: 'setting-info',
+    data () {
       return {
         name: '',
         description: '',
@@ -66,61 +66,62 @@
       Header
     },
     methods: {
-      getUserInfo() {
+      getUserInfo () {
         user.getUserInfo()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.name = this.description = '';
-              this.$store.state.user.username = res.data.username;
-              this.$store.state.user.name = res.data.name;
-              this.$store.state.user.id = res.data.id;
-              this.$store.state.user.email = res.data.email;
-              this.$store.state.user.isEmailLocked = res.data.isEmailLocked;
-              this.$store.state.user.description = res.data.description;
-              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}?_=${new Date().getTime()}`;
-              this.$store.state.user.roles = res.data.roles;
+              this.name = this.description = ''
+              this.$store.state.user.username = res.data.username
+              this.$store.state.user.name = res.data.name
+              this.$store.state.user.id = res.data.id
+              this.$store.state.user.email = res.data.email
+              this.$store.state.user.isEmailLocked = res.data.isEmailLocked
+              this.$store.state.user.description = res.data.description
+              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}?_=${new Date().getTime()}`
+              this.$store.state.user.roles = res.data.roles
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
 
-      modifyUserInfo() {
+      modifyUserInfo () {
         if (!this.name && !this.description) {
           this.$message.error(`输入为空！`)
-          return;
+          return
         }
-        let name = this.name || this.$store.state.user.name,
-          description = this.description || this.$store.state.user.description;
+        let name = this.name || this.$store.state.user.name
+        let description = this.description || this.$store.state.user.description
         user
           .modifyUserInfo({
             name: name,
-            description: description,
+            description: description
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`更改信息成功！`)
-              this.getUserInfo();
+              this.getUserInfo()
             } else {
-              this.$message.error(`提示：${res.msg}`);
+              this.$message.error(`提示：${res.msg}`)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      imgUpdate() {
-        let file = this.$refs.file.files[0],
-          data = new FormData();
-        data.append('avatar', file);
+      imgUpdate () {
+        /* global FileReader FormData */
+        let file = this.$refs.file.files[0]
+        let data = new FormData()
+        data.append('avatar', file)
         if (!file) {
-          this.$message.error('图片为空！');
-          return;
+          this.$message.error('图片为空！')
+          return
         }
         if (!this.isPic) {
-          this.$message.error(`不是图片！`);
-          return;
+          this.$message.error(`不是图片！`)
+          return
         }
         user
           .uploadAvatar({
@@ -128,30 +129,30 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$message.success(`图片上传成功！`);
-              this.getUserInfo();
+              this.$message.success(`图片上传成功！`)
+              this.getUserInfo()
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
-      addImg($event) {
+      addImg ($event) {
         $event.target.removeEventListener('change', this.loadImg)
         $event.target.addEventListener('change', this.loadImg)
       },
-      loadImg(event) {
-        let files = event.target.files,
-          reader = new FileReader(),
-          url = createObjectURL(files[0]);
+      loadImg (event) {
+        let files = event.target.files
+        let reader = new FileReader()
+        let url = createObjectURL(files[0])
         if (url) {
           if (/image/.test(files[0].type)) {
-            this.$refs.avatar.src = url;
-            reader.readAsDataURL(files[0]);
+            this.$refs.avatar.src = url
+            reader.readAsDataURL(files[0])
           } else {
-            this.$message.error('不是图片');
+            this.$message.error('不是图片')
             this.isPic = false
-            return;
+            return
           }
         }
         reader.onerror = () => {
@@ -161,16 +162,16 @@
           console.log('读取中...')
         }
         reader.onload = () => {
-          this.$message.success('读取文件成功!');
-          this.isPic = true;
+          this.$message.success('读取文件成功!')
+          this.isPic = true
         }
       }
     },
-    created() {
+    created () {
       // this.$refs.fileReader
     },
-    mounted() {
-      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'longPage';
+    mounted () {
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'longPage'
     }
   }
 </script>

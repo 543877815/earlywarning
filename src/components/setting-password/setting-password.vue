@@ -29,12 +29,12 @@
 
 <script type="text/ecmascript-6">
   import Header from '../header/header'
-  import User from '../../apis/User';
+  import User from '../../apis/User'
 
-  const user = new User();
+  const user = new User()
 
   export default {
-    data() {
+    data () {
       return {
         oldPassword: '',
         newPassword: '',
@@ -45,22 +45,22 @@
       Header
     },
     methods: {
-      changePassword() {
+      changePassword () {
         if (!this.oldPassword || !this.newPassword || !this.newPasswordRepeat) {
-          this.$message.error(`输入不能为空！`);
-          return;
+          this.$message.error(`输入不能为空！`)
+          return
         }
         if (this.newPassword !== this.newPasswordRepeat) {
           this.$message.error('两次输入密码不一致！')
-          return;
+          return
         }
         if (!/^.*[a-zA-Z]+.*$/.test(this.newPassword) ||
           !/^.*[0-9]+.*$/.test(this.newPassword) ||
           !/^.*[/^/$/.//,;:'!@#%&/*/|/?/+/(/)/[/\]/{/}]+.*$/.test(this.newPassword) ||
           this.newPassword.length <= 5 ||
           this.newPassword.length >= 17) {
-          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间');
-          return;
+          this.$message.error('密码必须包含数字、字母、特殊字符三种,长度属于6-16位之间')
+          return
         }
         user
           .updatePassword({
@@ -71,17 +71,17 @@
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success(`修改密码成功！`)
             } else {
-              this.$message.error(`提示：${res.msg}`);
+              this.$message.error(`提示：${res.msg}`)
             }
-            console.log(res);
+            console.log(res)
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
-    mounted() {
-      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage';
+    mounted () {
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
     }
   }
 </script>

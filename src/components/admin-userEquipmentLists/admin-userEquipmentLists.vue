@@ -52,9 +52,9 @@
 <script type="text/ecmascript-6">
   import Equipment from '../../apis/Equipment'
 
-  const equipment = new Equipment();
+  const equipment = new Equipment()
   export default {
-    data() {
+    data () {
       return {
         input: '',
         tableData: [],
@@ -66,17 +66,17 @@
       }
     },
     methods: {
-      currentChange(val) {
-        this.page = val - 1;
-        this.getUserInstruments(this.page, this.size, this.sort, this.uid, this.keyWord);
+      currentChange (val) {
+        this.page = val - 1
+        this.getUserInstruments(this.page, this.size, this.sort, this.uid, this.keyWord)
       },
-      search() {
+      search () {
 
       },
-      viewDetail(index, scopeRow){
+      viewDetail (index, scopeRow) {
         this.$router.push(`/admin/equipmentDetail?id=${scopeRow.id}`)
       },
-      getUserInstruments(page, size, sort, uid = null, keyWord = null) {
+      getUserInstruments (page, size, sort, uid = null, keyWord = null) {
         equipment
           .adminGetUserInstrument({
             page,
@@ -87,20 +87,20 @@
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.tableData = res.data.content;
-              this.total = res.data.totalElements;
+              this.tableData = res.data.content
+              this.total = res.data.totalElements
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
-    mounted() {
-      this.uid = this.$route.query.uid;
-      this.getUserInstruments(this.page, this.size, this.sort, this.uid, this.keyWord);
+    mounted () {
+      this.uid = this.$route.query.uid
+      this.getUserInstruments(this.page, this.size, this.sort, this.uid, this.keyWord)
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

@@ -12,8 +12,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../../components/navigator/navigator';
-  import sidebar from '../../components/setting-sidebar/setting-sidebar'
+  import navigator from '../../components/navigator/navigator'
+import sidebar from '../../components/setting-sidebar/setting-sidebar'
   import Footer from '../../components/footer/footer'
   import showControl from '../../components/showControl/showControl'
 
@@ -24,12 +24,12 @@
       Footer,
       showControl
     },
-    methods:{
+    methods: {
 
     },
-    mounted(){
+    mounted () {
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

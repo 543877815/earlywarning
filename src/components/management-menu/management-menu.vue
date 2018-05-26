@@ -27,32 +27,32 @@
 
 <script type="text/ecmascript-6">
   export default {
-    data() {
+    data () {
       return {
         isCollapse: false,
         page: 0,
         size: 10,
         sort: 'id',
         cid: '1'
-      };
+      }
     },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+      handleOpen (key, keyPath) {
+        console.log(key, keyPath)
       },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
+      handleClose (key, keyPath) {
+        console.log(key, keyPath)
       },
-      switchType(item){
-        this.$store.commit("changeEquipActive", item);
-        this.$emit('switchType', item.id);
+      switchType (item) {
+        this.$store.commit('changeEquipActive', item)
+        this.$emit('switchType', item.id)
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .el_NavMenu{
+  .el_NavMenu {
     box-shadow: 10px 10px 50px #888888;
     background-color: #fff;
     border-radius: 10px;

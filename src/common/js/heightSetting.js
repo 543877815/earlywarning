@@ -1,15 +1,15 @@
-export function heightSetting() {
-  let windowHeight = window.screen.height;
+export function heightSetting () {
+  let windowHeight = window.screen.height
   console.log(`window:${windowHeight}`)
-  let body = document.getElementsByTagName('body')[0];
-  let bodyHeight = body.offsetHeight;
+  let body = document.getElementsByTagName('body')[0]
+  let bodyHeight = body.offsetHeight
   console.log(bodyHeight)
   let html = document.getElementsByTagName('html')[0]
-  let htmlHeight = html.offsetHeight;
+  let htmlHeight = html.offsetHeight
   console.log(htmlHeight);
-  (windowHeight > htmlHeight)?
-    html.className = body.className = 'shortPage':
-    html.className = body.className = 'longPage';
+  (windowHeight > htmlHeight)
+    ? html.className = body.className = 'shortPage'
+    : html.className = body.className = 'longPage'
 }
 
 /**

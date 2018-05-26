@@ -105,10 +105,10 @@
 <script>
   import Modal from '../../components/modal/modal'
   import Url from '../../apis/Url'
-  import equipment_default from '../../assets/equipment_default.png'
+  import equipmentDefault from '../../assets/equipment_default.png'
 
   export default {
-    data() {
+    data () {
       return {
         EquipEdit: false,
         currentRow: null,
@@ -132,53 +132,53 @@
       total: {
         default: 100,
         type: Number
-      },
+      }
     },
     components: {
       Modal
     },
     methods: {
-      imgUpdate() {
-        this.$emit('imgUpdate', this.$refs.file.files[0]);
+      imgUpdate () {
+        this.$emit('imgUpdate', this.$refs.file.files[0])
       },
-      setcurrentPage(page) {
-        this.currentPage = page;
+      setcurrentPage (page) {
+        this.currentPage = page
       },
-      addImg(event) {
-        this.$emit('addImg', event);
+      addImg (event) {
+        this.$emit('addImg', event)
       },
-      handleCurrentChange(val) {
-        this.currentPage = val;
+      handleCurrentChange (val) {
+        this.currentPage = val
         this.$emit('CurrentChange', val)
       },
-      moidify() {
-        this.hideEdit();
-        this.$emit('modifyInstrument', this.$store.state.equipment.equipOnShowItem, this.form);
+      moidify () {
+        this.hideEdit()
+        this.$emit('modifyInstrument', this.$store.state.equipment.equipOnShowItem, this.form)
       },
-      hideEdit() {
-        this.$store.state.equipment.equipOnShow = false;
+      hideEdit () {
+        this.$store.state.equipment.equipOnShow = false
       },
-      handleEdit(index, scopeRow) {
-        this.$store.state.equipment.equipOnShow = true;
-        this.$store.state.equipment.equipOnShowItem = scopeRow;
-        this.form = {};
-        this.form.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipment_default;
+      handleEdit (index, scopeRow) {
+        this.$store.state.equipment.equipOnShow = true
+        this.$store.state.equipment.equipOnShowItem = scopeRow
+        this.form = {}
+        this.form.picUrl = scopeRow.picUrl ? `${Url.request}${scopeRow.picUrl}` : equipmentDefault
       },
-      handleDelete(index, row) {
+      handleDelete (index, row) {
         this.$confirm(`此操作将永久删除仪器 ${row.name}, 是否继续?`, '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$emit('deleteEquipment', row.id);
+          this.$emit('deleteEquipment', row.id)
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
-          });
-        });
+          })
+        })
       }
-    },
+    }
 
   }
 </script>

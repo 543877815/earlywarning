@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: "search",
+    name: 'search',
     props: {
       show: {
         type: Boolean,
@@ -22,18 +22,18 @@
       }
     },
     methods: {
-      searchInput() {
+      searchInput () {
         this.$prompt('请输入仪器名称', '提示', {
           confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          cancelButtonText: '取消'
         }).then(({value}) => {
           this.$emit('searchEquipment', value)
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '取消输入'
-          });
-        });
+          })
+        })
       }
     }
   }

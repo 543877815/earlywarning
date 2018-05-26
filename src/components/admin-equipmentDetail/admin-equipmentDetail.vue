@@ -32,9 +32,9 @@
 <script type="text/ecmascript-6">
   import Equipment from '../../apis/Equipment'
 
-  const equipment = new Equipment();
-  export default {
-    data() {
+  const equipment = new Equipment()
+export default {
+    data () {
       return {
         input: 0,
         equipment: {
@@ -52,32 +52,32 @@
       }
     },
     methods: {
-      getEquipmentDetail() {
-        this.getInstrumentById(this.input);
+      getEquipmentDetail () {
+        this.getInstrumentById(this.input)
       },
-      getInstrumentById(id) {
+      getInstrumentById (id) {
         equipment
           .getInstrumentById({
             id
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.equipment = res.data;
+              this.equipment = res.data
               this.$message.success(`查找成功！`)
             }
           })
           .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`);
-          });
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       }
     },
-    mounted() {
-      if (this.$route.query.id){
-        this.equipment.id = this.$route.query.id;
-        this.getInstrumentById(this.equipment.id);
+    mounted () {
+      if (this.$route.query.id) {
+        this.equipment.id = this.$route.query.id
+        this.getInstrumentById(this.equipment.id)
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

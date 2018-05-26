@@ -94,12 +94,11 @@
 </template>
 <script type="text/ecmascript-6">
   import Modal from '../../components/modal/modal'
-  import {createObjectURL} from "../../common/js/createObjectURL";
   import Url from '../../apis/Url'
-  import equipment_default from '../../assets/equipment_default.png'
+  import equipmentDefault from '../../assets/equipment_default.png'
 
   export default {
-    data() {
+    data () {
       return {
         messageBox: false,
         template: false,
@@ -136,47 +135,47 @@
       }
     },
     methods: {
-      addImg(event) {
-        this.$emit('addImg', event);
+      addImg (event) {
+        this.$emit('addImg', event)
       },
-      imgUpdate() {
-        this.$emit('imgUpdate', this.$refs.file.files[0]);
+      imgUpdate () {
+        this.$emit('imgUpdate', this.$refs.file.files[0])
       },
-      hideAll() {
+      hideAll () {
         this.messageBox =
           this.template =
-            this.templateList = false;
-        document.getElementsByTagName('body')[0].style.overflow = "auto";
+            this.templateList = false
+        document.getElementsByTagName('body')[0].style.overflow = 'auto'
       },
-      showTypes() {
-        this.messageBox = true;
+      showTypes () {
+        this.messageBox = true
         this.template =
-          this.templateList = false;
-        document.getElementsByTagName('body')[0].style.overflow = "hidden";
+          this.templateList = false
+        document.getElementsByTagName('body')[0].style.overflow = 'hidden'
       },
-      showTemplate() {
+      showTemplate () {
         if (this.currentRow) {
-          this.template = true;
+          this.template = true
           this.messageBox =
-            this.templateList = false;
-          this.form.picUrl = this.currentRow.picUrl ? `${Url.request}${this.currentRow.picUrl}` : equipment_default;
+            this.templateList = false
+          this.form.picUrl = this.currentRow.picUrl ? `${Url.request}${this.currentRow.picUrl}` : equipmentDefault
         } else {
           this.$message.warning(`请选择一种类型！`)
         }
       },
-      showTemplateList() {
+      showTemplateList () {
         this.template =
-          this.messageBox = false;
-        this.templateList = true;
-        this.$emit('getModel', this.radio);
+          this.messageBox = false
+        this.templateList = true
+        this.$emit('getModel', this.radio)
       },
-      handleCurrentChange(val) {
-        this.currentRow = val;
+      handleCurrentChange (val) {
+        this.currentRow = val
       },
-      CurrentChange(val) {
-        this.$emit('modelCurrentChange', val);
+      CurrentChange (val) {
+        this.$emit('modelCurrentChange', val)
       },
-      createEquip() {
+      createEquip () {
         this.$emit('createEquip', this.currentRow, this.form)
       }
     },

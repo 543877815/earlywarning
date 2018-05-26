@@ -26,7 +26,7 @@
     props: {
       equipItem: {
         default: () => {
-          return {};
+          return {}
         },
         type: Object
       },
@@ -36,14 +36,14 @@
       }
     },
     methods: {
-      hideDetail() {
-        this.$emit("hideDetail")
+      hideDetail () {
+        this.$emit('hideDetail')
       },
-      stopPropagation(event){
-        event.stopPropagation();
+      stopPropagation (event) {
+        event.stopPropagation()
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

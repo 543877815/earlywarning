@@ -64,7 +64,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-
   export default {
     props: {
       verCodeSrc: {
@@ -75,91 +74,91 @@
         default: true
       }
     },
-    data() {
+    data () {
       return {
         lineLeft: 240,
         forgetPassword: false,
         username: 'test',
         password: '123aaa.',
-        verCodeOrPassword: '',
+        verCodeOrPassword: ''
       }
     },
     methods: {
       /**
        * returnLogin and forgetPasswordActive use to switch between page login and page forgetPassword
        */
-      returnLogin() {
-        this.forgetPassword = false;
+      returnLogin () {
+        this.forgetPassword = false
         this.$nextTick(() => {
-          this.lineControl();
+          this.lineControl()
         })
       },
-      forgetPasswordActive() {
-        this.forgetPassword = true;
+      forgetPasswordActive () {
+        this.forgetPassword = true
         this.$nextTick(() => {
-          this.lineControl();
+          this.lineControl()
         })
       },
       /**
        *  loginActive and registerActive use to switch between page login and page register
        */
-      loginActive() {
-        this.$emit('changeToLogin',true);
+      loginActive () {
+        this.$emit('changeToLogin', true)
         this.activeChange('login')
       },
-      registerActive() {
-        this.$emit('changeToLogin', false);
+      registerActive () {
+        this.$emit('changeToLogin', false)
         this.activeChange('register')
       },
-      activeChange(position){
-        const offset = 15;
-        const delay = 600;
-        if (position === 'register'){
-          this.lineLeft = this.$refs.register.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.register.offsetWidth) / 2 + offset;
-        } else{
-          this.lineLeft = this.$refs.login.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.login.offsetWidth) / 2 - offset;
+      activeChange (position) {
+        const offset = 15
+        const delay = 600
+        if (position === 'register') {
+          this.lineLeft = this.$refs.register.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.register.offsetWidth) / 2 + offset
+        } else {
+          this.lineLeft = this.$refs.login.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.login.offsetWidth) / 2 - offset
         }
         this.verCodeOrPassword = this.password = this.username = ''
         let timer = setTimeout(() => {
-          this.lineControl();
-          clearTimeout(timer);
-        }, delay);
+          this.lineControl()
+          clearTimeout(timer)
+        }, delay)
       },
       /**
        *  use to control line position
        */
-      lineControl() {
+      lineControl () {
         if (!this.forgetPassword) {
           if (this.loginIsActive) {
-            this.lineLeft = this.$refs.login.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.login.offsetWidth) / 2;
+            this.lineLeft = this.$refs.login.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.login.offsetWidth) / 2
           } else {
-            this.lineLeft = this.$refs.register.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.register.offsetWidth) / 2;
+            this.lineLeft = this.$refs.register.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.register.offsetWidth) / 2
           }
         } else {
-          this.lineLeft = this.$refs.resetPassword.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.resetPassword.offsetWidth) / 2;
+          this.lineLeft = this.$refs.resetPassword.offsetLeft - (this.$refs.line.offsetWidth - this.$refs.resetPassword.offsetWidth) / 2
         }
       },
-      LoginOrRegister() {
+      LoginOrRegister () {
         if (this.loginIsActive) {
-          this.$emit('login',this.username, this.password, this.verCodeOrPassword);
+          this.$emit('login', this.username, this.password, this.verCodeOrPassword)
         } else {
-          this.$emit('register', this.username, this.password, this.verCodeOrPassword);
+          this.$emit('register', this.username, this.password, this.verCodeOrPassword)
         }
       },
-      getVerCode() {
-        let temp = this.verCodeSrc;
-        this.verCodeSrc = `${temp}?_=${new Date().getTime()}`;
+      getVerCode () {
+        let temp = this.verCodeSrc
+        this.verCodeSrc = `${temp}?_=${new Date().getTime()}`
       }
     },
-    created() {
+    created () {
       this.$nextTick(() => {
-        this.lineControl();
+        this.lineControl()
       })
     },
-    mounted() {
-      this.$forceUpdate();
+    mounted () {
+      this.$forceUpdate()
       window.onresize = () => {
-        this.lineControl();
+        this.lineControl()
       }
     }
   }
