@@ -8,6 +8,7 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js",
+    "precommit": "npm run lint",
     "lint": "eslint --ext .js --ext .vue src/ --ignore-pattern src/common/*",
     "lint-fix": "eslint --fix --ext .js --ext .vue src/ --ignore-pattern src/common/*"
   },
@@ -16,6 +17,7 @@
     "element-ui": "^2.3.4",
     "form-data": "^2.3.2",
     "highcharts": "^6.1.0",
+    "husky": "^0.14.3",
     "lodash": "^4.17.5",
     "lodash.throttle": "^4.1.1",
     "node-sass": "^4.9.0",
