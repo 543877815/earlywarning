@@ -36,7 +36,6 @@
             <div class="icon-wrapper">
               <img src="./icon-exit.png" width="25" height="25">
             </div>
-            <!--<div class="exit-bottom">退出</div>-->
           </div>
           <div class="up">
             <div class="avatar-wrapper">
@@ -84,13 +83,14 @@
   import '../../common/js/lib/stomp.min'
   import avatar_default from '../../assets/avatar_default.png'
   import Url from '../../apis/Url'
+
   const news = new News();
   const user = new User();
   var stompClient;
   export default {
     data() {
       return {
-        unReadMsgNum:0
+        unReadMsgNum: ''
       }
     },
     methods: {
@@ -149,7 +149,7 @@
             this.$message.error(`[系统提醒: ${err.msg}]`);
           });
       },
-      getUnReadNum(){
+      getUnReadNum() {
         news
           .getUnReadNum()
           .then((res) => {
