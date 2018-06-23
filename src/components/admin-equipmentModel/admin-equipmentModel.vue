@@ -19,7 +19,7 @@
         <el-table-column
           prop="name"
           label="模板名称"
-          width="160">
+          width="120">
         </el-table-column>
         <el-table-column
           label="创建时间"
@@ -29,26 +29,26 @@
         <el-table-column
           prop="insType"
           label="型号"
-          width="160">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="param"
           label="参数"
-          width="160">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="durableYears"
           label="使用年限"
-          width="100">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="thresholdValue"
           label="告警阈值"
-          width="100">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="description"
-          width="450"
+          width="200"
           label="描述">
         </el-table-column>
         <el-table-column label="操作">
