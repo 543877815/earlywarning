@@ -22,7 +22,7 @@
         </div>
         <div class="input-wrapper">
           <input type="password" :placeholder="loginIsActive ? '用户密码' : '请输入密码'" v-model="password">
-          <div class="forgetPassword" v-show="loginIsActive" @click="forgetPasswordActive">忘记密码？</div>
+          <!--<div class="forgetPassword" v-show="loginIsActive" @click="forgetPasswordActive">忘记密码？</div>-->
         </div>
       </div>
       <div class="vercode-wrapper">
@@ -66,9 +66,6 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
-      verCodeSrc: {
-        type: String
-      },
       loginIsActive: {
         type: Boolean,
         default: true
@@ -76,10 +73,11 @@
     },
     data () {
       return {
+        verCodeSrc: '/api/getVerCode',
         lineLeft: 240,
         forgetPassword: false,
-        username: 'test',
-        password: '123aaa.',
+        username: '',
+        password: '',
         verCodeOrPassword: ''
       }
     },
@@ -156,6 +154,8 @@
       })
     },
     mounted () {
+      let temp = this.verCodeSrc
+      this.verCodeSrc = `${temp}?_=${new Date().getTime()}`
       this.$forceUpdate()
       window.onresize = () => {
         this.lineControl()

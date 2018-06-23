@@ -4,7 +4,7 @@ import FormData from 'form-data'
 import qs from 'qs'
 
 const clientConfig = {
-  // baseURL: 'http://192.168.100.152:8080',
+  // imgURL: 'http://192.168.100.152:8080',
   baseURL: '/api',
   timeout: 300000
 }

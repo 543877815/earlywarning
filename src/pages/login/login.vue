@@ -4,7 +4,6 @@
     <panel ref="Panel"
            @login="login"
            @register="register"
-           :verCodeSrc="verCodeSrc"
            :loginIsActive="loginIsActive"
            @changeToLogin="changeToLogin"></panel>
     <showControl :right="50" :bottom="60"></showControl>
@@ -24,7 +23,6 @@
   export default {
     data () {
       return {
-        verCodeSrc: '/api/getVerCode',
         username: null,
         password: null,
         email: null,

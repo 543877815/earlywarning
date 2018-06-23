@@ -227,7 +227,7 @@
             param: form.param || currentRow.param,
             description: form.description || currentRow.description,
             thresholdValue: form.thresholdValue || currentRow.thresholdValue,
-            picUrl: this.picUrl || form.picUrl.replace(Url.request, '') || currentRow.picUrl.replace(Url.request, '')
+            picUrl: this.picUrl || form.picUrl.replace(Url.request, '').indexOf('data:image/png;base64,') > -1 ? '' : form.picUrl.replace(Url.request, '') || currentRow.picUrl.replace(Url.request, '')
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {

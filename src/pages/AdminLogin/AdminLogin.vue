@@ -49,9 +49,9 @@ export default {
     data () {
       return {
         verCodeSrc: '/api/getVerCode',
-        username: 'admin',
-        password: '123aaa.',
-        verCode: 'd'
+        username: '',
+        password: '',
+        verCode: ''
       }
     },
     components: {

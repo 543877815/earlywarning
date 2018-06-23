@@ -48,10 +48,9 @@
         /*flex: 1;*/
         width: 15%;
         height: 100%;
-        overflow: hidden;
       }
       .container {
-        margin: 100px 0 0 75px;
+        margin: 100px 75px 0;
         width: 84%;
         /*flex: 5.5;*/
       }

@@ -5,9 +5,11 @@
       :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="id"
-        label="ID"
+        label="编号"
         width="180">
+        <template slot-scope="scope">
+          {{scope.$index + 1}}
+        </template>
       </el-table-column>
       <el-table-column
         prop="name"

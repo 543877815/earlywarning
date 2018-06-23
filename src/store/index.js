@@ -5,6 +5,7 @@ import equipment from './modules/equipment'
 import particles from './modules/particles'
 import user from './modules/user'
 import sockJs from './modules/sockJs'
+import news from './modules/news'
 import VueLazyLoad from 'vue-lazyload'
 
 Vue.use(Vuex)
@@ -20,7 +21,8 @@ export default new Vuex.Store({
     equipment,
     particles,
     user,
-    sockJs
+    sockJs,
+    news
   }
   // strict: debug,
   // plugins: debug ? [createLogger()] : []

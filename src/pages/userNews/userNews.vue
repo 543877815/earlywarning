@@ -259,6 +259,7 @@
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success('标记成功！')
               this.getMessages(this.page, this.size)
+              this.getUnReadNum()
             }
           })
           .catch((err) => {
@@ -279,6 +280,7 @@
             if (res.ret === 200 && res.msg === 'success') {
               this.$message.success('标记成功！')
               this.getMessages(this.page, this.size)
+              this.getUnReadNum()
             }
           })
           .catch((err) => {
@@ -302,6 +304,18 @@
       },
       hideDetail () {
         this.modelShow = false
+      },
+      getUnReadNum () {
+        news
+          .getUnReadNum()
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$store.state.news.unReadMsgNum = res.data
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
       },
       getMessages (page, size) {
         news

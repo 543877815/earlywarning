@@ -115,12 +115,14 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
   .el-menu-vertical-demo {
     .el-menu {
+      overflow: hidden;
       .el-menu-item {
         color: rgb(255, 255, 255) !important;
         i {
           color: #909399;
         }
       }
+
       .router-link-active {
         .el-menu-item {
           color: rgb(255, 208, 75) !important;
@@ -130,5 +132,9 @@
         }
       }
     }
+  }
+
+  .el-menu-vertical-demo /deep/ .el-submenu {
+    overflow: hidden !important;
   }
 </style>

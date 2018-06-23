@@ -10,14 +10,16 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="id"
-          label="ID"
+          label="编号"
           width="50">
+          <template slot-scope="scope">
+            {{scope.$index + 1}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="name"
           label="模板名称"
-          width="120">
+          width="160">
         </el-table-column>
         <el-table-column
           label="创建时间"
@@ -27,12 +29,12 @@
         <el-table-column
           prop="insType"
           label="型号"
-          width="100">
+          width="160">
         </el-table-column>
         <el-table-column
           prop="param"
           label="参数"
-          width="100">
+          width="160">
         </el-table-column>
         <el-table-column
           prop="durableYears"
@@ -46,7 +48,7 @@
         </el-table-column>
         <el-table-column
           prop="description"
-          width="300"
+          width="450"
           label="描述">
         </el-table-column>
         <el-table-column label="操作">
@@ -194,7 +196,7 @@
         equipmentTypes: [],
         tableData: [],
         page: 0,
-        size: 0,
+        size: 65535,
         cid: 0,
         sort: 'id'
       }
@@ -327,11 +329,11 @@
           })
       },
       createEquipment () {
-        for (let key in this.newEquipmentForm) {
-          if (!this.newEquipmentForm[key]) {
-            this.$message.error(`输入不能为空！`)
-            return
-          }
+        if (!this.newEquipmentForm.name || !this.newEquipmentForm.insType ||
+            !this.newEquipmentForm.param || !this.newEquipmentForm.durableYears ||
+            !this.newEquipmentForm.thresholdValue || !this.newEquipmentForm.description) {
+          this.$message.error(`输入不能为空！`)
+          return
         }
         equipment
           .createInstrumentModal({
@@ -374,7 +376,10 @@
           .getCategories()
           .then((res) => {
             this.equipmentTypes = res.data
-            this.getModelInstrumentByCid(this.page, this.size, this.equipmentTypes[0].id)
+            this.newEquipmentForm.radio = res.data[0].id
+            if (res.data.length !== 0) {
+              this.getModelInstrumentByCid(this.page, this.size, this.equipmentTypes[0].id)
+            }
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`)
@@ -408,6 +413,11 @@
   @import '../../common/sass/components/modal-transition';
 
   @include modal-transition;
+  .el-table{
+    height: 650px;
+    overflow-y: scroll;
+  }
+
   .addEquip-wrapper {
     border-radius: 50%;
     position: fixed;
@@ -423,10 +433,6 @@
     flex-flow: column;
     justify-content: center;
     align-items: center;
-  }
-
-  .equipment-model {
-
   }
 
   .EquipmentModal /deep/ .modal {

@@ -2,10 +2,6 @@
   <div class="el_NavMenu">
     <el-row class="tac">
       <el-col :span="24">
-        <el-radio-group v-model="isCollapse">
-          <el-radio-button :label="false">展开</el-radio-button>
-          <el-radio-button :label="true">收起</el-radio-button>
-        </el-radio-group>
         <el-menu
           :default-active="$store.state.equipment.equipTypeActive.id.toString()"
           class="el-menu-vertical-demo"
@@ -60,7 +56,6 @@
   }
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 138px;
     min-height: 400px;
   }
 

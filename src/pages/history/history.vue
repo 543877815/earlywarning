@@ -111,7 +111,7 @@
           <div class="title el-icon-setting"> 仪器详情</div>
           <div class="wrapper">
             <div class="img-wrapper">
-              <img src="/static/loading-svg" width="300" height="300">
+              <img :src="orderData.instrument.picUrl" width="300" height="300">
             </div>
             <div class="intro-wrapper">
               <div class="name">{{orderData.instrument.name}}</div>
@@ -122,28 +122,23 @@
               <div class="createTime">创建时间：{{orderData.instrument.time | timeParse}}</div>
               <div class="durableYears">使用年限：{{orderData.instrument.durableYears}}</div>
               <div class="detail-intro">仪器简介：{{orderData.instrument.description}}</div>
-              <div class="thresholdValue">告警阈值：告警阈值</div>
-              <div class="present-thresholdValue">当前阈值：当前阈值</div>
+              <div class="thresholdValue">告警阈值：{{orderData.instrument.thresholdValue}}</div>
+              <!--<div class="present-thresholdValue">当前阈值：当前阈值</div>-->
             </div>
           </div>
         </div>
         <span slot="footer" v-if="$store.state.user.roles[0].name === 'maintainer'">
-          <!--<button class="btn btn-primary"  @click="confirmOrder" v-if="orderData.maintainStatus===0">确认订单-->
+          <button class="btn btn-primary"  @click="confirmOrder" v-if="orderData.maintainStatus===0">确认订单</button>
+          <button class="btn btn-primary"  @click="fixingOrder" v-else-if="orderData.maintainStatus===1">开始维修</button>
+          <button class="btn btn-primary"  @click="finishOrder" v-else-if="orderData.maintainStatus===2">维修完成</button>
+          <!--<button class="btn btn-primary" @click="confirmOrder">确认订单-->
           <!--</button>-->
-          <!--<button class="btn btn-primary"  @click="fixingOrder" v-else-if="orderData.maintainStatus===1">-->
+          <!--<button class="btn btn-primary" @click="fixingOrder">-->
           <!--开始维修-->
           <!--</button>-->
-          <!--<button class="btn btn-primary"  @click="finishOrder" v-else-if="orderData.maintainStatus===2">-->
+          <!--<button class="btn btn-primary" @click="finishOrder">-->
           <!--维修完成-->
           <!--</button>-->
-          <button class="btn btn-primary" @click="confirmOrder">确认订单
-          </button>
-          <button class="btn btn-primary" @click="fixingOrder">
-          开始维修
-          </button>
-          <button class="btn btn-primary" @click="finishOrder">
-          维修完成
-          </button>
         </span>
       </modal>
     </transition>
@@ -161,6 +156,7 @@
   import Header from '../../components/header/header'
   import Order from '../../apis/Order'
   import modal from '../../components/modal/modal'
+  import Url from '../../apis/Url'
 
   const order = new Order()
 
@@ -280,6 +276,7 @@
           })
           .then((res) => {
             this.orderData = res.data
+            this.orderData.instrument.picUrl = `${Url.request}${res.data.instrument.picUrl}`
             this.modelShow = true
           })
           .catch((err) => {

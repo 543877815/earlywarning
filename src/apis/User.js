@@ -1,4 +1,4 @@
-import BaseApi from './BaseApi'
+import BaseApi from './BaseURL'
 
 export default class User extends BaseApi {
   getVerCode () {

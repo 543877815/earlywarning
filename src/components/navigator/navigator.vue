@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <div class="left" v-if="$store.state.user.roles[0].id === 1" style="cursor: pointer">
+    <div class="left" v-if="$store.state.user.roles[0].description === '用户'" style="cursor: pointer">
       <div class="icon-wrapper">
         <router-link to="/index">
           <img src="./icon-home.png" width="50" height="50">
@@ -12,7 +12,7 @@
         </router-link>
       </div>
     </div>
-    <div class="left" v-if="$store.state.user.roles[0].id === 2">
+    <div class="left" v-if="$store.state.user.roles[0].description === '维修人员'">
       <div class="icon-wrapper">
         <img src="./icon-home.png" width="50" height="50">
       </div>
@@ -22,14 +22,14 @@
     </div>
     <div class="right">
       <div class="role">当前角色：{{$store.state.user.roles[0].description}}</div>
-      <router-link to="/management" v-if="$store.state.user.roles[0].id === 1">
+      <router-link to="/management" v-if="$store.state.user.roles[0].description === '用户'">
         <div class="management">仪器管理</div>
       </router-link>
       <router-link to="/history">
         <div class="record">检修记录</div>
       </router-link>
       <div class="personal-info">
-        <span class="greeting">你好，<span class="name">{{$store.state.user.name}}</span></span>
+        <span class="greeting">你好<span v-if="$store.state.user.name">，</span><span class="name">{{$store.state.user.name}}</span></span>
         <img :src="$store.state.user.avatar" width="45" height="45" class="avatar-circle">
         <div class="info-panel" :class="{'navChange':navChange}">
           <div class="exit" @click="exit">
@@ -62,7 +62,8 @@
                 <img src="./icon-trends.png" alt="">
               </div>
               <router-link to="/userNews">
-                <el-badge :value="unReadMsgNum" class="item">
+                <el-badge :value="$store.state.news.unReadMsgNum === 0 ? '': $store.state.news.unReadMsgNum"
+                          class="item">
                   <el-button size="middle">
                     用户动态
                   </el-button>
@@ -89,9 +90,7 @@
   var stompClient
   export default {
     data () {
-      return {
-        unReadMsgNum: ''
-      }
+      return {}
     },
     methods: {
       exit () {
@@ -99,13 +98,19 @@
           .logout()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$router.push('/login')
-              stompClient.disconnect(() => {
-                console.log('stompClient disconnect')
-              })
+              try {
+                stompClient.disconnect(() => {
+                  console.log('stompClient disconnect!')
+                })
+              } catch (e) {
+                console.log(e)
+              }
             }
+            this.$router.push('/login')
+            this.$store.state.user.name = ''
           })
           .catch((err) => {
+            console.log(err)
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
@@ -133,12 +138,17 @@
               stompClient.connect({username: res.data.username},
                 (frame) => {
                   stompClient.subscribe(subscribeAddress, (message) => {
-                    console.log('111')
-                    this.$notify.info({
-                      title: '消息',
-                      message: JSON.parse(message.body).content,
-                      offset: 100
-                    })
+                    console.log(typeof message.body)
+                    if (typeof message.body === 'string') {
+                      this.getUserInfo()
+                    } else {
+                      this.getUnReadNum()
+                      this.$notify.info({
+                        title: '消息',
+                        message: JSON.parse(message.body).content,
+                        offset: 100
+                      })
+                    }
                   })
                 },
                 (error) => {
@@ -155,7 +165,7 @@
           .getUnReadNum()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.unReadMsgNum = res.data
+              this.$store.state.news.unReadMsgNum = res.data
             }
           })
           .catch((err) => {
@@ -170,8 +180,19 @@
       }
     },
     created () {
-      this.getUserInfo()
+      if (!this.$store.state.user.name) {
+        this.getUserInfo()
+      }
       this.getUnReadNum()
+    },
+    beforeDestroy () {
+      try {
+        stompClient.disconnect(function () {
+          console.log('stompClient disconnect!')
+        })
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 </script>
@@ -234,7 +255,7 @@
             color: $nav_index-color;
           }
         }
-        &:hover {
+        &:hover, &:focus {
           color: $nav_index-color;
           background: rgba(255, 255, 255, 0.5);
           .info-panel {
@@ -270,7 +291,6 @@
           display: flex;
           flex-flow: column;
           justify-content: center;
-          transition: all 0.3s;
           pointer-events: none;
           box-shadow: 0 8px 16px 0 rgba(7, 17, 27, .2);
           &:hover {

@@ -49,7 +49,14 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">禁用
+            v-if="scope.row.isLocked===1"
+            @click="handleLock(scope.$index, scope.row)">禁用
+          </el-button>
+          <el-button
+            size="mini"
+            type="success"
+            v-if="scope.row.isLocked===0"
+            @click="hanldeUnlock(scope.$index, scope.row)">激活
           </el-button>
         </template>
       </el-table-column>
@@ -75,7 +82,7 @@
               <el-input v-model="form.password" type="password"></el-input>
             </el-form-item>
             <el-form-item label="重复密码">
-              <el-input v-model="form.repeatPassword" type=""></el-input>
+              <el-input v-model="form.repeatPassword" type="password"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -112,6 +119,38 @@
       Modal
     },
     methods: {
+      handleLock (index, scopeRow) {
+        let intIds = [scopeRow.id]
+        user
+          .lockUser({
+            intIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`用户 ${scopeRow.username} 锁定成功！`)
+              this.getUsersInfo(this.page, this.size)
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
+      },
+      hanldeUnlock (index, scopeRow) {
+        let intIds = [scopeRow.id]
+        user
+          .unlockUser({
+            intIds
+          })
+          .then((res) => {
+            if (res.ret === 200 && res.msg === 'success') {
+              this.$message.success(`用户 ${scopeRow.username} 激活成功！`)
+              this.getUsersInfo(this.page, this.size)
+            }
+          })
+          .catch((err) => {
+            this.$message.error(`[系统提醒: ${err.msg}]`)
+          })
+      },
       addMaintainer () {
         if (!this.form.username) {
           this.$message.error('用户名为空')

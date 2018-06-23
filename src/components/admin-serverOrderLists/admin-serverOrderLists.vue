@@ -87,8 +87,11 @@
             })
             .then((res) => {
               if (res.ret === 200 && res.msg === 'success') {
-                this.tableData = res.data.content
-                this.total = res.data.totalElements
+                this.$message.success(`查询成功！`)
+                if (!res.data) {
+                  this.total = res.data.totalElements
+                  this.tableData = res.data.content
+                }
               }
             })
             .catch((err) => {

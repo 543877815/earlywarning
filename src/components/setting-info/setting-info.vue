@@ -50,6 +50,7 @@
   import {createObjectURL} from '../../common/js/createObjectURL'
   import Url from '../../apis/Url'
   import User from '../../apis/User'
+  import avatarDefault from '../../assets/avatar_default.png'
 
   const user = new User()
 
@@ -70,33 +71,23 @@
         user.getUserInfo()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.name = this.description = ''
-              this.$store.state.user.username = res.data.username
-              this.$store.state.user.name = res.data.name
-              this.$store.state.user.id = res.data.id
-              this.$store.state.user.email = res.data.email
-              this.$store.state.user.isEmailLocked = res.data.isEmailLocked
-              this.$store.state.user.description = res.data.description
-              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}?_=${new Date().getTime()}`
-              this.$store.state.user.roles = res.data.roles
+              this.$store.state.user = res.data
+              this.$store.state.user.avatar = res.data.avatar ? `${Url.request}${res.data.avatar}?_=${new Date().getTime()}` : avatarDefault
             }
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
-
       modifyUserInfo () {
-        if (!this.name && !this.description) {
+        if ((!this.name && !this.$store.state.user.name) || (!this.description && !this.$store.state.user.description)) {
           this.$message.error(`输入为空！`)
           return
         }
-        let name = this.name || this.$store.state.user.name
-        let description = this.description || this.$store.state.user.description
         user
           .modifyUserInfo({
-            name: name,
-            description: description
+            name: this.name || this.$store.state.user.name,
+            description: this.description || this.$store.state.user.description
           })
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
