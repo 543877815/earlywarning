@@ -61,6 +61,9 @@
       margin: 0;
       position: relative;
       overflow: hidden;
+      /*.window{*/
+        /*overflow: hidden;*/
+      /*}*/
     }
     &.scrollPage {
       width: 100%;

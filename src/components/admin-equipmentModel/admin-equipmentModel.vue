@@ -20,7 +20,7 @@
           prop="name"
           label="模板名称"
           width="120">
-        </el-table-column>
+        </el-table-column>1
         <el-table-column
           label="创建时间"
           width="160">

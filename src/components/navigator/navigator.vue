@@ -89,11 +89,13 @@
   const user = new User()
   var stompClient
   export default {
-    data () {
+    data() {
       return {}
     },
     methods: {
-      exit () {
+      exit() {
+        this.$router.push('/login')
+        this.$store.state.user.name = ''
         user
           .logout()
           .then((res) => {
@@ -106,15 +108,13 @@
                 console.log(e)
               }
             }
-            this.$router.push('/login')
-            this.$store.state.user.name = ''
           })
           .catch((err) => {
             console.log(err)
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
-      getUserInfo () {
+      getUserInfo() {
         user.getUserInfo()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
@@ -138,8 +138,7 @@
               stompClient.connect({username: res.data.username},
                 (frame) => {
                   stompClient.subscribe(subscribeAddress, (message) => {
-                    console.log(typeof message.body)
-                    if (typeof message.body === 'string') {
+                    if (message.headers["content-length"] < 200) {
                       this.getUserInfo()
                     } else {
                       this.getUnReadNum()
@@ -160,7 +159,7 @@
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
-      getUnReadNum () {
+      getUnReadNum() {
         news
           .getUnReadNum()
           .then((res) => {
@@ -179,21 +178,21 @@
         default: false
       }
     },
-    created () {
+    created() {
       if (!this.$store.state.user.name) {
         this.getUserInfo()
       }
       this.getUnReadNum()
-    },
-    beforeDestroy () {
-      try {
-        stompClient.disconnect(function () {
-          console.log('stompClient disconnect!')
-        })
-      } catch (e) {
-        console.log(e)
-      }
     }
+    // beforeDestroy () {
+    //   try {
+    //     stompClient.disconnect(function () {
+    //       console.log('stompClient disconnect!')
+    //     })
+    //   } catch (e) {
+    //     console.log(e)
+    //   }
+    // }
   }
 </script>
 

@@ -5,7 +5,7 @@
       style="width: 100%">
       <el-table-column
         label="ID"
-        width="180">
+        width="50">
         <template slot-scope="scope">
           {{scope.$index+1}}
         </template>
@@ -13,11 +13,11 @@
       <el-table-column
         prop="username"
         label="用户名"
-        width="180">
+        width="110">
       </el-table-column>
       <el-table-column
         label="用户状态"
-        width="180">
+        width="100">
         <template slot-scope="scope">
           {{ scope.row.isLocked | Status }}
         </template>
@@ -25,7 +25,7 @@
       <el-table-column
         prop="name"
         label="昵称"
-        width="180">
+        width="110">
       </el-table-column>
       <el-table-column
         prop="email"
@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column
         label="邮箱状态"
-        width="180">
+        width="110">
         <template slot-scope="scope">
           {{ scope.row.isEmailLocked | Status }}
         </template>
