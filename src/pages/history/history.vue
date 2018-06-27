@@ -168,7 +168,7 @@
         total: 10,
         page: 0,
         size: 10,
-        sort: 'id',
+        sort: 'id,desc',
         modelShow: false,
         orderData: {
           id: 0,
@@ -351,8 +351,7 @@
       }
     },
     mounted () {
-      document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'shortPage'
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'scrollPage'
       this.getOrderList(this.page, this.size)
     }
   }
@@ -374,11 +373,15 @@
       padding: 20px;
       width: 60%;
       margin: 100px auto;
-      min-height: 60%;
+      max-height: 60%;
+      /*min-height: 60%;*/
       display: flex;
       flex-flow: column;
       .el-pagination {
         align-self: center;
+      }
+      .el-table{
+        overflow-y: scroll;
       }
     }
 
