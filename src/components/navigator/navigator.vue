@@ -95,7 +95,7 @@
     methods: {
       exit() {
         this.$router.push('/login')
-        this.$store.state.user.name = ''
+        this.$store.commit("UpdateUserName", "")
         user
           .logout()
           .then((res) => {
@@ -127,8 +127,8 @@
                   offset: 100
                 })
               }
-              this.$store.state.user = res.data
-              this.$store.state.user.avatar = res.data.avatar ? `${Url.request}${res.data.avatar}` : avatarDefault
+              this.$store.commit("UpdateUser", res.data)
+              this.$store.commit("UpdateUserAvatar", res.data.avatar ? `${Url.request}${res.data.avatar}` : avatarDefault)
 
               let subscribeAddress
               res.data.roles[0].name === 'user' ? subscribeAddress = '/user/msg/user' : subscribeAddress = '/user/msg/maintainer'
@@ -138,7 +138,7 @@
               stompClient.connect({username: res.data.username},
                 (frame) => {
                   stompClient.subscribe(subscribeAddress, (message) => {
-                    if (message.headers["content-length"] < 200) {
+                    if (message.headers['content-length'] < 200) {
                       this.getUserInfo()
                     } else {
                       this.getUnReadNum()
@@ -164,7 +164,7 @@
           .getUnReadNum()
           .then((res) => {
             if (res.ret === 200 && res.msg === 'success') {
-              this.$store.state.news.unReadMsgNum = res.data
+              this.$store.commit("UpdateUnReadMsgNum", res.data)
             }
           })
           .catch((err) => {
@@ -184,15 +184,6 @@
       }
       this.getUnReadNum()
     }
-    // beforeDestroy () {
-    //   try {
-    //     stompClient.disconnect(function () {
-    //       console.log('stompClient disconnect!')
-    //     })
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    // }
   }
 </script>
 

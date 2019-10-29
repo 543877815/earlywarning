@@ -6,6 +6,7 @@
     </el-tabs>
     <template>
       <el-table
+        max-height="550"
         :data="tableData"
         border
         style="width: 100%">
@@ -51,7 +52,7 @@
           width="200"
           label="描述">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button
               size="mini"

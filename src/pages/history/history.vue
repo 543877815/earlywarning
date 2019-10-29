@@ -149,13 +149,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navIndex from '../../components/navigator/navigator'
-  import showControl from '../../components/showControl/showControl'
-  import Footer from '../../components/footer/footer'
-  import scrollToY from '../../components/scrollToY/scrollToY'
-  import Header from '../../components/header/header'
   import Order from '../../apis/Order'
-  import modal from '../../components/modal/modal'
   import Url from '../../apis/Url'
 
   const order = new Order()
@@ -204,12 +198,12 @@
       }
     },
     components: {
-      navIndex,
-      showControl,
-      Footer,
-      scrollToY,
-      Header,
-      modal
+      navIndex: resolve => require(['../../components/navigator/navigator'], resolve),
+      Footer: resolve => require(['../../components/footer/footer'], resolve),
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve),
+      ScrollToY: resolve => require(['../../components/scrollToY/scrollToY'], resolve),
+      Header: resolve => require(['../../components/header/header'], resolve),
+      modal: resolve => require(['../../components/modal/modal'], resolve)
     },
     methods: {
       confirmOrder () {

@@ -7,6 +7,7 @@
     </div>
     <el-table
       :data="tableData"
+      max-height="550"
       style="width: 100%">
       <el-table-column
         prop="id"

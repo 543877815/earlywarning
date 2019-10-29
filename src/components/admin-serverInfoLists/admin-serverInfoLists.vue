@@ -1,6 +1,7 @@
 <template>
   <div class="server-info-lists">
     <el-table
+      max-height="550"
       :data="tableData"
       style="width: 100%">
       <el-table-column

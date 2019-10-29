@@ -37,7 +37,23 @@ const getters = {
   }
 }
 
-const mutations = {}
+const mutations = {
+  UpdateUser(state, item){
+    state.username = item.username
+    state.id = item.id
+    state.email = item.email;
+    state.isEmailLocked = item.isEmailLocked
+    state.name = item.name
+    state.description = item.description
+    state.roles = item.roles
+  },
+  UpdateUserAvatar(state, item){
+    state.avatar = item
+  },
+  UpdateUserName(state, item){
+    state.name = item
+  }
+}
 
 const action = {}
 export default {

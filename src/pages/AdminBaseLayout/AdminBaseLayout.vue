@@ -16,7 +16,6 @@
 <script type="text/ecmascript-6">
   import vSidebar from '../../components/admin-sidebar/admin-sidebar'
   import vHeader from '../../components/admin-navigator/admin-navigator'
-  import showControl from '../../components/showControl/showControl'
 
   export default {
     data () {
@@ -26,11 +25,11 @@
     components: {
       vHeader,
       vSidebar,
-      showControl
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve)
     },
     mounted () {
       document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'shortPage'
+        document.getElementsByTagName('html')[0].className = 'scrollPage'
     }
   }
 </script>

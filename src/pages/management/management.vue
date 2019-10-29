@@ -32,10 +32,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navIndex from '../../components/navigator/navigator'
-  import showControl from '../../components/showControl/showControl'
   import search from '../../components/search/search'
-  import Footer from '../../components/footer/footer'
   import Menu from '../../components/management-menu/management-menu'
   import Table from '../../components/management-table/management-table'
   import addEquip from '../../components/addEquip/addEquip'
@@ -68,13 +65,13 @@
       }
     },
     components: {
-      navIndex,
-      showControl,
-      Footer,
+      navIndex: resolve => require(['../../components/navigator/navigator'], resolve),
+      Footer: resolve => require(['../../components/footer/footer'], resolve),
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve),
+      addEquip: resolve => require(['../../components/addEquip/addEquip'], resolve),
+      ScrollToY: resolve => require(['../../components/scrollToY/scrollToY'], resolve),
       Menu,
-      addEquip,
       Table,
-      scrollToY,
       search
     },
     methods: {
@@ -286,8 +283,7 @@
       }
     },
     mounted () {
-      document.getElementsByTagName('body')[0].className =
-        document.getElementsByTagName('html')[0].className = 'shortPage'
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'scrollPage'
       if (this.$store.state.equipment.equipTypes.length === 0) {
         this.getCategories()
       }
@@ -313,12 +309,13 @@
     .el_NavMenu {
       position: fixed;
       top: 18%;
-      left: 17%;
+      left: 13%;
     }
     .el_table {
       position: relative !important;
       left: 28%;
-      width: 960px !important;
+      width: 50%!important;
+      /*width: 960px !important;*/
     }
     #footer {
       position: absolute;

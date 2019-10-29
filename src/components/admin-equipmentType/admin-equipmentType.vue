@@ -2,6 +2,7 @@
   <div class="equipment-type">
     <el-table
       border
+      max-height="550"
       :data="tableData"
       style="width: 100%">
       <el-table-column

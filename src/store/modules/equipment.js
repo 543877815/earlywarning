@@ -30,11 +30,19 @@ const getters = {
 }
 
 const mutations = {
-  changeEquipActive (state, item) {
+  changeEquipActive(state, item) {
     state.equipTypeActive = Object.assign({}, item)
   },
-
-  maintainStatus (state, status) {
+  UpdateEquipTypes(state, item) {
+    state.equipTypes = item
+  },
+  UpdateEquipmentItems(state, item) {
+    state.equipItems = item
+  },
+  UpdateEquipOnShow(state, item) {
+    state.equipOnShow = item
+  },
+  maintainStatus(state, status) {
     switch (status) {
       case 0:
         return '等待确认'

@@ -12,21 +12,15 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../../components/navigator/navigator'
-import sidebar from '../../components/setting-sidebar/setting-sidebar'
-  import Footer from '../../components/footer/footer'
-  import showControl from '../../components/showControl/showControl'
-
+  import sidebar from '../../components/setting-sidebar/setting-sidebar'
   export default {
     components: {
-      navigator,
-      sidebar,
-      Footer,
-      showControl
+      navigator: resolve => require(['../../components/navigator/navigator'], resolve),
+      Footer: resolve => require(['../../components/footer/footer'], resolve),
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve),
+      sidebar
     },
-    methods: {
-
-    },
+    methods: {},
     mounted () {
     }
   }
@@ -38,6 +32,7 @@ import sidebar from '../../components/setting-sidebar/setting-sidebar'
     height: 100%;
     position: relative;
     z-index: 2;
+    overflow: hidden;
     .sidebar {
       width: 20%;
     }
@@ -58,7 +53,7 @@ import sidebar from '../../components/setting-sidebar/setting-sidebar'
     .fade-enter-to, .fade-leave {
       opacity: 1;
     }
-    .fade-enter-active{
+    .fade-enter-active {
       transition: all 0.3s;
     }
   }

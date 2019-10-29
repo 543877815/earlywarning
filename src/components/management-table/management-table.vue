@@ -192,8 +192,9 @@
     border-radius: 10px;
     padding: 20px;
     margin-top: 3%;
+    max-height: 60%;
+    overflow-y: scroll;
     .table {
-      min-height: 60%;
       .split {
         width: 100%;
         height: 1px;

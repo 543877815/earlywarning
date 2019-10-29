@@ -4,8 +4,8 @@
                :class="{'scrollDown':navChange}"
                :navChange="navChange"></navigator>
     <Parallax :sectionHeight="100"
-              style="position: relative"
               :speedFactor="0.1"
+              style="position: relative"
               ref="Masthead">
       <img src="../../assets/Jumbotron.jpg" width="100%" height="100%">
     </Parallax>
@@ -81,26 +81,22 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navigator from '../../components/navigator/navigator'
-  import Footer from '../../components/footer/footer'
   import Parallax from '../../components/Parallax/Parallax'
   import menubar from '../../components/index-menubar/index-menubar'
   import Menu from '../../components/index-menu/index-menu'
   import equipItem from '../../components/equipItem/equipItem'
-  import showControl from '../../components/showControl/showControl'
-  import ScrollToY from '../../components/scrollToY/scrollToY'
-  import modal from '../../components/modal/modal'
   import Url from '../../apis/Url'
   import _ from 'underscore'
   import Highcharts from 'highcharts'
-
+  import ScrollToY from '../../components/scrollToY/scrollToY'
+  import showControl from '../../components/showControl/showControl'
   import Equipment from '../../apis/Equipment'
   import User from '../../apis/User'
 
   const equipment = new Equipment()
   const user = new User()
   export default {
-    data () {
+    data() {
       return {
         Url: '',
         particlesShow: true,
@@ -122,25 +118,26 @@
       }
     },
     components: {
-      navigator,
-      Footer,
+      navigator: resolve => require(['../../components/navigator/navigator'], resolve),
+      Footer: resolve => require(['../../components/footer/footer'], resolve),
+      modal: resolve => require(['../../components/modal/modal'], resolve),
+      ScrollToY,
+      showControl,
       Parallax,
       menubar,
       Menu,
-      equipItem,
-      showControl,
-      ScrollToY,
-      modal
+      equipItem
     },
-    mounted () {
+    mounted() {
       this.Url = Url.request
 
       document.getElementsByTagName('body')[0].className =
         document.getElementsByTagName('html')[0].className = 'scrollPage'
-
-      this.navHeight = this.$refs.nav.$el.offsetHeight
-      this.iconShowHeight = this.$refs.Masthead.$el.offsetHeight
-
+      try {
+        this.navHeight = this.$refs.nav.$el.offsetHeight
+        this.iconShowHeight = this.$refs.Masthead.$el.offsetHeight
+      } catch (e) {
+      }
       this.throttleload = _.throttle(this.scrollControl, 100)
       window.addEventListener('scroll', this.throttleload, false)
 
@@ -153,7 +150,7 @@
         : this.getUserInstrument(this.page, this.size, this.sort, false)
     },
     methods: {
-      getEquipData (machineId) {
+      getEquipData(machineId) {
         equipment
           .getDataByMachineId({
             machineId
@@ -243,32 +240,11 @@
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
-      getUserInfo () {
-        user.getUserInfo()
-          .then((res) => {
-            if (res.ret === 200 && res.msg === 'success') {
-              // 如果邮箱为空或者未激活则提醒用户
-              if (res.data.isEmailLocked === 0 || res.data.email === '') {
-                this.$notify({
-                  title: '警告',
-                  message: '您尚未绑定邮箱或邮箱未激活，你将无法及时收到消息推送，为了提供更好的服务，请及时绑定您的邮箱',
-                  type: 'warning',
-                  offset: 100
-                })
-              }
-              this.$store.state.user = res.data
-              this.$store.state.user.avatar = `${Url.request}${res.data.avatar}`
-            }
-          })
-          .catch((err) => {
-            this.$message.error(`[系统提醒: ${err.msg}]`)
-          })
-      },
-      hideDetail () {
-        this.$store.state.equipment.equipOnShow = false
+      hideDetail() {
+        this.$store.commit("UpdateEquipOnShow", false)
         document.getElementsByTagName('body')[0].style.overflow = 'auto'
       },
-      loadMore () {
+      loadMore() {
         this.busy = true
         setTimeout(() => {
           this.busy = false
@@ -278,7 +254,7 @@
             : this.getUserInstrument(this.page, this.size, this.sort, true)
         }, 500)
       },
-      changeEquipActive () {
+      changeEquipActive() {
         this.page = 0
         this.size = 10
         this.$store.state.equipment.equipTypeActive.id === 0 ? this.getByCid = false : this.getByCid = true
@@ -286,7 +262,7 @@
           ? this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false)
           : this.getUserInstrument(this.page, this.size, this.sort, false)
       },
-      getInstrumentByCid (page, size, cid, sort = 'id', flag = false) {
+      getInstrumentByCid(page, size, cid, sort = 'id', flag = false) {
         this.loading = true
         equipment
           .getInstrumentByCid({
@@ -298,16 +274,14 @@
           .then((res) => {
             this.loading = false
             if (flag) {
-              this.$store.state.equipment.equipItems =
-                this.$store.state.equipment.equipItems.concat(res.data.content)
+              this.$store.commit("UpdateEquipmentItems", this.$store.state.equipment.equipItems.concat(res.data.content))
               if (res.data.content.length === 0) {
                 this.busy = true
               } else {
                 this.busy = false
               }
             } else {
-              this.$store.state.equipment.equipItems =
-                res.data.content
+              this.$store.commit("UpdateEquipmentItems", res.data.content)
               this.busy = false
             }
           })
@@ -315,7 +289,7 @@
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
-      switchSort (desc) {
+      switchSort(desc) {
         this.page = 0
         this.size = 10
         desc === false ? this.sort = this.sort.replace(/,desc/, '') : this.sort = `${this.sort},desc`
@@ -323,7 +297,7 @@
           ? this.getInstrumentByCid(this.page, this.size, this.$store.state.equipment.equipTypeActive.id, this.sort, false)
           : this.getUserInstrument(this.page, this.size, this.sort, false)
       },
-      getUserInstrument (page, size, sort = 'id', flag = false) {
+      getUserInstrument(page, size, sort = 'id', flag = false) {
         this.loading = true
         equipment
           .getUserInstrument({
@@ -334,28 +308,27 @@
           .then((res) => {
             this.loading = false
             if (flag) {
-              this.$store.state.equipment.equipItems =
-                this.$store.state.equipment.equipItems.concat(res.data.content)
+              this.$store.commit("UpdateEquipmentItems", this.$store.state.equipment.equipItems.concat(res.data.content))
               if (res.data.content.length === 0) {
                 this.busy = true
               } else {
                 this.busy = false
               }
             } else {
-              this.$store.state.equipment.equipItems =
-                res.data.content
+              this.$store.commit("UpdateEquipmentItems", res.data.content)
               this.busy = false
             }
           })
           .catch((err) => {
+            console.log(err);
             this.$message.error(`[系统提醒: ${err.msg}]`)
           })
       },
-      getCategories () {
+      getCategories() {
         equipment
           .getCategories()
           .then((res) => {
-            this.$store.state.equipment.equipTypes = res.data
+            this.$store.commit("UpdateEquipTypes", res.data);
           })
           .catch((err) => {
             this.$message.error(`[系统提醒: ${err.msg}]`)
@@ -365,7 +338,7 @@
        * minitor the icon show/hidden
        * monitor thr nav color black/Transparent
        */
-      scrollControl () {
+      scrollControl() {
         this.navHeight > window.pageYOffset
           ? this.navChange = false
           : this.navChange = true
@@ -376,18 +349,18 @@
       /**
        * turn on/off the particles
        */
-      switchShowAndHide () {
+      switchShowAndHide() {
         let particlesCanvas = this.$refs.particlesJs.getElementsByClassName('particles-js-canvas-el')[0]
         !this.$store.state.particles.show ? particlesCanvas.style.display = 'none' : particlesCanvas.style.display = 'block'
       },
       /**
        * toggle the index-menu
        */
-      menuControl () {
+      menuControl() {
         this.menuShow = !this.menuShow
       }
     },
-    beforeDestroy () {
+    beforeDestroy() {
       window.removeEventListener('scroll', this.throttleload, false)
     }
   }

@@ -41,7 +41,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import showControl from '../../components/showControl/showControl'
   import User from '../../apis/User'
 
   const user = new User()
@@ -55,7 +54,7 @@ export default {
       }
     },
     components: {
-      showControl
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve)
     },
     methods: {
       login () {

@@ -81,7 +81,7 @@
       }
     },
     mounted () {
-      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'scrollPage'
     }
   }
 </script>
@@ -92,6 +92,7 @@
   .container {
     .content {
       margin-top: 50px;
+      padding-bottom: 50px;
       display: flex;
       flex-flow: column;
       .left-wrapper {

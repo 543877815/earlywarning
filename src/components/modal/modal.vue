@@ -92,8 +92,7 @@
           border-top: 1px solid #e5e5e5;
           .btn-default {
             text-shadow: 0 1px 0 #fff;
-            background-image: linear-gradient(top, #fff 0, #e0e0e0 100%);
-            background-repeat: repeat-x;
+            background: linear-gradient(to top, #fff 0, #e0e0e0 100%) repeat-x;
             border-color: #dbdbdb;
             border-color: #ccc;
           }

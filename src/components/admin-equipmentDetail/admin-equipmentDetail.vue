@@ -3,7 +3,7 @@
     <el-input :placeholder="!equipment.id?'请输入仪器ID':equipment.id" v-model.number="input">
       <el-button slot="append" icon="el-icon-search" @click="getEquipmentDetail"></el-button>
     </el-input>
-    <el-form ref="form" :model="equipment" label-width="80px" slot="body">
+    <el-form ref="form" :model="equipment" label-width="100px" slot="body">
       <el-form-item label="仪器名称">
         <el-input v-model="equipment.name"></el-input>
       </el-form-item>

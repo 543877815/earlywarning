@@ -24,8 +24,6 @@
         class="newsList"
         ref="multipleTable"
         :data="tableData"
-        tooltip-effect="dark"
-        style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
@@ -46,7 +44,7 @@
           width="120">
           <template slot-scope="scope">{{ scope.row.read | readStatus}}</template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="200" fixed="right">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -139,10 +137,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navIndex from '../../components/navigator/navigator'
-  import showControl from '../../components/showControl/showControl'
-  import modal from '../../components/modal/modal'
-  import Footer from '../../components/footer/footer'
   import News from '../../apis/News'
   import Order from '../../apis/Order'
 
@@ -192,10 +186,10 @@
       }
     },
     components: {
-      navIndex,
-      showControl,
-      Footer,
-      modal
+      navIndex: resolve => require(['../../components/navigator/navigator'], resolve),
+      Footer: resolve => require(['../../components/footer/footer'], resolve),
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve),
+      modal: resolve => require(['../../components/modal/modal'], resolve)
     },
     methods: {
       handleDelete (index, scopeRow) {

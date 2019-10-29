@@ -68,7 +68,7 @@ export default {
     },
     mounted () {
       this.$nextTick(() => {
-        document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
+        document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'scrollPage'
       })
     }
   }

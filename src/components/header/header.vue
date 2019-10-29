@@ -31,7 +31,7 @@
     .split {
       width: 100%;
       height: 4px;
-      background: linear-gradient(left, $nav_index-color, rgb(233,240,245));
+      background: linear-gradient(to left, $nav_index-color, rgb(233,240,245));
       margin-top: 30px;
     }
   }

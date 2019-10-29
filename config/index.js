@@ -10,16 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      // '/api':{
-      //   target: 'http://early.lifengjun.xin:8080',
-      //   // secure: false,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/api': '/'
-      //   }
-      // }
-    },
+    // proxyTable: {
+    //   '/api':{
+    //     target: 'http://early.lifengjun.xin:8080',
+    //     // secure: false,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/api': '/'
+    //     }
+    //   }
+    // },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

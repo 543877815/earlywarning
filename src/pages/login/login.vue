@@ -15,7 +15,6 @@
   import navigation from '../../components/login-nav/login-nav'
   import showControl from '../../components/showControl/showControl'
   import panel from '../../components/login-panel/login-panel'
-  import Footer from '../../components/footer/footer'
   import User from '../../apis/User'
 
   const user = new User()
@@ -31,13 +30,13 @@
       }
     },
     components: {
+      Footer: resolve => require(['../../components/footer/footer'], resolve),
+      showControl: resolve => require(['../../components/showControl/showControl'], resolve),
       navigation,
-      panel,
-      showControl,
-      Footer
+      panel
     },
     mounted () {
-      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'shortPage'
+      document.getElementsByTagName('body')[0].className = document.getElementsByTagName('html')[0].className = 'scrollPage'
     },
     methods: {
       changeToLogin (msg) {
