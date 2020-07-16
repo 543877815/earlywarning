@@ -20,7 +20,7 @@
     "husky": "^0.14.3",
     "koa": "^2.5.2",
     "koa-router": "^7.4.0",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.19",
     "lodash.throttle": "^4.1.1",
     "node-sass": "^4.9.0",
     "particles.js": "^2.0.0",
