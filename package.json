@@ -16,7 +16,7 @@
     "axios": "^0.18.0",
     "element-ui": "^2.3.4",
     "form-data": "^2.3.2",
-    "highcharts": "^6.1.0",
+    "highcharts": "^7.2.2",
     "husky": "^0.14.3",
     "koa": "^2.5.2",
     "koa-router": "^7.4.0",
