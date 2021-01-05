@@ -13,7 +13,7 @@
     "lint-fix": "eslint --fix --ext .js --ext .vue src/ --ignore-pattern src/common/*"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "element-ui": "^2.3.4",
     "form-data": "^2.3.2",
     "highcharts": "^6.1.0",
