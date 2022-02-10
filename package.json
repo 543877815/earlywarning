@@ -22,7 +22,7 @@
     "koa-router": "^7.4.0",
     "lodash": "^4.17.5",
     "lodash.throttle": "^4.1.1",
-    "node-sass": "^4.9.0",
+    "node-sass": "^7.0.0",
     "particles.js": "^2.0.0",
     "particlesjs": "^2.2.2",
     "qs": "^6.5.1",
